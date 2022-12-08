@@ -1,0 +1,96 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.loginContainer {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+
+}
+
+.imgContainer {
+    width: 50%;
+    height: 100%;
+    background: url("../Assets/HomePage.jpg");
+    background-size: 100% 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imgContainer h1 {
+    font-size: 6rem;
+    color: #ffffff;
+}
+
+.loginFormContainer {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginForm {
+    height: 50vh;
+    width: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.inputControlGroup {
+    margin: 0 auto;
+    width: 80%;
+}
+
+.loginForm .inputControl {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.loginForm .inputControl label {
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+
+.loginForm .inputControl input {
+    padding: 0.5rem;
+    color: #000000;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    border-radius: 5px;
+    border: 1px solid #cacaca;
+}
+
+.loginForm .inputControl input:focus {
+    outline: 1px solid black;
+}
+
+.loginForm button {
+    background-color: #000000;
+    color: white;
+    letter-spacing: 3px;
+    width: 100%;
+    padding: 0.6rem;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.loginForm .formError {
+    text-align: center;
+    color: rgb(255, 0, 51);
+    font-size: 0.9rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    
+}

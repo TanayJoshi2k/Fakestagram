@@ -1,0 +1,29 @@
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    background-color: #000000;
+    color: white;
+}
+
+.navbarContainer {
+    margin: 0 auto;
+    width: 75vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    list-style-type: none;
+}
+
+.navbarContainer div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbarContainer div li {
+    margin: 0 0.5rem;
+}
