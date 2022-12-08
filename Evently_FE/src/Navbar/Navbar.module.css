@@ -27,3 +27,26 @@ nav {
 .navbarContainer div li {
     margin: 0 0.5rem;
 }
+
+ul p, ul li {
+    display: inline-block;
+    position: relative;
+}
+
+ul p::after, ul li::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(95, 249, 142);
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+}
+
+ul p:hover::after, ul li:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}

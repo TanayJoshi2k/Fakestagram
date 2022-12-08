@@ -33,7 +33,9 @@ function Home(props) {
               })
             : null}
         </div>
-        <div className={classes.sideContainer}></div>
+        <div className={classes.sideContainer}>
+          <button>Create Event</button>
+        </div>
       </div>
     </div>
   );
