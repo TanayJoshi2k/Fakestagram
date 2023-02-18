@@ -6,15 +6,18 @@ nav {
     width: 100vw;
     background-color: #000000;
     color: white;
+    display: flex;
+    align-items: center;
+    height: 3.5rem;
 }
 
 .navbarContainer {
+    position: relative;
     margin: 0 auto;
     width: 75vw;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
     list-style-type: none;
 }
 
@@ -31,8 +34,9 @@ nav {
 ul p, ul li {
     display: inline-block;
     position: relative;
+    cursor: pointer;
 }
-
+/* 
 ul p::after, ul li::after {
     content: '';
     position: absolute;
@@ -41,12 +45,21 @@ ul p::after, ul li::after {
     height: 2px;
     bottom: 0;
     left: 0;
-    background-color: rgb(95, 249, 142);
+    background-color: #fdc229;
     transform-origin: bottom right;
     transition: transform 0.25s ease-out;
-}
+} */
 
 ul p:hover::after, ul li:hover::after {
     transform: scaleX(1);
     transform-origin: bottom left;
+}
+
+nav .profileLink {
+    color: #fff;
+    text-decoration: none;
+}
+
+nav .navbarContainer .menuCotainer {
+    cursor: pointer;
 }

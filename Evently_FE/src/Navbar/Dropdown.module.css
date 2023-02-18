@@ -1,0 +1,69 @@
+.dropdownContainer {
+    position: absolute;
+    width: 125px;
+    top: 2.5rem;
+    left: 95%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    z-index: 100;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+.dropdownContainer * {
+    width: 100%;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.dropdownContainer div {
+    margin: 0 0.5rem;
+}
+
+.dropdownContainer button:hover {
+    background-color: rgb(207, 39, 39);
+    color: #fff;
+}
+
+.dropdownContainer button {
+    background-color: rgb(244, 244, 244);
+    color: red;
+    border: none;
+    transition: all 0.3s;
+    padding: 0.45rem;
+}
+
+.dropdownContainer .profileLinkCotaniner {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    transition: all 0.3s;
+    padding: 0.45rem;
+    color: #000;
+
+}
+
+.dropdownContainer .profileLinkCotaniner:hover {
+    background-color: rgb(232, 232, 232);
+}
+
+.dropdownContainer .profileLinkCotaniner:hover .profileLink {
+    text-decoration: underline;
+}
+
+.dropdownContainer .profileLink {
+    text-decoration: none;
+    margin-left: 1rem;
+    width: max-content;
+    color: #000;
+}
+
+.dropdownContainer img {
+    height: 18px;
+    width: max-content;
+    margin-left: 10px;
+}
