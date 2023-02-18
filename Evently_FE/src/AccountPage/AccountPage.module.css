@@ -1,0 +1,68 @@
+.accountPageContainer {
+    background: rgba(255, 204, 41, 0.2);
+    overflow: hidden;
+}
+
+.heroBanner {
+    width: 50%;
+    height: max-content;
+    margin: 5.5rem auto;
+    padding: 1rem;
+    border-radius: 10px;
+    background: rgba(255, 204, 41, 0.2);
+    border: 2px solid #ffcc29;
+    display: flex;
+}
+
+.profilePicContainer {}
+
+.profilePicContainer img {
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
+    margin: 1rem;
+}
+
+.meta {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+.meta>div {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.meta>div>button {
+    display: block;
+    background-color: transparent;
+    padding: 0;
+    margin-top: 0.5rem;
+    border: none;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.meta .followBtn {
+    background: #ffcc29;
+    padding: 0.25rem 1.5rem;
+    width: max-content;
+    transition: all 0.3s;
+    border: 2px solid #000;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.meta .followBtn:hover {
+    background-color: #000;
+    color: #ffcc29;
+    border: 2px solid #ffcc29;
+}
+
+.meta h2 {
+    margin: 0;
+}
+
+.meta .bio {
+    margin-bottom: 0.5rem;
+}
