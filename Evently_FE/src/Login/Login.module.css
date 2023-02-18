@@ -86,6 +86,11 @@ body {
     font-weight: 600;
 }
 
+.loginForm button:disabled {
+    background-color: rgba(0, 0, 0, 0.85);
+    cursor: not-allowed;
+}
+
 .loginForm .formError {
     text-align: center;
     color: rgb(255, 0, 51);

@@ -1,29 +1,22 @@
-html,
-body,
-* {
-    box-sizing: border-box;
-}
-
 /* width */
 ::-webkit-scrollbar {
-    width: 2px;
+    width: 0;
 }
 
 /* Track */
-::-webkit-scrollbar-track {
+/* ::-webkit-scrollbar-track {
     background: #f1f1f1;
-}
+} */
 
 /* Handle */
-::-webkit-scrollbar-thumb {
+/* ::-webkit-scrollbar-thumb {
     background: #bec4c4;
-}
-
+} */
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
+/* ::-webkit-scrollbar-thumb:hover {
     background: #555;
-}
+} */
 
 .homePageContainer {
     height: 100vh;
@@ -38,6 +31,7 @@ body,
     width: 50vw;
     height: 75vh;
     overflow-y: scroll;
+    overflow-x: hidden;
     border: 1px solid #ebebeb;
     border-radius: 10px;
 }
@@ -58,11 +52,25 @@ body,
 }
 
 .sideContainer button {
+    position: relative;
     margin: 0 auto;
     background-color: #000;
     color: #fff;
-    font-size: 1rem;
+    font-size: 0.9rem;
     border-radius: 5px;
+    padding: 0.5rem 1.75rem;
+    border: none;
+    z-index:0;
+}
+
+.sideContainer button::before {
+    content: "+";
+    position: absolute;
+    font-size: 1.25rem;
+    left: 0;
+    margin-left: 10px;
+    transform: translateY(-10%);
+    color: rgb(95, 249, 142);
 }
 
 .event .detailsBtn {
@@ -72,4 +80,17 @@ body,
     text-transform: capitalize;
     border-radius: 5px;
     font-size: 0.9rem;
+}
+
+.eventsContainer .filterOptions {
+    background-color: rgba(242, 242, 242, 0.4);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.eventsContainer .filterOptions li {
+    margin: 0 0.5rem;
 }

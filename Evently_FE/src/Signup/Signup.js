@@ -31,9 +31,11 @@ function Signup() {
         setEmailVerificationMsg(res.data.message);
       })
       .catch((e) => {
+        console.log(e.response.data);
         setSignupFormErrors({
-          usernameError: e.response.data.error.usernameError,
-          passwordError: e.response.data.error.passwordError,
+          emailError: e.response.data.error?.emailError,
+          usernameError: e.response.data.error?.usernameError,
+          passwordError: e.response.data.error?.passwordError,
         });
       });
   };
@@ -55,6 +57,11 @@ function Signup() {
                   name="email"
                   onChange={inputHandler}
                 />
+                {signupFormErrors.emailError ? (
+                  <p className={classes.signupFormErrors}>
+                    {signupFormErrors.emailError}
+                  </p>
+                ) : null}
               </div>
               <div className={classes.inputControl}>
                 <label>Username</label>

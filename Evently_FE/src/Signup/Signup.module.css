@@ -61,7 +61,7 @@ body {
     font-size: 1rem;
     margin-bottom: 0.3rem;
     font-weight: 600;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
 }
 
@@ -88,12 +88,14 @@ body {
     font-weight: 600;
 }
 
-.loginForm .formError {
+.loginForm .signupFormErrors {
     text-align: center;
     color: rgb(255, 0, 51);
-    font-size: 0.9rem;
+    background-color: transparent;
+    font-size: 0.75rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    
+    bottom: -1rem;
+
 }
 
 .loginForm .signupLink {
