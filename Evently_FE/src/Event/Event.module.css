@@ -1,0 +1,121 @@
+.event {
+    position: relative;
+    border-bottom: 1px solid #ebebeb;
+    padding: 1rem 1.5rem;
+    transition: all 0.5s;
+}
+
+.event:hover {
+    background-color: #f5f5f5;
+    transform: scale(1.02);
+}
+
+.event h3,
+p {
+    padding: 0;
+    margin: 0;
+    width: max-content;
+}
+
+.event h3 {
+    position: relative;
+    margin-bottom: 0.25rem;
+    text-transform: capitalize;
+}
+
+.event .eventDetails {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: rgba(241, 241, 241, 0.3);
+    margin: 0.5rem auto;
+    border-radius: 10px;
+
+}
+
+.event p {
+    font-size: 14px;
+    border-radius: 5px;
+    padding: 0.25rem 0.5rem;
+    transition: all 0.3s;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+.event p:hover {
+    border: 1px solid #f7c229;
+    /* background-color: #000;
+    color: #f7c229; */
+}
+
+.event p::before {
+    margin-right: 0.3rem;
+}
+
+.event p:nth-of-type(1)::before {
+    content: "📌";
+}
+
+.event p:nth-of-type(2)::before {
+    content: "⏱";
+}
+
+.event .description {
+    display: block;
+    flex-basis: 100%;
+    align-self: center;
+}
+
+.event p:nth-of-type(3)::before {
+    content: "✨";
+}
+
+.event .detailsBtn {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 0.35rem 1.25rem;
+    text-transform: capitalize;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    transition: all 0.3s;
+}
+
+.event .detailsBtn:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* .event h3::after {
+    content: '';
+    position: absolute;
+    width: 75%;
+    transform: scaleX(0);
+    height: 2.5px;
+    bottom: 0;
+    left: 0;
+    background-color: #f7c229;
+    transform-origin: bottom right;
+    transition: transform 0.4s ease-out;
+} */
+
+.event:hover h3::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+.event .bookmarkIcon svg {
+    position: absolute;
+    height: 24px;
+    right: 0;
+    top: -2px;
+    cursor: pointer;
+    fill: #ccc;
+}
+
+.event .bookmarkIcon svg:hover {
+    fill: #f7d800;
+}

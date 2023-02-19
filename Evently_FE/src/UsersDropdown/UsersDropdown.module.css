@@ -1,0 +1,23 @@
+.dropdownContainer {
+    position: absolute;
+    background-color: rgb(237, 237, 237);
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    overflow-y: scroll;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.dropdownContainer div {
+    cursor: pointer;
+    padding-left: 0.5rem;
+    border-bottom: 1px solid red;
+}
+
+.dropdownContainer div:last-child {
+    border-bottom: none;
+}
+
+.dropdownContainer div p {
+}
