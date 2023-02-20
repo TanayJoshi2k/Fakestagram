@@ -81,8 +81,6 @@ eventRouter.post("/saveEvent", async (req, res, next) => {
 });
 
 eventRouter.post("/addToBookmarks/:eventId", async (req, res, next) => {
-  console.log(req.session)
-
   const eventId = req.params.eventId;
   const savedEvent = await UserTrivia.findOne({
     username: req.body.username,

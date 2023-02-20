@@ -25,6 +25,7 @@ const userTrivia = mongoose.Schema(
     bio: {
       type: String,
       required: false,
+      default:""
     },
 
     followers: {
@@ -33,6 +34,7 @@ const userTrivia = mongoose.Schema(
 
     followersCount: {
       type: Number,
+      default: 0
     },
 
     following: {
@@ -41,15 +43,11 @@ const userTrivia = mongoose.Schema(
 
     followingCount: {
       type: Number,
+      default: 0
     },
 
     bookedmarkedEvents: {
       type: [String],
-    },
-
-    confirmedDetails: {
-      type: Boolean,
-      default: false,
     },
   },
   { timestamps: true }

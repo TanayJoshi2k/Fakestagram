@@ -6,10 +6,10 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const limiter = require("../Services/Rate-Limiter");
 const authRouter = express.Router();
+const UserTrivia = require("../Models/UserTrivia");
 
 authRouter.post("/login", limiter, async (req, res, next) => {
   try {
-    console.log("Received login request", req.body);
     const user = req.body;
     let error_message = "";
     const userFound = await User.findOne({ username: user.username });
@@ -23,6 +23,14 @@ authRouter.post("/login", limiter, async (req, res, next) => {
           error_message,
           isAuth: false,
         },
+      });
+    }
+
+    const confirmedDetails = userFound.confirmedDetails;
+
+    if (!confirmedDetails) {
+      res.status(404).json({
+        confirmedDetails: false,
       });
     }
 
@@ -113,34 +121,55 @@ authRouter.post("/logout", (req, res, next) => {
   res.json({ message: "Logged out" });
 });
 
-authRouter.get(
-  `${process.env.BASE_URL}users/:user_id/verify/:token`,
-  async (req, res, next) => {
-    try {
-      const user = await User.findOne({ _id: req.params.user_id });
-      if (!user) {
-        return res.status(400).json({
-          error: "User not found",
-        });
-      }
-      const token = Tokens.findOne({
-        userId: req.params.user._id,
-        token: req.params.token,
+authRouter.get("/users/:user_id/verify/:token", async (req, res, next) => {
+  try {
+    const user = await User.findById({ _id: req.params.user_id });
+    if (!user) {
+      return res.status(400).json({
+        error: "User not found",
       });
-      if (!token) {
-        return res.status(400).json({ error: "Invalid Token/Link" });
-      }
-      await User.updateOne({ _id: user._id, verified: true });
-      await token.remove();
-
-      res.status(201).json({
-        message: "Email Verified",
-      });
-    } catch (e) {
-      res.status(500).json({ error: "Internal Server Error" });
-      console.log(e);
     }
+    const token = await Tokens.findOne({
+      userId: req.params.user_id,
+      token: req.params.token,
+    });
+    if (!token) {
+      return res.status(400).json({ error: "Invalid Token/Link" });
+    }
+    await User.findOneAndUpdate({ _id: user._id}, {verified: true });
+    await token.remove();
+
+    res.status(201).json({
+      message: "Email Verified",
+    });
+  } catch (e) {
+    res.status(500).json({ error: "Internal Server Error" });
+    console.log(e);
   }
-);
+});
+
+authRouter.post("/secondSignupStep", async (req, res, next) => {
+  try {
+    const newUserTrivia = await new UserTrivia({
+      username: req.body.username,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      bio: req.body.bio,
+      gender: req.body.gender,
+    }).save();
+
+    await User.findOneAndUpdate(
+      { username: req.body.username },
+      { $set: { confirmedDetails: true } }
+    );
+
+    return res.status(203).json({
+      message: "Details confirmed. Success.",
+    });
+  } catch (e) {
+    res.status(500).json({ error: "Internal Server Error" });
+    console.log(e);
+  }
+});
 
 module.exports = authRouter;
