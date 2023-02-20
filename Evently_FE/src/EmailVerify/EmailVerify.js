@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
-import ExtraSignupDetails from "../ExtraSignupDetails/ExtraSignupDetails";
 import TokenError from "./TokenError";
 import classes from "./EmailVerify.module.css";
 
@@ -14,11 +13,9 @@ function EmailVerify(props) {
     axios
       .get(url)
       .then((data) => {
-        console.log(data);
         setValidURL(true);
       })
       .catch((e) => {
-        console.log(e);
         setValidURL(false);
       });
   }, [url]);
@@ -32,7 +29,6 @@ function EmailVerify(props) {
             <button className={classes.loginBtn}>Login</button>
           </Link>
         </div>
-        // <ExtraSignupDetails setIsAuth={props.setIsAuth} />
       ) : (
         <TokenError />
       )}

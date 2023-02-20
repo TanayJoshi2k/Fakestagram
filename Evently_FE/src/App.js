@@ -7,7 +7,7 @@ import Signup from "./Signup/Signup";
 import EmailVerify from "./EmailVerify/EmailVerify";
 import ExtraSignupDetails from "./ExtraSignupDetails/ExtraSignupDetails";
 import AccountPage from "./AccountPage/AccountPage";
-import styles from "./App.css";
+import "./App.css";
 
 function App() {
   const [isAuth, setIsAuth] = useState(false);
@@ -61,6 +61,16 @@ function App() {
       <Route
         path="/users/:user_id/verify/:token"
         element={<EmailVerify setIsAuth={setIsAuth} />}
+      ></Route>
+      <Route
+        path="/extra-details"
+        element={
+          !isAuth ? (
+            <Navigate to="/" />
+          ) : (
+            <ExtraSignupDetails setIsAuth={setIsAuth} username={username} />
+          )
+        }
       ></Route>
     </Routes>
   );
