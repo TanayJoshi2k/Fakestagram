@@ -1,15 +1,12 @@
 const express = require("express");
 require("dotenv").config();
-
 const cors = require("cors");
 const session = require("express-session");
 const mongoDBStore = require("connect-mongodb-session")(session);
 const mongoose = require("mongoose");
-const User = require("./Models/User");
 const eventRouter = require("./Controllers/Event-Controller");
 const authRouter = require("./Controllers/Auth-controller");
-
-// const isAuth = require("./middleware/isAuth");
+const accountPageRouter = require("./Controllers/Account-Page-Controller");
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -48,6 +45,7 @@ app.get("/isAuth", (req, res, next) => {
 
 app.use(authRouter);
 app.use("/events", eventRouter);
+app.use("/account", accountPageRouter);
 
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })

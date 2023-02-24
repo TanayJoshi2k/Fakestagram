@@ -49,6 +49,10 @@ const userTrivia = mongoose.Schema(
     bookedmarkedEvents: {
       type: [String],
     },
+
+    avatarURL: {
+      type: String
+    }
   },
   { timestamps: true }
 );

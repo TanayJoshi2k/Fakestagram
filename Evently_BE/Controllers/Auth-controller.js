@@ -1,12 +1,19 @@
 const express = require("express");
-const User = require("../Models/User");
-const Tokens = require("../Models/Token");
-const sendMail = require("../Services/Mail-Service");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const limiter = require("../Services/Rate-Limiter");
-const authRouter = express.Router();
+const multer = require("multer");
 const UserTrivia = require("../Models/UserTrivia");
+const User = require("../Models/User");
+const Tokens = require("../Models/Token");
+require("../Models/db");
+const sendMail = require("../Services/Mail-Service");
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage }).single("avatar");
+const ImageUpload = require("../Services/Image-Upload-Service");
+global.XMLHttpRequest = require("xhr2");
+
+const authRouter = express.Router();
 
 authRouter.post("/login", limiter, async (req, res, next) => {
   try {
@@ -108,7 +115,7 @@ authRouter.post("/signup", async (req, res, next) => {
   const url = `${process.env.BASE_URL}users/${newUser._id}/verify/${token.token}`;
   await sendMail(user.email, "Verify Email", url);
 
-  res.status(201).json({
+  return res.status(201).json({
     message: "Verification Link is sent to your inbox",
   });
 });
@@ -118,7 +125,7 @@ authRouter.post("/logout", (req, res, next) => {
     console.log(e);
   });
 
-  res.json({ message: "Logged out" });
+  return res.json({ message: "Logged out" });
 });
 
 authRouter.get("/users/:user_id/verify/:token", async (req, res, next) => {
@@ -136,7 +143,7 @@ authRouter.get("/users/:user_id/verify/:token", async (req, res, next) => {
     if (!token) {
       return res.status(400).json({ error: "Invalid Token/Link" });
     }
-    await User.findOneAndUpdate({ _id: user._id}, {verified: true });
+    await User.findOneAndUpdate({ _id: user._id }, { verified: true });
     await token.remove();
 
     res.status(201).json({
@@ -148,14 +155,18 @@ authRouter.get("/users/:user_id/verify/:token", async (req, res, next) => {
   }
 });
 
-authRouter.post("/secondSignupStep", async (req, res, next) => {
+authRouter.post("/secondSignupStep", upload, async (req, res, next) => {
   try {
-    const newUserTrivia = await new UserTrivia({
+    const file = req.file;
+    const downloadURL = await ImageUpload(file, req.body.username, 'avatar')
+    
+    await new UserTrivia({
       username: req.body.username,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       bio: req.body.bio,
       gender: req.body.gender,
+      avatarURL: downloadURL
     }).save();
 
     await User.findOneAndUpdate(
@@ -164,7 +175,7 @@ authRouter.post("/secondSignupStep", async (req, res, next) => {
     );
 
     return res.status(203).json({
-      message: "Details confirmed. Success.",
+      message: "Details confirmed. Success."
     });
   } catch (e) {
     res.status(500).json({ error: "Internal Server Error" });
