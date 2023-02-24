@@ -12,6 +12,7 @@ import "./App.css";
 function App() {
   const [isAuth, setIsAuth] = useState(false);
   const [username, setUsername] = useState("");
+
   useEffect(() => {
     axios
       .get("/isAuth")
@@ -29,10 +30,10 @@ function App() {
       <Route
         path="/account/:username"
         element={
-          !isAuth ? (
-            <Navigate to="/" />
-          ) : (
+          isAuth ? (
             <AccountPage setIsAuth={setIsAuth} username={username} />
+          ) : (
+            <Navigate to="/" />
           )
         }
       ></Route>

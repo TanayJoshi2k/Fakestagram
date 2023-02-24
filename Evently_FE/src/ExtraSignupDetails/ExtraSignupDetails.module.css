@@ -9,7 +9,6 @@
     justify-content: center;
     align-items: center;
     background-color: #f7c229;
-    
 }
 
 .extraDetailsFormContainer {
@@ -55,7 +54,7 @@
     transform: translate(-50%);
     background: url("../Assets/download.png") no-repeat center;
     overflow: hidden;
-    background-size: cover;
+    background-size:contain !important;
     border: 2px solid #f7c229;
     outline: 2px solid #fff;
 }
@@ -84,6 +83,7 @@
     color: #f7c229;
     font-size: 0.9rem;
     font-weight: 600;
+
 }
 
 .name {
@@ -97,6 +97,7 @@
     border-radius: 5px;
     font-size: 1rem;
     width: 100%;
+    padding: 0.25rem 0.4rem;
 }
 
 .extraDetailsFormControl textarea {
@@ -107,6 +108,7 @@
     border: 2px solid rgb(230, 230, 230);
     border-radius: 5px;
     font-size: 1rem;
+    padding: 0.25rem 0.4rem;
 }
 
 .extraDetailsFormControl textarea:focus {

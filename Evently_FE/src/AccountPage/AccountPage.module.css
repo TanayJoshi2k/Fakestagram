@@ -21,6 +21,7 @@
     height: 150px;
     border-radius: 100%;
     margin: 1rem;
+    object-fit: cover;
 }
 
 .meta {

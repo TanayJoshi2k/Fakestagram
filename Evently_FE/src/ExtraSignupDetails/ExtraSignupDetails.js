@@ -3,28 +3,41 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import classes from "./ExtraSignupDetails.module.css";
+import Spinner from "../Spinner/Spinner";
+import DefaultProfilePic from "../Assets/download.png"
 
 function ExtraSignupDetails(props) {
-  // const [imgUrl, setImgUrl] = useState("");
   const bioRegex = /[^a-z A-Z0-9@_.!-#*]*$/i;
   const nameRegex = /[^a-z A-Z]*$/i;
+  const [displayAvatarURL, setDisplayAvatarURL] = useState(DefaultProfilePic);
 
   const [extraFormData, setExtraFormData] = useState({
     firstName: "",
     lastName: "",
     bio: "",
     gender: "",
-    username: props.username
+    username: props.username,
+    avatar: "",
   });
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const MAX_CHARS = 150;
   const navigate = useNavigate();
 
   const handleInput = (e) => {
+
     const name = e.target.name;
     let value = "";
 
-    if (name === "bio") {
+    if (name === "avatar") {
+      const url = URL.createObjectURL(e.target.files[0])
+      setDisplayAvatarURL(url)
+      setExtraFormData({
+        ...extraFormData,
+        [name]: e.target.files[0],
+      });
+
+    } else if (name === "bio") {
       value = e.target.value.replace(bioRegex, "");
       setExtraFormData({
         ...extraFormData,
@@ -38,16 +51,35 @@ function ExtraSignupDetails(props) {
       });
     }
   };
-
+  console.log("extraFormData", extraFormData);
   const submitHandler = () => {
+    const formData = new FormData();
+    formData.append("avatar", extraFormData.avatar);
+    formData.append("firstName", extraFormData.firstName);
+    formData.append("lastName", extraFormData.lastName);
+    formData.append("bio", extraFormData.bio);
+    formData.append("gender", extraFormData.gender);
+    formData.append("username", extraFormData.username);
+    // for (let pair of formData.entries()) {
+    //   console.log(`${pair[0]}: ${pair[1]}`);
+    // }
+    setShowSpinner(true);
+
     axios
-      .post("/secondSignupStep", extraFormData)
+      .post("/secondSignupStep", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((res) => {
+        setShowSpinner(false);
         props.setIsAuth(true);
-        navigate("/home", {state:{username: props.username}});
+        navigate("/home", { state: { username: props.username } });
       })
       .catch((e) => console.log(e));
   };
+
+  if (showSpinner) return <Spinner />
 
   return (
     <div className={classes.extraDetailsContainer}>
@@ -57,12 +89,14 @@ function ExtraSignupDetails(props) {
       </div>
 
       <div>
-        <label htmlFor="profilePic" className={classes.profilePicLabel}></label>
+        <label htmlFor="profilePic" className={classes.profilePicLabel} style={{background:`url(${displayAvatarURL})`}}></label>
         <input
           id="profilePic"
           type="file"
+          name="avatar"
           accept="image/png, image/jpg, image/jpeg"
           style={{ display: "none" }}
+          onChange={handleInput}
         />
       </div>
 
