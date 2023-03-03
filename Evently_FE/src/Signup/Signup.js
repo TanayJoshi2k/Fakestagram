@@ -92,7 +92,15 @@ function Signup() {
                 ) : null}
               </div>
 
-              <button type="submit" onClick={signupHandler}>
+              <button
+                type="submit"
+                onClick={signupHandler}
+                disabled={
+                  !signupDetails.username ||
+                  !signupDetails.email ||
+                  signupDetails.password.length < 6
+                }
+              >
                 SUBMIT
               </button>
               {emailVerificationMsg ? (

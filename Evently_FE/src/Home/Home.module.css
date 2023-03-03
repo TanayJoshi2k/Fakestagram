@@ -3,21 +3,6 @@
     width: 0;
 }
 
-/* Track */
-/* ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-} */
-
-/* Handle */
-/* ::-webkit-scrollbar-thumb {
-    background: #bec4c4;
-} */
-
-/* Handle on hover */
-/* ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-} */
-
 .homePageContainer {
     height: 100vh;
     width: 100vw;
@@ -39,7 +24,7 @@
 .eventsContainer .event {
     border-bottom: 1px solid #ebebeb;
     padding: 0.25rem 1rem;
-    
+
 }
 
 .sideContainer {
@@ -60,7 +45,7 @@
     border-radius: 5px;
     padding: 0.5rem 1.75rem;
     border: none;
-    z-index:0;
+    z-index: 0;
 }
 
 .sideContainer button::before {
@@ -93,4 +78,47 @@
 
 .eventsContainer .filterOptions li {
     margin: 0 0.5rem;
+}
+
+@media screen and (max-width:576px) {
+    .homePageContainer {
+        flex-direction: column-reverse;
+    }
+
+    .sideContainer {
+        position: fixed;
+        height: max-content;
+        right: 20px;
+        bottom: 20px;
+    }
+
+    .sideContainer button::before {
+        font-size: 1.5rem;
+        transform: translate(100%, -60%);
+        margin: 0;
+    }
+
+    .sideContainer button {
+        font-size: 0.9rem;
+        border-radius: 0.75rem;
+        padding: 1.35rem;
+    }
+
+    .sideContainer button span {
+        display: none;
+    }
+
+    .eventsContainer {
+        margin: 1rem auto;
+        width: 90vw;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        border: 1px solid #ebebeb;
+        border-radius: 10px;
+    }
+
+    .event {
+        background-color: rebeccapurple;
+    }
+
 }

@@ -5,13 +5,18 @@ import classes from "./Navbar.module.css";
 
 function Navbar(props) {
   const [toggleDropdown, setToggleDropdown] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const navigate = useNavigate();
 
   return (
     <header>
       <nav>
+        <div className={classes.mobileMenu}>
+          <span onClick={() => setShowMobileMenu(!showMobileMenu)}>☰</span>
+        </div>
         <ul className={classes.navbarContainer}>
           <p onClick={() => navigate("/")}>Evently</p>
+
           <div>
             <li>MY EVENTS</li>
             <li>INVITES</li>

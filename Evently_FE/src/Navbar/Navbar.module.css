@@ -31,11 +31,13 @@ nav {
     margin: 0 0.5rem;
 }
 
-ul p, ul li {
+ul p,
+ul li {
     display: inline-block;
     position: relative;
     cursor: pointer;
 }
+
 /* 
 ul p::after, ul li::after {
     content: '';
@@ -50,7 +52,8 @@ ul p::after, ul li::after {
     transition: transform 0.25s ease-out;
 } */
 
-ul p:hover::after, ul li:hover::after {
+ul p:hover::after,
+ul li:hover::after {
     transform: scaleX(1);
     transform-origin: bottom left;
 }
@@ -62,4 +65,35 @@ nav .profileLink {
 
 nav .navbarContainer .menuCotainer {
     cursor: pointer;
+}
+
+.mobileMenu {
+    display: none;
+}
+
+@media screen and (max-width:576px) {
+    nav {
+        padding: 0.5rem;
+    }
+    .mobileMenu {
+        display: flex;
+        font-size: 2rem;
+    }
+
+    .navbarContainer div {
+        display: none;
+    }
+
+    .navbarContainer>p {
+        font-size: 1.125rem;
+        letter-spacing: 0.25px;
+        margin-left: auto;
+    }
+    
+    .navbarContainer div:nth-child(3) {
+        display: flex;
+        margin-left:  auto;
+    }
+
+    
 }

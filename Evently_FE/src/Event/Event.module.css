@@ -89,19 +89,6 @@ p {
     color: #000000;
 }
 
-/* .event h3::after {
-    content: '';
-    position: absolute;
-    width: 75%;
-    transform: scaleX(0);
-    height: 2.5px;
-    bottom: 0;
-    left: 0;
-    background-color: #f7c229;
-    transform-origin: bottom right;
-    transition: transform 0.4s ease-out;
-} */
-
 .event:hover h3::after {
     transform: scaleX(1);
     transform-origin: bottom left;
@@ -118,4 +105,11 @@ p {
 
 .event .bookmarkIcon svg:hover {
     fill: #f7d800;
+}
+
+@media screen and (max-width:576px) {
+    .event {
+        margin: 1rem auto;
+        padding: 0.75rem 0.75rem;
+    }
 }

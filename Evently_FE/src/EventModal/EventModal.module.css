@@ -20,7 +20,6 @@
     box-shadow: 0px 0px 1px 0px #535353;
     z-index: 100;
     overflow-y: scroll;
-
 }
 
 .closeBtn {
@@ -102,6 +101,7 @@
 .eventForm .inputControl textarea:focus {
     border-radius: 5px;
 }
+
 hr {
     margin-top: 1rem;
     margin-bottom: 0;
@@ -165,4 +165,22 @@ hr {
     background-color: #ffffff;
     color: #ff075e;
     border: 2px solid #ff075e;
+}
+
+@media screen and (max-width:576px) {
+
+    .EventModalContainer {
+        height: 100vh;
+        width: 100vw;
+        overflow-y: hidden;
+    }
+
+    .EventModal {
+        margin-top: 0;
+        height: max-content;
+        width: 90%;
+        margin-top: 0;
+        border-radius: 15px;
+    }
+
 }

@@ -82,7 +82,7 @@ function Home(props) {
               setShowEventModal(true);
             }}
           >
-            Create Event
+            <span>Create Event</span>
           </button>
         </div>
       </div>
