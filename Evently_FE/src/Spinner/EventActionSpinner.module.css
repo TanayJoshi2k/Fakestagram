@@ -1,0 +1,44 @@
+.spinnerContainer {
+    height: max-content;
+    width: max-content;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    width: 25px;
+    height: 25px;
+    margin: 0 auto;
+    margin-left: 0.5rem;
+    background-color: #000;
+
+    border-radius: 100%;
+    -webkit-animation: sk-scaleout 0.8s infinite ease-in-out;
+    animation: sk-scaleout 0.8s infinite ease-in-out;
+}
+
+@-webkit-keyframes sk-scaleout {
+    0% {
+        -webkit-transform: scale(0)
+    }
+
+    100% {
+        -webkit-transform: scale(1.0);
+        opacity: 0;
+    }
+}
+
+@keyframes sk-scaleout {
+    0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+    }
+
+    100% {
+        -webkit-transform: scale(1.0);
+        transform: scale(1.0);
+        opacity: 0;
+    }
+}

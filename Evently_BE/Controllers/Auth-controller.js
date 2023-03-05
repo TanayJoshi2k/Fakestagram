@@ -15,6 +15,26 @@ global.XMLHttpRequest = require("xhr2");
 
 const authRouter = express.Router();
 
+authRouter.get("/isAuth", async (req, res, next) => {
+  if (!req.session.isLoggedIn) {
+    return res.status(401).json({
+      message: "",
+      error: {
+        authorized: false,
+      },
+    });
+  }
+  try {
+    const user = await UserTrivia.findOne({ username: req.session.username }).lean();
+    return res.status(200).json({
+      message: { authorized: true, username: req.session.username, ...user },
+      error: {},
+    });
+  } catch (e) {
+    return res.status(500).json({ error: "Internal Serve Error" });
+  }
+});
+
 authRouter.post("/login", limiter, async (req, res, next) => {
   try {
     const user = req.body;
@@ -158,15 +178,15 @@ authRouter.get("/users/:user_id/verify/:token", async (req, res, next) => {
 authRouter.post("/secondSignupStep", upload, async (req, res, next) => {
   try {
     const file = req.file;
-    const downloadURL = await ImageUpload(file, req.body.username, 'avatar')
-    
+    const downloadURL = await ImageUpload(file, req.body.username, "avatar");
+
     await new UserTrivia({
       username: req.body.username,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       bio: req.body.bio,
       gender: req.body.gender,
-      avatarURL: downloadURL
+      avatarURL: downloadURL,
     }).save();
 
     await User.findOneAndUpdate(
@@ -175,7 +195,7 @@ authRouter.post("/secondSignupStep", upload, async (req, res, next) => {
     );
 
     return res.status(203).json({
-      message: "Details confirmed. Success."
+      message: "Details confirmed. Success.",
     });
   } catch (e) {
     res.status(500).json({ error: "Internal Server Error" });

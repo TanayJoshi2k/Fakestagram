@@ -12,6 +12,7 @@ import "./App.css";
 function App() {
   const [isAuth, setIsAuth] = useState(false);
   const [username, setUsername] = useState("");
+  const [userDetails, setUserDetails] = useState({});
 
   useEffect(() => {
     axios
@@ -19,6 +20,7 @@ function App() {
       .then((res) => {
         setIsAuth(res.data.message.authorized);
         setUsername(res.data.message.username);
+        setUserDetails(res.data.message);
       })
       .catch((e) => {
         setIsAuth(false);
@@ -53,7 +55,11 @@ function App() {
           !isAuth ? (
             <Navigate to="/" />
           ) : (
-            <Home setIsAuth={setIsAuth} username={username} />
+            <Home
+              setIsAuth={setIsAuth}
+              username={username}
+              userDetails={userDetails}
+            />
           )
         }
       ></Route>

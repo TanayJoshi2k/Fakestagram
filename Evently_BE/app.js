@@ -27,22 +27,6 @@ app.use(
   })
 );
 
-app.get("/isAuth", (req, res, next) => {
-  if (!req.session.isLoggedIn) {
-    return res.status(401).json({
-      message: "",
-      error: {
-        authorized: false,
-      },
-    });
-  }
-
-  return res.status(200).json({
-    message: { authorized: true, username: req.session.username },
-    error: {},
-  });
-});
-
 app.use(authRouter);
 app.use("/events", eventRouter);
 app.use("/account", accountPageRouter);

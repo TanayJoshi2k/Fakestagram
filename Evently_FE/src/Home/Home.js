@@ -11,6 +11,18 @@ function Home(props) {
   const [events, setEvents] = useState([]);
   const [showEventModal, setShowEventModal] = useState(false);
   const location = useLocation();
+  const [username, setUsername] = useState(
+    props.username || location.state.username
+  );
+
+  const [eventsAttending, setEventsAttending] = useState(
+    props.userDetails.eventsAttending || []
+  );
+
+  const [bookmarkedEvents, setBookmarkedEvent] = useState(
+    props.userDetails.bookedmarkedEvents || []
+  );
+
   useEffect(() => {
     axios
       .get("events/all")
@@ -20,7 +32,7 @@ function Home(props) {
       .catch((e) => {
         console.log(e);
       });
-  }, []);
+  }, [eventsAttending, bookmarkedEvents]);
 
   const getEvent = (event) => {
     let eventId = event.target.id;
@@ -37,7 +49,9 @@ function Home(props) {
   const getSavedEvents = () => {
     axios
       .get("/events/saved/")
-      .then((res) => {console.log(res)})
+      .then((res) => {
+        console.log(res);
+      })
       .catch((e) => {
         console.log(e);
       });
@@ -52,10 +66,7 @@ function Home(props) {
           events={events}
         />
       )}
-      <Navbar
-        username={props.username || location.state.username}
-        setIsAuth={props.setIsAuth}
-      />
+      <Navbar username={username} setIsAuth={props.setIsAuth} />
 
       <div className={classes.homePageContainer}>
         <div className={classes.eventsContainer}>
@@ -65,12 +76,17 @@ function Home(props) {
           </ul>
           {events.length
             ? events.map((event) => {
+              console.log(bookmarkedEvents.includes(event._id))
                 return (
                   <EventItem
+                    key={event._id}
                     eventData={event}
                     getEvent={getEvent}
                     username={props.username || location.state.username}
-                    key={event._id}
+                    isAttending={eventsAttending.includes(event._id)}
+                    isBookMarked={bookmarkedEvents.includes(event._id)}
+                    setEventsAttending={setEventsAttending}
+                    setBookmarkedEvent={setBookmarkedEvent}
                   />
                 );
               })

@@ -2,10 +2,11 @@ const express = require("express");
 const Events = require("../Models/Events");
 const UserTrivia = require("../Models/UserTrivia");
 const mongoose = require("mongoose");
+const User = require("../Models/User");
 const eventRouter = express.Router();
 
 eventRouter.get("/all", async (req, res, next) => {
-
+  console.log("rec req....");
   try {
     const events = await Events.find({});
     res.status(200).json({
@@ -86,9 +87,25 @@ eventRouter.post("/addToBookmarks/:eventId", async (req, res, next) => {
     username: req.body.username,
     bookedmarkedEvents: eventId,
   });
+
   if (savedEvent) {
+    await UserTrivia.updateOne(
+      { username: req.body.username },
+      {
+        $pull: {
+          bookedmarkedEvents: eventId,
+        },
+      }
+    );
+
+    const bookmarkedEvents = await UserTrivia.findOne(
+      { username: req.body.username },
+      "bookedmarkedEvents"
+    ).lean();
+
     return res.status(409).json({
-      error: "Event already added to bookmarks!",
+      error: "Removed from Bookmarks!",
+      ...bookmarkedEvents,
     });
   }
 
@@ -97,7 +114,16 @@ eventRouter.post("/addToBookmarks/:eventId", async (req, res, next) => {
     { $push: { bookedmarkedEvents: eventId } }
   );
 
-  return res.status(200).json({ message: "Saved to bookmarks" });
+  const bookmarkedEvents = await UserTrivia.findOne(
+    { username: req.body.username },
+    "bookedmarkedEvents"
+  ).lean();
+
+  return res.status(200).json({
+    message: "Event successfully added to bookmarks!",
+
+    ...bookmarkedEvents,
+  });
 });
 
 eventRouter.get("/saved", async (req, res, next) => {
@@ -108,6 +134,56 @@ eventRouter.get("/saved", async (req, res, next) => {
   return res.json({
     bookedmarkedEvents,
   });
+});
+
+eventRouter.post("/attendEvent/:eventId", async (req, res, next) => {
+  try {
+    await UserTrivia.findOneAndUpdate(
+      { username: req.body.username },
+      { $push: { eventsAttending: req.params.eventId.toString() } }
+    );
+
+    const eventsAttending = await UserTrivia.findOne(
+      { username: req.body.username },
+      "eventsAttending"
+    ).lean();
+
+    return res.status(201).json({
+      ...eventsAttending,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      error: "Internal Server Error",
+    });
+  }
+});
+
+eventRouter.post("/unattendEvent/:eventId", async (req, res, next) => {
+  try {
+    await UserTrivia.updateOne(
+      { username: req.body.username },
+      {
+        $pull: {
+          eventsAttending: req.params.eventId.toString(),
+        },
+      }
+    );
+
+    const eventsAttending = await UserTrivia.findOne(
+      { username: req.body.username },
+      "eventsAttending"
+    ).lean();
+
+    return res.status(202).json({
+      ...eventsAttending,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      error: "Internal Server Error",
+    });
+  }
 });
 
 module.exports = eventRouter;

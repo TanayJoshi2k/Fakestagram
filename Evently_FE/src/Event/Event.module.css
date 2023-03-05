@@ -72,6 +72,12 @@ p {
     content: "✨";
 }
 
+.event .btnGrp {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
 .event .detailsBtn {
     background-color: #000000;
     color: #ffffff;
@@ -80,13 +86,15 @@ p {
     border: none;
     border-radius: 5px;
     font-size: 0.9rem;
-    margin-top: 0.5rem;
     transition: all 0.3s;
+    border: 1px solid transparent;
+
 }
 
 .event .detailsBtn:hover {
     background-color: #ffffff;
     color: #000000;
+    border: 1px solid black;
 }
 
 .event:hover h3::after {
@@ -94,17 +102,54 @@ p {
     transform-origin: bottom left;
 }
 
-.event .bookmarkIcon svg {
+.event .bookmarkIcon svg,
+.event .bookmarkIconSaved svg {
     position: absolute;
     height: 24px;
     right: 0;
     top: -2px;
     cursor: pointer;
-    fill: #ccc;
+
+}
+
+.event .bookmarkIcon svg {
+    fill: #ccc
+}
+
+.event .bookmarkIconSaved svg {
+    fill: #f7d800
 }
 
 .event .bookmarkIcon svg:hover {
     fill: #f7d800;
+}
+
+.event .attendEventBtn {
+    background-color: #f7d800;
+    color: black;
+    border: 1px solid transparent;
+    padding: 0.25rem 0.9rem;
+    font-size: 1.125rem;
+    border: none;
+    border-radius: 5px;
+    margin-left: 0.5rem;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+
+}
+
+.event .unattendEventBtn {
+    background-color: #dc3545;
+    color: white;
+    border: 1px solid transparent;
+    padding: 0.1rem 0.9rem;
+    font-size: 1.25rem;
+    border: none;
+    border-radius: 5px;
+    margin-left: 0.5rem;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+
 }
 
 @media screen and (max-width:576px) {

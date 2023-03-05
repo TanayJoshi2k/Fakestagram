@@ -2,51 +2,114 @@ import React, { useState } from "react";
 import classes from "./Event.module.css";
 import BookmarkIcon from "../Logos/BookmarkIcon";
 import Toast from "../Toast/Toast";
+import EventActionSpinner from "../Spinner/EventActionSpinner";
 import axios from "axios";
 
 function EventItem(props) {
-  const [showSuccessToast, setShowSuccessToast] = useState(false);
-  const [showErrorToast, setShowErrorToast] = useState(false);
-
+  const [showToast, setShowToast] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
+  const [toastMessage, setToastMessage] = useState({
+    text: "",
+    error: false,
+  });
   const addToBookmarks = (eventId) => {
     axios
-      .post(`http://localhost:4000/events/addToBookmarks/:${eventId}`, {
-        username: props.username, 
+      .post(`events/addToBookmarks/${eventId}`, {
+        username: props.username,
       })
       .then((res) => {
-        setShowSuccessToast(true);
+        setShowToast(true);
+        setToastMessage({ text: res.data.message, error: false });
         setTimeout(() => {
-          setShowSuccessToast(false);
+          setShowToast(false);
         }, 2000);
+        props.setBookmarkedEvent(res.data.bookedmarkedEvents);
       })
       .catch((e) => {
-        setShowErrorToast(true);
+        setToastMessage({ text: e.response.data.error, error: true });
+        setShowToast(true);
         setTimeout(() => {
-          setShowErrorToast(false);
+          setShowToast(false);
         }, 2000);
+        props.setBookmarkedEvent(e.response.data.bookedmarkedEvents);
       });
   };
 
+  const attendEvent = (event) => {
+    let eventId = event.target.id;
+    setShowLoading(true);
+    axios
+      .post(`/events/attendEvent/${eventId}`, { username: props.username })
+      .then((res) => {
+        props.setEventsAttending(res.data.eventsAttending);
+        setShowLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const unattendEvent = (event) => {
+    let eventId = event.target.id;
+    setShowLoading(true);
+    axios
+      .post(`/events/unattendEvent/${eventId}`, { username: props.username })
+      .then((res) => {
+        props.setEventsAttending(res.data.eventsAttending);
+        setShowLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+  let eventActionBtn = (
+    <button
+      id={props.eventData._id}
+      onClick={attendEvent}
+      className={classes.attendEventBtn}
+    >
+      +
+    </button>
+  );
+
+  if (props && props.isAttending) {
+    if (props.isAttending) {
+      eventActionBtn = (
+        <button
+          id={props.eventData._id}
+          onClick={unattendEvent}
+          className={classes.unattendEventBtn}
+        >
+          🗑
+        </button>
+      );
+    }
+  }
+
   return (
     <div className={classes.event}>
-      {showSuccessToast ? (
-        <Toast>Event successfully added to bookmarks!</Toast>
-      ) : null}
-      {showErrorToast ? (
+      {showToast ? (
         <Toast
-          style={{
-            backgroundColor: "pink",
-            color: "red",
-            border: "2px solid red",
-          }}
+          style={
+            toastMessage.error
+              ? {
+                  backgroundColor: "pink",
+                  color: "red",
+                  border: "2px solid red",
+                }
+              : null
+          }
         >
-          Event already added to bookmarks!
+          {toastMessage.text}
         </Toast>
       ) : null}
 
       <h3>{props.eventData.title}</h3>
+
       <div
-        className={classes.bookmarkIcon}
+        className={
+          props.isBookMarked ? classes.bookmarkIconSaved : classes.bookmarkIcon
+        }
         onClick={() => addToBookmarks(props.eventData._id)}
       >
         <BookmarkIcon />
@@ -58,13 +121,16 @@ function EventItem(props) {
         <p className={classes.description}>{props.eventData.description}</p>
       </div>
 
-      <button
-        id={props.eventData._id}
-        onClick={props.getEvent}
-        className={classes.detailsBtn}
-      >
-        More Details
-      </button>
+      <div className={classes.btnGrp}>
+        <button
+          id={props.eventData._id}
+          onClick={props.getEvent}
+          className={classes.detailsBtn}
+        >
+          More Details
+        </button>
+        {showLoading ? <EventActionSpinner /> : eventActionBtn}
+      </div>
     </div>
   );
 }
