@@ -6,7 +6,6 @@ const User = require("../Models/User");
 const eventRouter = express.Router();
 
 eventRouter.get("/all", async (req, res, next) => {
-  console.log("rec req....");
   try {
     const events = await Events.find({});
     res.status(200).json({
@@ -73,7 +72,7 @@ eventRouter.post("/saveEvent", async (req, res, next) => {
 
   await newEvent.save();
 
-  return res.status(200).json({
+  return res.status(201).json({
     message: {
       event: newEvent,
       text: "Successfully created Event",
@@ -119,7 +118,7 @@ eventRouter.post("/addToBookmarks/:eventId", async (req, res, next) => {
     "bookedmarkedEvents"
   ).lean();
 
-  return res.status(200).json({
+  return res.status(201).json({
     message: "Event successfully added to bookmarks!",
 
     ...bookmarkedEvents,
@@ -185,5 +184,55 @@ eventRouter.post("/unattendEvent/:eventId", async (req, res, next) => {
     });
   }
 });
+eventRouter.post("/:eventId/comments", async (req, res, next) => {
+  try {
+    await Events.findByIdAndUpdate(
+      { _id: req.params.eventId },
+      {
+        $push: {
+          comments: {
+            username: req.body.username,
+            comment: req.body.comment,
+            avatarURL: req.body.avatarURL
+          },
+        },
+      }
+    );
+
+    const comments = await Events.findById({
+      _id: req.params.eventId
+    }, 'comments').lean()
+
+    return res.status(201).json({
+      ...comments
+    });
+
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      error: "Internal Server Error",
+    });
+  }
+});
+
+eventRouter.get("/:eventId/comments", async (req, res, next) => {
+  try {
+    
+    const comments = await Events.findById({
+      _id: req.params.eventId
+    }, 'comments').lean()
+
+    return res.status(200).json({
+      ...comments
+    });
+  }
+  catch(e) {
+    console.log(e);
+    return res.status(500).json({
+      error: "Internal Server Error",
+    });
+  }
+})
+
 
 module.exports = eventRouter;

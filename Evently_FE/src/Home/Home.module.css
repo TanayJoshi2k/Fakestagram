@@ -1,6 +1,17 @@
-/* width */
 ::-webkit-scrollbar {
-    width: 0;
+    width: 3px;
+    height: 15px;
+}
+
+::-webkit-scrollbar-track-piece {
+    background-color: #C2D2E4;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+    height: 30px;
+    background-color: #5e5e5e;
+    border-radius: 10px;
 }
 
 .homePageContainer {

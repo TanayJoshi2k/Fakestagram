@@ -149,8 +149,97 @@ p {
     margin-left: 0.5rem;
     transition: all 0.3s;
     border: 1px solid transparent;
-
 }
+
+.inputCommentContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.inputCommentContainer>div {
+    width: 100%;
+    display: flex;
+    border: 1px solid #cacaca;
+    border-radius: 5px;
+    margin-top: 1rem;
+    overflow: hidden;
+}
+
+.inputCommentContainer>div button {
+    border: none;
+    background-color: white;
+    color: #00B2FF;
+    padding: 0.5rem;
+}
+
+.inputCommentContainer>div button:disabled {
+    color: #a0a0a0;
+}
+
+.inputCommentContainer input {
+    width: 100%;
+    padding: 0.3rem 0.4rem;
+    color: #000000;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    flex-grow: 1;
+    border: none;
+}
+
+.inputCommentContainer input:focus {
+    border:none
+}
+
+.inputCommentContainer .commentsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-height: 100px;
+    padding: 0.5rem 0;
+    overflow-y: auto;
+    font-size: 0.9rem;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding-left: 0.5rem;
+}
+
+.commentsContainer::-webkit-scrollbar {
+    width: 2px;
+}
+
+.commentsContainer::-webkit-scrollbar-thumb {
+    background-color: #9f9f9f;
+    border-radius: 5px;
+}
+
+.commentsContainer img {
+    height: 25px;
+    aspect-ratio: 1/1;
+    border-radius: 100%;
+}
+
+.commentsContainer img {
+    height: 25px;
+    border-radius: 100%;
+    margin-right: 0.45rem;
+}
+
+.commentsContainer .comment {
+    display: flex;
+    align-items: center
+}
+
+.commentsContainer .username {
+    margin-right: 1rem;
+    cursor: pointer;
+    color: #00B2FF;
+    text-decoration: none;
+}
+
+.commentsContainer .username:hover {
+    color: #004bad;
+}
+
 
 @media screen and (max-width:576px) {
     .event {

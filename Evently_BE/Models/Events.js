@@ -19,6 +19,13 @@ const EventsSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    comments: [
+      {
+        username: String,
+        comment: String,
+        avatarURL:String
+      },
+    ],
   },
   { timestamps: true }
 );

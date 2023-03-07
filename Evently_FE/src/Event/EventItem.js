@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./Event.module.css";
 import BookmarkIcon from "../Logos/BookmarkIcon";
 import Toast from "../Toast/Toast";
 import EventActionSpinner from "../Spinner/EventActionSpinner";
+import { Link } from "react-router-dom";
 import axios from "axios";
-
 function EventItem(props) {
   const [showToast, setShowToast] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
@@ -12,6 +12,27 @@ function EventItem(props) {
     text: "",
     error: false,
   });
+  const [comment, setComment] = useState("");
+  const [eventComments, setEventComments] = useState([]);
+  const [loadingComments, setLoadingComments] = useState(false);
+
+  const getPostComments = () => {
+    setLoadingComments(true);
+    axios
+      .get(`/events/${props.eventData._id}/comments`)
+      .then((res) => {
+        setLoadingComments(false);
+        setEventComments(...[...eventComments, res.data.comments ]);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  useEffect(() => {
+    getPostComments();
+  }, []);
+
   const addToBookmarks = (eventId) => {
     axios
       .post(`events/addToBookmarks/${eventId}`, {
@@ -62,6 +83,24 @@ function EventItem(props) {
         console.log(e);
       });
   };
+  const addCommentHandler = (e) => {
+    const eventId = e.target.id;
+    axios
+      .post(`/events/${eventId}/comments`, {
+        username: props.username,
+        comment: comment,
+        avatarURL: props.avatarURL,
+      })
+      .then((res) => {
+        setComment("");
+        setEventComments([...res.data.comments]);
+      })
+
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   let eventActionBtn = (
     <button
       id={props.eventData._id}
@@ -130,6 +169,52 @@ function EventItem(props) {
           More Details
         </button>
         {showLoading ? <EventActionSpinner /> : eventActionBtn}
+      </div>
+      <div>
+        <div className={classes.inputCommentContainer}>
+          {eventComments ? (
+            loadingComments ? (
+              <EventActionSpinner />
+            ) : (
+              <div className={classes.commentsContainer}>
+                {eventComments?.map((comment) => {
+                  if (comment) {
+                    return (
+                      <div key={Math.random().toString()} className={classes.comment}>
+                        <img src={comment.avatarURL} />
+                        <Link
+                          className={classes.username}
+                          to={`/account/:${comment.username}`}
+                        >
+                          {comment.username}
+                        </Link>
+                        <span className={classes.commentText}>
+                          {comment.comment}
+                        </span>
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            )
+          ) : null}
+          <div>
+            <input
+              type="text"
+              placeholder="Add a comment..."
+              onChange={(e) => setComment(e.target.value)}
+              value={comment}
+            />
+            <button
+              id={props.eventData._id}
+              disabled={comment.trim() === "" || comment.trim().length === 0}
+              onClick={addCommentHandler}
+            >
+              Post
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

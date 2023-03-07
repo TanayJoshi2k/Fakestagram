@@ -14,11 +14,9 @@ function Home(props) {
   const [username, setUsername] = useState(
     props.username || location.state.username
   );
-
   const [eventsAttending, setEventsAttending] = useState(
     props.userDetails.eventsAttending || []
   );
-
   const [bookmarkedEvents, setBookmarkedEvent] = useState(
     props.userDetails.bookedmarkedEvents || []
   );
@@ -76,15 +74,15 @@ function Home(props) {
           </ul>
           {events.length
             ? events.map((event) => {
-              console.log(bookmarkedEvents.includes(event._id))
                 return (
                   <EventItem
                     key={event._id}
                     eventData={event}
-                    getEvent={getEvent}
                     username={props.username || location.state.username}
                     isAttending={eventsAttending.includes(event._id)}
                     isBookMarked={bookmarkedEvents.includes(event._id)}
+                    avatarURL={props.userDetails.avatarURL}
+                    getEvent={getEvent}
                     setEventsAttending={setEventsAttending}
                     setBookmarkedEvent={setBookmarkedEvent}
                   />

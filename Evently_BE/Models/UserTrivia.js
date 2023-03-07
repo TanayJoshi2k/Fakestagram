@@ -25,7 +25,7 @@ const userTrivia = mongoose.Schema(
     bio: {
       type: String,
       required: false,
-      default:""
+      default: "",
     },
 
     followers: {
@@ -34,7 +34,7 @@ const userTrivia = mongoose.Schema(
 
     followersCount: {
       type: Number,
-      default: 0
+      default: 0,
     },
 
     following: {
@@ -43,7 +43,7 @@ const userTrivia = mongoose.Schema(
 
     followingCount: {
       type: Number,
-      default: 0
+      default: 0,
     },
 
     bookedmarkedEvents: {
@@ -51,13 +51,14 @@ const userTrivia = mongoose.Schema(
     },
 
     avatarURL: {
-      type: String
+      type: String,
+      default:
+        "https://t0.gstatic.com/images?q=tbn:ANd9GcSLjgzNXwdx8i6MpWP3v34obkH6E8_MECNh6J8jjvQ45m55Az63",
     },
 
     eventsAttending: {
       type: [String],
     },
-
   },
   { timestamps: true }
 );
