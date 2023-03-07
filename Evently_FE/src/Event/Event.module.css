@@ -220,11 +220,6 @@ p {
     height: 25px;
     aspect-ratio: 1/1;
     border-radius: 100%;
-}
-
-.commentsContainer img {
-    height: 25px;
-    border-radius: 100%;
     margin-right: 0.45rem;
 }
 
