@@ -22,7 +22,7 @@ function EventItem(props) {
       .get(`/events/${props.eventData._id}/comments`)
       .then((res) => {
         setLoadingComments(false);
-        setEventComments(...[...eventComments, res.data.comments ]);
+        setEventComments(...[...eventComments, res.data.comments]);
       })
       .catch((e) => {
         console.log(e);
@@ -176,15 +176,24 @@ function EventItem(props) {
             loadingComments ? (
               <EventActionSpinner />
             ) : (
-              <div className={classes.commentsContainer}>
+              <div
+                className={
+                  eventComments.length
+                    ? classes.commentsContainer
+                    : classes.hideComments
+                }
+              >
                 {eventComments?.map((comment) => {
                   if (comment) {
                     return (
-                      <div key={Math.random().toString()} className={classes.comment}>
+                      <div
+                        key={Math.random().toString()}
+                        className={classes.comment}
+                      >
                         <img src={comment.avatarURL} />
                         <Link
                           className={classes.username}
-                          to={`/account/:${comment.username}`}
+                          to={`/account/${comment.username}`}
                         >
                           {comment.username}
                         </Link>

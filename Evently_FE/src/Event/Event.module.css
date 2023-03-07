@@ -203,6 +203,10 @@ p {
     padding-left: 0.5rem;
 }
 
+.hideComments {
+    display: none !important;
+}
+
 .commentsContainer::-webkit-scrollbar {
     width: 2px;
 }

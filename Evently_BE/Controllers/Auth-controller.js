@@ -40,7 +40,11 @@ authRouter.post("/login", limiter, async (req, res, next) => {
     const user = req.body;
     let error_message = "";
     const userFound = await User.findOne({ username: user.username });
-    if (!userFound || user.password !== userFound.password) {
+    if (!userFound) {
+      error_message = "User does not exist";
+    }
+
+    else if (!await bcrypt.compare(user.password , userFound.password)) {
       error_message = "Wrong username and/or password";
     }
 
@@ -109,8 +113,6 @@ authRouter.post("/signup", async (req, res, next) => {
   }
 
   if (formErrors.usernameError || formErrors.passwordError) {
-    console.log(formErrors);
-
     return res.status(400).json({
       error: {
         usernameError: formErrors.usernameError,
