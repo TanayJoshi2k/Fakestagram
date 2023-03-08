@@ -15,18 +15,19 @@
 }
 
 .homePageContainer {
-    height: 100vh;
+    height: calc(100vh - 3.5rem);
     width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 3.5rem;
 }
 
 .eventsContainer {
-    margin-top: 5rem;
     width: 50vw;
-    height: 75vh;
-    overflow-y: scroll;
+    height: max-content;
+    max-height: 75vh;
+    overflow-y: auto;
     overflow-x: hidden;
     border: 1px solid #ebebeb;
     border-radius: 10px;
@@ -38,7 +39,7 @@
 }
 
 .eventsContainer>div:nth-of-type(1){
-    margin-top: 2.25rem;
+    /* margin-top: 2.25rem; */
 }
 
 .sideContainer {
@@ -82,17 +83,12 @@
 }
 
 .eventsContainer .filterOptions {
-    position: fixed;
-    width: inherit;
     background-color: rgba(242, 242, 242, 1);
     padding: 0.5rem 1rem;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 5px;
     cursor: pointer;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    z-index: 100;
 }
 
 .eventsContainer .filterOptions li {
@@ -100,8 +96,21 @@
 }
 
 @media screen and (max-width:576px) {
+
+    html, body {
+        overflow: hidden;
+        height: 100vh;
+        width: 100vw;
+        max-height: 100%;
+        max-width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     .homePageContainer {
         flex-direction: column-reverse;
+        height: 50%;
+        /* margin-top: 3rem; */
     }
 
     .sideContainer {
@@ -128,16 +137,12 @@
     }
 
     .eventsContainer {
-        margin: 1rem auto;
+        margin: 0 auto;
         width: 90vw;
         overflow-y: scroll;
         overflow-x: hidden;
         border: 1px solid #ebebeb;
         border-radius: 10px;
-    }
-
-    .event {
-        background-color: rebeccapurple;
     }
 
 }

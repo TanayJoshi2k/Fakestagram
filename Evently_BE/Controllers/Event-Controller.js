@@ -1,9 +1,17 @@
 const express = require("express");
 const Events = require("../Models/Events");
 const UserTrivia = require("../Models/UserTrivia");
-const mongoose = require("mongoose");
-const User = require("../Models/User");
 const eventRouter = express.Router();
+
+async function getPostComments(eventId) {
+  const comments = await Events.findById(
+    {
+      _id: eventId,
+    },
+    "comments"
+  ).lean();
+  return comments;
+}
 
 eventRouter.get("/all", async (req, res, next) => {
   try {
@@ -196,6 +204,7 @@ eventRouter.post("/unattendEvent/:eventId", async (req, res, next) => {
     });
   }
 });
+
 eventRouter.post("/:eventId/comments", async (req, res, next) => {
   try {
     await Events.findByIdAndUpdate(
@@ -211,12 +220,7 @@ eventRouter.post("/:eventId/comments", async (req, res, next) => {
       }
     );
 
-    const comments = await Events.findById(
-      {
-        _id: req.params.eventId,
-      },
-      "comments"
-    ).lean();
+    const comments = await getPostComments(req.params.eventId);
 
     return res.status(201).json({
       ...comments,
@@ -231,13 +235,7 @@ eventRouter.post("/:eventId/comments", async (req, res, next) => {
 
 eventRouter.get("/:eventId/comments", async (req, res, next) => {
   try {
-    const comments = await Events.findById(
-      {
-        _id: req.params.eventId,
-      },
-      "comments"
-    ).lean();
-
+    const comments = await getPostComments(req.params.eventId);
     return res.status(200).json({
       ...comments,
     });
@@ -248,4 +246,28 @@ eventRouter.get("/:eventId/comments", async (req, res, next) => {
     });
   }
 });
+
+eventRouter.delete("/:eventId/comments/:commentId", async (req, res, next) => {
+  try {
+    await Events.findByIdAndUpdate(
+      { _id: req.params.eventId },
+      {
+        $pull: { comments: { _id: req.params.commentId } },
+      },
+      { new: true }
+    );
+
+    const comments = await getPostComments(req.params.eventId);
+
+    return res.json({
+      ...comments,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      error: "Internal Server Error",
+    });
+  }
+});
+
 module.exports = eventRouter;

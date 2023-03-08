@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import LogoutIcon from "../Assets/logout.svg";
+import LogoutIcon from "../Assets/logout.png";
 import UserIcon from "../Assets/user.svg";
 import classes from "./Dropdown.module.css";
 
@@ -36,6 +36,7 @@ function Dropdown(props) {
         </Link>
       </div>
       <div>
+        <img src={LogoutIcon} alt="" />
         <button onClick={logoutHandler}>Logout</button>
       </div>
     </div>

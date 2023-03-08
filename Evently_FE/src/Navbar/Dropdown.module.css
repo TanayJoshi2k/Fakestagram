@@ -20,31 +20,27 @@
     font-size: 0.85rem;
 }
 
-.dropdownContainer div {
-    margin: 0 0.5rem;
-}
-
-.dropdownContainer button:hover {
+.dropdownContainer div:last-child {
     background-color: rgb(207, 39, 39);
-    color: #fff;
 }
 
 .dropdownContainer button {
-    background-color: rgb(244, 244, 244);
-    color: red;
+    width: max-content;
+    background-color: transparent;
+    padding: 0;
+    color: #fff;
     border: none;
     transition: all 0.3s;
-    padding: 0.45rem;
 }
 
-.dropdownContainer .profileLinkCotaniner {
+.dropdownContainer div {
+    position: relative;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     transition: all 0.3s;
     padding: 0.45rem;
     color: #000;
-
 }
 
 .dropdownContainer .profileLinkCotaniner:hover {
@@ -57,13 +53,18 @@
 
 .dropdownContainer .profileLink {
     text-decoration: none;
-    margin-left: 1rem;
+    /* margin-left: 1rem; */
     width: max-content;
     color: #000;
 }
 
 .dropdownContainer img {
+    position: absolute;
+    left: 10px;
     height: 18px;
     width: max-content;
-    margin-left: 10px;
+}
+
+.dropdownContainer div:last-child img{
+    left: 12px;
 }

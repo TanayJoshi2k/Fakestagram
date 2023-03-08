@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import classes from "./Event.module.css";
 import BookmarkIcon from "../Logos/BookmarkIcon";
 import Toast from "../Toast/Toast";
+import Comment from "../Comment/Comment";
 import EventActionSpinner from "../Spinner/EventActionSpinner";
+import EventParticipationButton from "./EventParticipationButton";
 import { Link } from "react-router-dom";
 import axios from "axios";
+
 function EventItem(props) {
   const [showToast, setShowToast] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
@@ -56,11 +59,11 @@ function EventItem(props) {
       });
   };
 
-  const attendEvent = (event) => {
+  const eventParticipationHandler = (event, action) => {
     let eventId = event.target.id;
     setShowLoading(true);
     axios
-      .post(`/events/attendEvent/${eventId}`, { username: props.username })
+      .post(`/events/${action}/${eventId}`, { username: props.username })
       .then((res) => {
         props.setEventsAttending(res.data.eventsAttending);
         setShowLoading(false);
@@ -70,19 +73,6 @@ function EventItem(props) {
       });
   };
 
-  const unattendEvent = (event) => {
-    let eventId = event.target.id;
-    setShowLoading(true);
-    axios
-      .post(`/events/unattendEvent/${eventId}`, { username: props.username })
-      .then((res) => {
-        props.setEventsAttending(res.data.eventsAttending);
-        setShowLoading(false);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
   const addCommentHandler = (e) => {
     const eventId = e.target.id;
     axios
@@ -95,40 +85,43 @@ function EventItem(props) {
         setComment("");
         setEventComments([...res.data.comments]);
       })
-
       .catch((e) => {
         console.log(e);
       });
   };
 
+  const deleteCommentHandler = (eventId, commentId) => {
+    axios.delete(`/events/${eventId}/comments/${commentId}`).then((res) => {
+      setEventComments([...res.data.comments]);
+    });
+  };
+
   let eventActionBtn = (
-    <button
-      id={props.eventData._id}
-      onClick={attendEvent}
-      className={classes.attendEventBtn}
+    <EventParticipationButton
+      eventId={props.eventData._id}
+      eventParticipationHandler={eventParticipationHandler}
+      action={"attendEvent"}
     >
       +
-    </button>
+    </EventParticipationButton>
   );
 
   if (props && props.isAttending) {
     if (props.isAttending) {
       eventActionBtn = (
-        <button
-          id={props.eventData._id}
-          onClick={unattendEvent}
-          className={classes.unattendEventBtn}
+        <EventParticipationButton
+          eventId={props.eventData._id}
+          eventParticipationHandler={eventParticipationHandler}
+          action={"unattendEvent"}
         >
           🗑
-        </button>
+        </EventParticipationButton>
       );
     }
   }
 
   return (
-    <div
-      className={classes.event}
-    >
+    <div className={classes.event}>
       {showToast ? (
         <Toast
           style={
@@ -145,7 +138,11 @@ function EventItem(props) {
         </Toast>
       ) : null}
 
-      <h3>{props.eventData.title}</h3>
+<div style={{display:"flex", alignItems:"center"}}>
+<Link className={classes.eventTitle}>{props.eventData.title}</Link>
+      {showLoading ? <EventActionSpinner /> : eventActionBtn}
+</div>
+     
 
       <div
         className={
@@ -163,17 +160,16 @@ function EventItem(props) {
       </div>
 
       <div className={classes.btnGrp}>
-        <button
+        {/* <button
           id={props.eventData._id}
           onClick={props.getEvent}
           className={classes.detailsBtn}
         >
-          More Details
-        </button>
-        {showLoading ? <EventActionSpinner /> : eventActionBtn}
+          Details
+        </button> */}
       </div>
       <div>
-        <div className={classes.inputCommentContainer}>
+        <div className={classes.commentSection}>
           {eventComments ? (
             loadingComments ? (
               <EventActionSpinner />
@@ -188,21 +184,14 @@ function EventItem(props) {
                 {eventComments?.map((comment) => {
                   if (comment) {
                     return (
-                      <div
-                        key={Math.random().toString()}
-                        className={classes.comment}
-                      >
-                        <img src={comment.avatarURL} />
-                        <Link
-                          className={classes.username}
-                          to={`/account/${comment.username}`}
-                        >
-                          {comment.username}
-                        </Link>
-                        <span className={classes.commentText}>
-                          {comment.comment}
-                        </span>
-                      </div>
+                      <Comment
+                        key={comment._id}
+                        commentData={comment}
+                        signedInUsername={props.username}
+                        deleteCommentHandler={() =>
+                          deleteCommentHandler(props.eventData._id, comment._id)
+                        }
+                      />
                     );
                   }
                   return null;
@@ -210,7 +199,7 @@ function EventItem(props) {
               </div>
             )
           ) : null}
-          <div>
+          <div className={classes.inputCommentContainer}>
             <input
               type="text"
               placeholder="Add a comment..."

@@ -51,20 +51,13 @@ function ExtraSignupDetails(props) {
       });
     }
   };
-  console.log("extraFormData", extraFormData);
+
   const submitHandler = () => {
     const formData = new FormData();
-    formData.append("avatar", extraFormData.avatar);
-    formData.append("firstName", extraFormData.firstName);
-    formData.append("lastName", extraFormData.lastName);
-    formData.append("bio", extraFormData.bio);
-    formData.append("gender", extraFormData.gender);
-    formData.append("username", extraFormData.username);
-    // for (let pair of formData.entries()) {
-    //   console.log(`${pair[0]}: ${pair[1]}`);
-    // }
+    for (let field in extraFormData) {
+      formData.append(field, extraFormData[field] || "")
+    }
     setShowSpinner(true);
-
     axios
       .post("/secondSignupStep", formData, {
         headers: {

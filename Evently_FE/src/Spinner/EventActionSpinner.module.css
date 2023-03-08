@@ -2,14 +2,12 @@
     height: max-content;
     width: max-content;
     max-width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: inline-block;
 }
 
 .spinner {
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
     margin: 0 auto;
     margin-left: 0.5rem;
     background-color: #000;
