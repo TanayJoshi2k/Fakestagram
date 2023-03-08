@@ -20,8 +20,7 @@ function Home(props) {
   const [bookmarkedEvents, setBookmarkedEvent] = useState(
     props.userDetails.bookedmarkedEvents || []
   );
-
-  useEffect(() => {
+  const getAllEvents = () => {
     axios
       .get("events/all")
       .then((res) => {
@@ -30,6 +29,9 @@ function Home(props) {
       .catch((e) => {
         console.log(e);
       });
+  };
+  useEffect(() => {
+    getAllEvents();
   }, [eventsAttending, bookmarkedEvents]);
 
   const getEvent = (event) => {
@@ -48,13 +50,13 @@ function Home(props) {
     axios
       .get("/events/saved/")
       .then((res) => {
-        console.log(res);
+        console.log(res)
+        setEvents(res.data.result);
       })
       .catch((e) => {
         console.log(e);
       });
   };
-
   return (
     <div>
       {showEventModal && (
@@ -69,7 +71,7 @@ function Home(props) {
       <div className={classes.homePageContainer}>
         <div className={classes.eventsContainer}>
           <ul className={classes.filterOptions}>
-            <li>All</li>
+            <li onClick={getAllEvents}>All</li>
             <li onClick={getSavedEvents}>Saved</li>
           </ul>
           {events.length

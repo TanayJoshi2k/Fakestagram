@@ -126,7 +126,9 @@ function EventItem(props) {
   }
 
   return (
-    <div className={classes.event}>
+    <div
+      className={classes.event}
+    >
       {showToast ? (
         <Toast
           style={

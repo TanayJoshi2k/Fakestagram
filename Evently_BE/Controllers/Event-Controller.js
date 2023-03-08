@@ -126,12 +126,24 @@ eventRouter.post("/addToBookmarks/:eventId", async (req, res, next) => {
 });
 
 eventRouter.get("/saved", async (req, res, next) => {
-  const bookedmarkedEvents = await UserTrivia.find({
-    username: req.session.username,
-  }).select("bookedmarkedEvents");
+  // get ids of saved events from UserTrivia
+  const bookedmarkedEventIds = await UserTrivia.findOne(
+    {
+      username: req.session.username,
+    },
+    "bookedmarkedEvents"
+  ).lean();
+
+  // for the above ids, get matching documents from events collection
+
+  const bookedmarkedEvents = await Events.find({
+    _id: { $in: bookedmarkedEventIds.bookedmarkedEvents },
+  }).lean();
+  let result = [];
+  bookedmarkedEvents.map((event) => result.push(event));
 
   return res.json({
-    bookedmarkedEvents,
+    result,
   });
 });
 
@@ -193,20 +205,22 @@ eventRouter.post("/:eventId/comments", async (req, res, next) => {
           comments: {
             username: req.body.username,
             comment: req.body.comment,
-            avatarURL: req.body.avatarURL
+            avatarURL: req.body.avatarURL,
           },
         },
       }
     );
 
-    const comments = await Events.findById({
-      _id: req.params.eventId
-    }, 'comments').lean()
+    const comments = await Events.findById(
+      {
+        _id: req.params.eventId,
+      },
+      "comments"
+    ).lean();
 
     return res.status(201).json({
-      ...comments
+      ...comments,
     });
-
   } catch (e) {
     console.log(e);
     return res.status(500).json({
@@ -217,22 +231,21 @@ eventRouter.post("/:eventId/comments", async (req, res, next) => {
 
 eventRouter.get("/:eventId/comments", async (req, res, next) => {
   try {
-    
-    const comments = await Events.findById({
-      _id: req.params.eventId
-    }, 'comments').lean()
+    const comments = await Events.findById(
+      {
+        _id: req.params.eventId,
+      },
+      "comments"
+    ).lean();
 
     return res.status(200).json({
-      ...comments
+      ...comments,
     });
-  }
-  catch(e) {
+  } catch (e) {
     console.log(e);
     return res.status(500).json({
       error: "Internal Server Error",
     });
   }
-})
-
-
+});
 module.exports = eventRouter;

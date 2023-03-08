@@ -35,7 +35,10 @@
 .eventsContainer .event {
     border-bottom: 1px solid #ebebeb;
     padding: 0.25rem 1rem;
+}
 
+.eventsContainer>div:nth-of-type(1){
+    margin-top: 2.25rem;
 }
 
 .sideContainer {
@@ -79,12 +82,17 @@
 }
 
 .eventsContainer .filterOptions {
-    background-color: rgba(242, 242, 242, 0.4);
+    position: fixed;
+    width: inherit;
+    background-color: rgba(242, 242, 242, 1);
     padding: 0.5rem 1rem;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 5px;
     cursor: pointer;
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    z-index: 100;
 }
 
 .eventsContainer .filterOptions li {

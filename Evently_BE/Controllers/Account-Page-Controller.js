@@ -3,7 +3,6 @@ const UserTrivia = require("../Models/UserTrivia");
 const accountPageRouter = express.Router();
 
 accountPageRouter.get("/:username/followers", (req, res, next) => {
-  console.log("fetching followers")
   return res.status(200).json(usernames);
 });
 
