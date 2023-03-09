@@ -1,5 +1,5 @@
 ::-webkit-scrollbar {
-    width: 3px;
+    width: 0px;
     height: 15px;
 }
 
@@ -10,8 +10,13 @@
 
 ::-webkit-scrollbar-thumb:vertical {
     height: 30px;
-    background-color: #5e5e5e;
+    background-color: #adadad;
     border-radius: 10px;
+}
+
+.parentContainer {
+    background: url("../Assets/header-gradient.svg") no-repeat;
+    overflow: hidden;
 }
 
 .homePageContainer {
@@ -31,6 +36,11 @@
     overflow-x: hidden;
     border: 1px solid #ebebeb;
     border-radius: 10px;
+    background-color: white;
+    -webkit-box-shadow: 12px 9px 19px -10px rgba(0, 0, 0, 0.35);
+    -moz-box-shadow: 12px 9px 19px -10px rgba(0, 0, 0, 0.35);
+    box-shadow: 12px 9px 19px -10px rgba(0, 0, 0, 0.35);
+
 }
 
 .eventsContainer .event {
@@ -38,7 +48,7 @@
     padding: 0.25rem 1rem;
 }
 
-.eventsContainer>div:nth-of-type(1){
+.eventsContainer>div:nth-of-type(1) {
     /* margin-top: 2.25rem; */
 }
 
@@ -83,12 +93,12 @@
 }
 
 .eventsContainer .filterOptions {
-    background-color: rgba(242, 242, 242, 1);
     padding: 0.5rem 1rem;
     cursor: pointer;
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    border-bottom: 1px solid #ccc;
 }
 
 .eventsContainer .filterOptions li {
@@ -97,7 +107,8 @@
 
 @media screen and (max-width:576px) {
 
-    html, body {
+    html,
+    body {
         overflow: hidden;
         height: 100vh;
         width: 100vw;
@@ -107,6 +118,7 @@
         justify-content: center;
         align-items: center;
     }
+
     .homePageContainer {
         flex-direction: column-reverse;
         height: 50%;

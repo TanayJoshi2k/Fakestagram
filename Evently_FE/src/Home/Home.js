@@ -58,7 +58,7 @@ function Home(props) {
       });
   };
   return (
-    <div>
+    <div className={classes.parentContainer}>
       {showEventModal && (
         <EventModal
           setShowEventModal={setShowEventModal}

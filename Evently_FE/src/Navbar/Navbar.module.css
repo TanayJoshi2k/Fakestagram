@@ -4,8 +4,10 @@ nav {
     left: 0;
     right: 0;
     width: 100vw;
-    background-color: #000000;
+    background-color: rgba(0, 0, 0, 1);
+    border-bottom: 1px solid #ccc;
     color: white;
+    font-size: 1.2rem;
     display: flex;
     align-items: center;
     height: 3.5rem;
@@ -21,7 +23,7 @@ nav {
     list-style-type: none;
 }
 
-.navbarContainer div {
+.navbarContainer>div {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -37,20 +39,6 @@ ul li {
     position: relative;
     cursor: pointer;
 }
-
-/* 
-ul p::after, ul li::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    transform: scaleX(0);
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: #fdc229;
-    transform-origin: bottom right;
-    transition: transform 0.25s ease-out;
-} */
 
 ul p:hover::after,
 ul li:hover::after {
@@ -71,10 +59,39 @@ nav .navbarContainer .menuCotainer {
     display: none;
 }
 
+nav .searchContainer {
+    position: relative;
+    width: 25%;
+}
+
+nav .searchContainer>img {
+    position: absolute;
+    left: 2.5px;
+    height: 25px;
+}
+
+nav .searchContainer input {
+    width: 100%;
+    padding: 0.5rem;
+    padding-left: 2rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: white;
+    border: 1px solid solid;
+    background-color: rgba(110, 110, 110, 0.35);
+}
+
+nav .searchContainer input:focus {
+    border: none;
+    outline: none;
+}
+
 @media screen and (max-width:576px) {
     nav {
         padding: 0.5rem;
     }
+
     .mobileMenu {
         display: flex;
         font-size: 2rem;
@@ -89,10 +106,10 @@ nav .navbarContainer .menuCotainer {
         letter-spacing: 0.25px;
         margin-left: auto;
     }
-    
+
     .navbarContainer div:nth-child(3) {
         display: flex;
-        margin-left:  auto;
+        margin-left: auto;
     }
 
 }

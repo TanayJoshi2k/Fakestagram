@@ -1,12 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Dropdown from "./Dropdown";
+import UsersDropdown from "../UsersDropdown/UsersDropdown";
+import Search from "../Assets/search.png"
+import axios from "axios";
 import classes from "./Navbar.module.css";
 
 function Navbar(props) {
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [search, setSearch] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (search === "") {
+      setSearchResults([]);
+    } else {
+      const timer = setTimeout(() => {
+        axios
+          .get(`/search/${search}`)
+          .then((res) => {
+            setSearchResults(res.data.searchResults);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }, 500);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [search]);
 
   return (
     <header>
@@ -17,9 +42,15 @@ function Navbar(props) {
         <ul className={classes.navbarContainer}>
           <p onClick={() => navigate("/")}>Evently</p>
 
-          <div>
-            <li>MY EVENTS</li>
-            <li>INVITES</li>
+          <div className={classes.searchContainer}>
+            <img src={Search} alt=""/>
+            <input
+              type="search"
+              placeholder="Search"
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+            />
+            <UsersDropdown searchResults={searchResults} />
           </div>
           <div
             className={classes.menuCotainer}
