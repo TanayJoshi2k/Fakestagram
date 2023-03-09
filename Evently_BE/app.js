@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const eventRouter = require("./Controllers/Event-Controller");
 const authRouter = require("./Controllers/Auth-controller");
 const accountPageRouter = require("./Controllers/Account-Page-Controller");
-
+const searchRouter = require('./Controllers/Search-Controller');
 const MONGODB_URI = process.env.MONGODB_URI;
 
 const app = express();
@@ -30,6 +30,7 @@ app.use(
 app.use(authRouter);
 app.use("/events", eventRouter);
 app.use("/account", accountPageRouter);
+app.use(searchRouter);
 
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
