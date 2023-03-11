@@ -59,6 +59,16 @@ const userTrivia = mongoose.Schema(
     eventsAttending: {
       type: [String],
     },
+    notifications: [
+      {
+        item: {
+          type: String,
+        },
+        avatarURL: {
+          type: String,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

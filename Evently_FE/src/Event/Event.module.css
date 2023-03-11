@@ -1,13 +1,11 @@
 .event {
-    position: relative;
     border-bottom: 1px solid #ebebeb;
     padding: 1rem 1.5rem;
-    transition: all 0.75s;
+    transition: all 0.5s;
 }
 
 .event:hover {
-    background-color: rgba(245, 245, 245, 0.7);
-    transform: scale(1.01);
+    background-color: rgba(245, 245, 245, 0.9);
 }
 
 .event .eventTitle,
@@ -34,7 +32,6 @@ p {
     background-color: rgba(241, 241, 241, 0.3);
     margin-top: 1rem;
     border-radius: 10px;
-
 }
 
 .event p {
@@ -48,8 +45,6 @@ p {
 
 .event p:hover {
     border: 1px solid #f7c229;
-    /* background-color: #000;
-    color: #f7c229; */
 }
 
 .event p::before {
@@ -90,7 +85,6 @@ p {
     font-size: 0.9rem;
     transition: all 0.3s;
     border: 1px solid transparent;
-
 }
 
 .event .detailsBtn:hover {
@@ -106,20 +100,19 @@ p {
 
 .event .bookmarkIcon svg,
 .event .bookmarkIconSaved svg {
-    position: absolute;
+    float: right;
     height: 24px;
-    right: 0;
-    top: -2px;
     cursor: pointer;
-
+    width: max-content;
+    margin: -1rem -1.5rem;
 }
 
 .event .bookmarkIcon svg {
-    fill: #ccc
+    fill: #ccc;
 }
 
 .event .bookmarkIconSaved svg {
-    fill: #f7d800
+    fill: #f7d800;
 }
 
 .event .bookmarkIcon svg:hover {

@@ -6,6 +6,12 @@ import classes from "./Home.module.css";
 import Navbar from "../Navbar/Navbar";
 import EventModal from "../EventModal/EventModal";
 import EventItem from "../Event/EventItem";
+import {
+  socketConnection,
+  emitClientData,
+  getNotifications,
+} from "../Services/Socket";
+import { getSavedEvents, getAllEvents } from "../Services/EventHelpers";
 
 function Home(props) {
   const [events, setEvents] = useState([]);
@@ -20,18 +26,25 @@ function Home(props) {
   const [bookmarkedEvents, setBookmarkedEvent] = useState(
     props.userDetails.bookedmarkedEvents || []
   );
-  const getAllEvents = () => {
-    axios
-      .get("events/all")
-      .then((res) => {
-        setEvents(res.data.events);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
+  const [notifications, setNotifications] = useState([]);
+
   useEffect(() => {
-    getAllEvents();
+    let socket = socketConnection();
+    socket.on("connect", () => {
+      emitClientData(props.username);
+      getNotifications(props.username, (data) => {
+        setNotifications([...notifications, ...data.notifications]);
+      });
+    });
+  }, []);
+
+  const getAllEventsHandler = async () => {
+    const events = await getAllEvents();
+    setEvents(events);
+  };
+
+  useEffect(() => {
+    getAllEventsHandler();
   }, [eventsAttending, bookmarkedEvents]);
 
   const getEvent = (event) => {
@@ -46,33 +59,33 @@ function Home(props) {
       });
   };
 
-  const getSavedEvents = () => {
-    axios
-      .get("/events/saved/")
-      .then((res) => {
-        console.log(res)
-        setEvents(res.data.result);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+  const getSavedEventsHandler = async () => {
+    const savedEvents = await getSavedEvents();
+    setEvents(savedEvents);
   };
+
   return (
     <div className={classes.parentContainer}>
       {showEventModal && (
         <EventModal
+          username={username}
           setShowEventModal={setShowEventModal}
           setEvents={setEvents}
           events={events}
         />
       )}
-      <Navbar username={username} setIsAuth={props.setIsAuth} />
+
+      <Navbar
+        username={username}
+        setIsAuth={props.setIsAuth}
+        notifications={notifications}
+      />
 
       <div className={classes.homePageContainer}>
         <div className={classes.eventsContainer}>
           <ul className={classes.filterOptions}>
-            <li onClick={getAllEvents}>All</li>
-            <li onClick={getSavedEvents}>Saved</li>
+            <li onClick={getAllEventsHandler}>All</li>
+            <li onClick={getSavedEventsHandler}>Saved</li>
           </ul>
           {events.length
             ? events.map((event) => {
@@ -80,10 +93,9 @@ function Home(props) {
                   <EventItem
                     key={event._id}
                     eventData={event}
-                    username={props.username || location.state.username}
                     isAttending={eventsAttending.includes(event._id)}
                     isBookMarked={bookmarkedEvents.includes(event._id)}
-                    avatarURL={props.userDetails.avatarURL}
+                    userDetails={props.userDetails}
                     getEvent={getEvent}
                     setEventsAttending={setEventsAttending}
                     setBookmarkedEvent={setBookmarkedEvent}

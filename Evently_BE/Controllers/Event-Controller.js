@@ -45,7 +45,6 @@ eventRouter.post("/saveEvent", async (req, res, next) => {
     descriptionError: "",
   };
 
-  const time = req.body.time;
   if (req.body.title.trim() === "") {
     eventErrors.titleError = "Required";
   }
@@ -76,6 +75,7 @@ eventRouter.post("/saveEvent", async (req, res, next) => {
     location: req.body.location.trim(),
     description: req.body.description.trim(),
     time: req.body.time,
+    createdBy: req.body.username
   });
 
   await newEvent.save();

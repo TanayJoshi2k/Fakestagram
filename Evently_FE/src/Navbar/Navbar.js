@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import notificationTray from "../Assets/notification_tray.png";
 import Dropdown from "./Dropdown";
 import UsersDropdown from "../UsersDropdown/UsersDropdown";
-import Search from "../Assets/search.png"
+import NotificationDropDown from "../NotificationDropDown/NotificationDropDown";
+import Search from "../Assets/search.png";
 import axios from "axios";
 import classes from "./Navbar.module.css";
 
 function Navbar(props) {
   const [toggleDropdown, setToggleDropdown] = useState(false);
+  const [toggleNotificationTray, setToggleNotificationTray] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     if (search === "") {
       setSearchResults([]);
@@ -43,7 +46,7 @@ function Navbar(props) {
           <p onClick={() => navigate("/")}>Evently</p>
 
           <div className={classes.searchContainer}>
-            <img src={Search} alt=""/>
+            <img src={Search} alt="" />
             <input
               type="search"
               placeholder="Search"
@@ -52,6 +55,24 @@ function Navbar(props) {
             />
             <UsersDropdown searchResults={searchResults} />
           </div>
+
+          <div
+            className={classes.notificationsContainer}
+            onClick={() => {
+              setToggleNotificationTray(!toggleNotificationTray);
+            }}
+          >
+            <img src={notificationTray} alt="" height={20} width={20} />
+            {props.notifications?.length > 0 ? (
+              <span className={classes.notificationCount}>
+                {props.notifications?.length}
+              </span>
+            ) : null}
+            {toggleNotificationTray ? (
+              <NotificationDropDown notificationsData={props.notifications} />
+            ) : null}
+          </div>
+
           <div
             className={classes.menuCotainer}
             onClick={() => setToggleDropdown(!toggleDropdown)}

@@ -1,8 +1,6 @@
-.toastContainer {
-    position: absolute;
-    bottom: 10px;
-    right: 25px;
-    z-index: 10;
+.successToast,
+.errorToast {
+    position: relative;
     width: 40%;
     text-align: center;
     background-color: #fff5d4;
@@ -10,4 +8,13 @@
     padding: 0.3rem 0.6rem;
     border: 2px solid #f7c229;
     border-radius: 5px;
+    float: right;
+    margin-top: -20px;
+    z-index: 100;
+}
+
+.errorToast {
+    background-color: pink;
+    color: red;
+    border: 2px solid red;
 }

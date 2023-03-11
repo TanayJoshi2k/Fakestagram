@@ -1,0 +1,55 @@
+.notificationContainer {
+    position: absolute;
+    width: 375px;
+    top: 100%;
+    background-color: rgb(231, 248, 255);
+    overflow: hidden;
+    border-bottom-left-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    border-bottom: 1px solid #9bcbff;
+
+}
+
+.notificationContainer::-webkit-scrollbar {
+    width: 3px;
+}
+
+.notificationContainer::-webkit-scrollbar-thumb {
+    background-color: #0969da;
+}
+
+.notificationContainer::-webkit-scrollbar-track-piece {
+    background-color: #9bcbff;
+}
+
+.notification {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 1rem;
+    border-top: 1px solid #9bcbff;
+    border-left: 1px solid #9bcbff;
+    border-right: 1px solid #9bcbff;
+    font-size: 0.9rem;
+    height: max-content;
+    color: black;
+   }
+
+
+.notification:hover {
+    background-color: #0969da;
+    color: white;
+}
+
+.notification:last-child {
+    border-bottom-left-radius: 5px;
+}
+
+.notification img {
+    height: 25px;
+    aspect-ratio: 1/1;
+    border-radius: 100%;
+    margin-right: 0.5rem;
+}

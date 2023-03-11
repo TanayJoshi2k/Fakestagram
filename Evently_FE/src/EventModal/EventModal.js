@@ -14,6 +14,7 @@ function EventModal(props) {
     description: "",
     duration: "",
     guests: [],
+    username:props.username
   });
 
   const eventInputHandler = (e) => {

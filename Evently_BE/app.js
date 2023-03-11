@@ -7,8 +7,10 @@ const mongoose = require("mongoose");
 const eventRouter = require("./Controllers/Event-Controller");
 const authRouter = require("./Controllers/Auth-controller");
 const accountPageRouter = require("./Controllers/Account-Page-Controller");
-const searchRouter = require('./Controllers/Search-Controller');
+const searchRouter = require("./Controllers/Search-Controller");
 const MONGODB_URI = process.env.MONGODB_URI;
+const UserTrivia = require("./Models/UserTrivia");
+const initializeSocket = require("./Services/Notification-Service");
 
 const app = express();
 const store = new mongoDBStore({
@@ -35,7 +37,9 @@ app.use(searchRouter);
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((res) => {
-    app.listen(process.env.PORT, () =>
+    const server = app.listen(process.env.PORT, () =>
       console.log("Example app listening on port 4000!")
     );
+
+    initializeSocket(server);
   });

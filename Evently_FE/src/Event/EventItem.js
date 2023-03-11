@@ -7,6 +7,13 @@ import EventActionSpinner from "../Spinner/EventActionSpinner";
 import EventParticipationButton from "./EventParticipationButton";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { emitAddComment } from "../Services/Socket";
+import {
+  getPostComments,
+  addEventToBookmarks,
+  addComment,
+  eventParticipation,
+} from "../Services/EventHelpers";
 
 function EventItem(props) {
   const [showToast, setShowToast] = useState(false);
@@ -19,75 +26,53 @@ function EventItem(props) {
   const [eventComments, setEventComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(false);
 
-  const getPostComments = () => {
+  const getPostCommentsHandler = async (eventId) => {
     setLoadingComments(true);
-    axios
-      .get(`/events/${props.eventData._id}/comments`)
-      .then((res) => {
-        setLoadingComments(false);
-        setEventComments(...[...eventComments, res.data.comments]);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    const comments = await getPostComments(eventId);
+    setLoadingComments(false);
+    setEventComments(...[...eventComments, comments]);
   };
 
   useEffect(() => {
-    getPostComments();
+    getPostCommentsHandler(props.eventData._id);
   }, []);
 
-  const addToBookmarks = (eventId) => {
-    axios
-      .post(`events/addToBookmarks/${eventId}`, {
-        username: props.username,
-      })
-      .then((res) => {
-        setShowToast(true);
-        setToastMessage({ text: res.data.message, error: false });
-        setTimeout(() => {
-          setShowToast(false);
-        }, 2000);
-        props.setBookmarkedEvent(res.data.bookedmarkedEvents);
-      })
-      .catch((e) => {
-        setToastMessage({ text: e.response.data.error, error: true });
-        setShowToast(true);
-        setTimeout(() => {
-          setShowToast(false);
-        }, 2000);
-        props.setBookmarkedEvent(e.response.data.bookedmarkedEvents);
-      });
+  const addEventToBookmarksHandler = () => {
+    addEventToBookmarks(
+      props.eventData._id,
+      props.userDetails.username,
+      setShowToast,
+      setToastMessage,
+      props.setBookmarkedEvent
+    );
   };
 
   const eventParticipationHandler = (event, action) => {
     let eventId = event.target.id;
-    setShowLoading(true);
-    axios
-      .post(`/events/${action}/${eventId}`, { username: props.username })
-      .then((res) => {
-        props.setEventsAttending(res.data.eventsAttending);
-        setShowLoading(false);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    eventParticipation(
+      eventId,
+      action,
+      props.userDetails,
+      props.setEventsAttending,
+      setShowLoading
+    );
   };
 
   const addCommentHandler = (e) => {
     const eventId = e.target.id;
-    axios
-      .post(`/events/${eventId}/comments`, {
-        username: props.username,
-        comment: comment,
-        avatarURL: props.avatarURL,
-      })
-      .then((res) => {
-        setComment("");
-        setEventComments([...res.data.comments]);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    emitAddComment(
+      eventId,
+      comment,
+      props.userDetails.username,
+      props.eventData.createdBy
+    );
+    addComment(
+      eventId,
+      props.userDetails,
+      comment,
+      setEventComments,
+      setComment
+    );
   };
 
   const deleteCommentHandler = (eventId, commentId) => {
@@ -100,57 +85,26 @@ function EventItem(props) {
     <EventParticipationButton
       eventId={props.eventData._id}
       eventParticipationHandler={eventParticipationHandler}
-      action={"attendEvent"}
+      action={props.isAttending ? "unattendEvent" : "attendEvent"}
     >
-      +
+      {props.isAttending ? "🗑" : "+"}
     </EventParticipationButton>
   );
 
-  if (props && props.isAttending) {
-    if (props.isAttending) {
-      eventActionBtn = (
-        <EventParticipationButton
-          eventId={props.eventData._id}
-          eventParticipationHandler={eventParticipationHandler}
-          action={"unattendEvent"}
-        >
-          🗑
-        </EventParticipationButton>
-      );
-    }
-  }
-
   return (
     <div className={classes.event}>
-      {showToast ? (
-        <Toast
-          style={
-            toastMessage.error
-              ? {
-                  backgroundColor: "pink",
-                  color: "red",
-                  border: "2px solid red",
-                }
-              : null
-          }
-        >
-          {toastMessage.text}
-        </Toast>
-      ) : null}
-
-<div style={{display:"flex", alignItems:"center"}}>
-<Link className={classes.eventTitle}>{props.eventData.title}</Link>
-      {showLoading ? <EventActionSpinner /> : eventActionBtn}
-</div>
-     
-
       <div
         className={
           props.isBookMarked ? classes.bookmarkIconSaved : classes.bookmarkIcon
         }
-        onClick={() => addToBookmarks(props.eventData._id)}
+        onClick={() => addEventToBookmarksHandler()}
       >
         <BookmarkIcon />
+      </div>
+
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Link className={classes.eventTitle}>{props.eventData.title}</Link>
+        {showLoading ? <EventActionSpinner /> : eventActionBtn}
       </div>
 
       <div className={classes.eventDetails}>
@@ -159,15 +113,7 @@ function EventItem(props) {
         <p className={classes.description}>{props.eventData.description}</p>
       </div>
 
-      <div className={classes.btnGrp}>
-        {/* <button
-          id={props.eventData._id}
-          onClick={props.getEvent}
-          className={classes.detailsBtn}
-        >
-          Details
-        </button> */}
-      </div>
+      <div className={classes.btnGrp}></div>
       <div>
         <div className={classes.commentSection}>
           {eventComments ? (
@@ -181,13 +127,13 @@ function EventItem(props) {
                     : classes.hideComments
                 }
               >
-                {eventComments?.map((comment) => {
+                {eventComments.map((comment) => {
                   if (comment) {
                     return (
                       <Comment
                         key={comment._id}
                         commentData={comment}
-                        signedInUsername={props.username}
+                        signedInUsername={props.userDetails.username}
                         deleteCommentHandler={() =>
                           deleteCommentHandler(props.eventData._id, comment._id)
                         }
@@ -215,9 +161,11 @@ function EventItem(props) {
             </button>
           </div>
         </div>
+        {showToast ? (
+          <Toast isErrorMessage={toastMessage.error}>{toastMessage.text}</Toast>
+        ) : null}
       </div>
     </div>
   );
 }
-
 export default EventItem;
