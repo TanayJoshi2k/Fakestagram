@@ -8,6 +8,8 @@ const eventRouter = require("./Controllers/Event-Controller");
 const authRouter = require("./Controllers/Auth-controller");
 const accountPageRouter = require("./Controllers/Account-Page-Controller");
 const searchRouter = require("./Controllers/Search-Controller");
+const notificationRouter = require("./Controllers/Notifications-Controller");
+
 const MONGODB_URI = process.env.MONGODB_URI;
 const UserTrivia = require("./Models/UserTrivia");
 const initializeSocket = require("./Services/Notification-Service");
@@ -33,6 +35,7 @@ app.use(authRouter);
 app.use("/events", eventRouter);
 app.use("/account", accountPageRouter);
 app.use(searchRouter);
+app.use(notificationRouter);
 
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })

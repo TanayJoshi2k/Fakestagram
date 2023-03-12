@@ -27,7 +27,7 @@ function Home(props) {
     props.userDetails.bookedmarkedEvents || []
   );
   const [notifications, setNotifications] = useState([]);
-
+    console.log(props.userDetails.eventsAttending)
   useEffect(() => {
     let socket = socketConnection();
     socket.on("connect", () => {

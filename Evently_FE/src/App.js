@@ -11,15 +11,13 @@ import "./App.css";
 
 function App() {
   const [isAuth, setIsAuth] = useState(false);
-  const [username, setUsername] = useState("");
   const [userDetails, setUserDetails] = useState({});
 
   useEffect(() => {
     axios
       .get("/isAuth")
       .then((res) => {
-        setIsAuth(res.data.message.authorized);
-        setUsername(res.data.message.username);
+        setIsAuth(true);
         setUserDetails(res.data.message);
       })
       .catch((e) => {
@@ -33,7 +31,10 @@ function App() {
         path="/account/:username"
         element={
           isAuth ? (
-            <AccountPage setIsAuth={setIsAuth} username={username} />
+            <AccountPage
+              setIsAuth={setIsAuth}
+              username={userDetails.username}
+            />
           ) : (
             <Navigate to="/" />
           )
@@ -45,7 +46,7 @@ function App() {
           isAuth ? (
             <Navigate to="/home" />
           ) : (
-            <Login setIsAuth={setIsAuth} setUsername={setUsername} />
+            <Login setIsAuth={setIsAuth} setUserDetails={setUserDetails} />
           )
         }
       ></Route>
@@ -57,7 +58,7 @@ function App() {
           ) : (
             <Home
               setIsAuth={setIsAuth}
-              username={username}
+              username={userDetails.username}
               userDetails={userDetails}
             />
           )
@@ -75,7 +76,10 @@ function App() {
           !isAuth ? (
             <Navigate to="/" />
           ) : (
-            <ExtraSignupDetails setIsAuth={setIsAuth} username={username} />
+            <ExtraSignupDetails
+              setIsAuth={setIsAuth}
+              username={userDetails.username}
+            />
           )
         }
       ></Route>

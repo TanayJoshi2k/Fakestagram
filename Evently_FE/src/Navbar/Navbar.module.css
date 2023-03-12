@@ -106,9 +106,9 @@ nav .notificationCount {
     bottom: 50%;
     left: 50%;
     color: white;
-    background-color: red;
-    padding: 1px 5px;
+    background-color: 	#ff003c;
     border-radius: 200%;
+    padding: 2px;
     font-size: 12px;
 }
 

@@ -17,6 +17,7 @@ const authRouter = express.Router();
 
 authRouter.get("/isAuth", async (req, res, next) => {
   if (!req.session.isLoggedIn) {
+    console.log("here");
     return res.status(401).json({
       message: "",
       error: {
@@ -25,7 +26,9 @@ authRouter.get("/isAuth", async (req, res, next) => {
     });
   }
   try {
-    const user = await UserTrivia.findOne({ username: req.session.username }).lean();
+    const user = await UserTrivia.findOne({
+      username: req.session.username,
+    }).lean();
     return res.status(200).json({
       message: { authorized: true, username: req.session.username, ...user },
       error: {},
@@ -42,9 +45,7 @@ authRouter.post("/login", limiter, async (req, res, next) => {
     const userFound = await User.findOne({ username: user.username });
     if (!userFound) {
       error_message = "User does not exist";
-    }
-
-    else if (!await bcrypt.compare(user.password , userFound.password)) {
+    } else if (!(await bcrypt.compare(user.password, userFound.password))) {
       error_message = "Wrong username and/or password";
     }
 
@@ -65,13 +66,18 @@ authRouter.post("/login", limiter, async (req, res, next) => {
       });
     }
 
+    const userDetails = await UserTrivia.findOne({
+      username: user.username,
+    }).lean();
+
     req.session.isLoggedIn = true;
     req.session.username = user.username;
-    res.status(200).json({
+    return res.status(200).json({
       message: {
         text: "Success",
         isAuth: true,
         username: user.username,
+        ...userDetails,
       },
     });
   } catch (e) {

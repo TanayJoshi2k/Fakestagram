@@ -1,14 +1,23 @@
 .notificationContainer {
     position: absolute;
-    width: 375px;
-    top: 100%;
-    background-color: rgb(231, 248, 255);
+    width: 350px;
+    top: 105%;
     overflow: hidden;
     border-bottom-left-radius: 5px;
     max-height: 200px;
     overflow-y: auto;
-    border-bottom: 1px solid #9bcbff;
+    border-bottom: 1px solid #dedede;
+    background-color: white;
+}
 
+.notificationContainer .notificationsBanner {
+    color: black;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.5rem;
+    border-left: 1px solid #dedede;
+    border: 1px solid #dedede;
+    cursor: initial;
 }
 
 .notificationContainer::-webkit-scrollbar {
@@ -23,31 +32,43 @@
     background-color: #9bcbff;
 }
 
-.notification {
+.unreadNotification,
+.readNotification {
     position: relative;
     display: flex;
     align-items: center;
     cursor: pointer;
-    padding: 1rem;
-    border-top: 1px solid #9bcbff;
-    border-left: 1px solid #9bcbff;
-    border-right: 1px solid #9bcbff;
+    padding: 0.7rem;
+    border-top: 1px solid #dedede;
+    border-left: 1px solid #dedede;
+    border-right: 1px solid #dedede;
     font-size: 0.9rem;
     height: max-content;
     color: black;
-   }
+    background-color: rgb(231, 248, 255);
+    transition: all 0.3s;
+}
 
+.readNotification {
+    background-color: rgb(255, 255, 255);
+}
 
-.notification:hover {
+.unreadNotification:hover {
     background-color: #0969da;
     color: white;
 }
 
-.notification:last-child {
+.readNotification:hover {
+    background-color: #eaeaea;
+    color: black;
+}
+
+.unreadNotification:last-child {
     border-bottom-left-radius: 5px;
 }
 
-.notification img {
+.unreadNotification img,
+.readNotification img {
     height: 25px;
     aspect-ratio: 1/1;
     border-radius: 100%;

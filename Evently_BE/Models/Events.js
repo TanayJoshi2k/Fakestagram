@@ -20,10 +20,12 @@ const EventsSchema = mongoose.Schema(
       type: "String",
       required: true,
     },
+    
     description: {
       type: String,
       required: true,
     },
+
     comments: [
       {
         username: String,

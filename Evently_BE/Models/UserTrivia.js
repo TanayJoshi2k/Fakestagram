@@ -67,6 +67,10 @@ const userTrivia = mongoose.Schema(
         avatarURL: {
           type: String,
         },
+        read: {
+          type: Boolean,
+          default: false,
+        },
       },
     ],
   },

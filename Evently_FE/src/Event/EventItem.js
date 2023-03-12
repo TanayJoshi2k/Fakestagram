@@ -27,10 +27,12 @@ function EventItem(props) {
   const [loadingComments, setLoadingComments] = useState(false);
 
   const getPostCommentsHandler = async (eventId) => {
-    setLoadingComments(true);
-    const comments = await getPostComments(eventId);
-    setLoadingComments(false);
-    setEventComments(...[...eventComments, comments]);
+    await getPostComments(
+      eventId,
+      setLoadingComments,
+      eventComments,
+      setEventComments
+    );
   };
 
   useEffect(() => {
@@ -58,8 +60,8 @@ function EventItem(props) {
     );
   };
 
-  const addCommentHandler = (e) => {
-    const eventId = e.target.id;
+  const addCommentHandler = (event) => {
+    const eventId = event.target.id;
     emitAddComment(
       eventId,
       comment,
@@ -127,7 +129,7 @@ function EventItem(props) {
                     : classes.hideComments
                 }
               >
-                {eventComments.map((comment) => {
+                {eventComments?.map((comment) => {
                   if (comment) {
                     return (
                       <Comment

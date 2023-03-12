@@ -15,7 +15,7 @@ async function addNotificationToTray(eventAuthor, commenter, comment) {
       {
         $push: {
           notifications: {
-            item: `${commenter} commented ${comment} on your post!`,
+            item: `${commenter} commented ${comment} on your post`,
             avatarURL: result.avatarURL.toString(),
           },
         },
@@ -62,18 +62,18 @@ function initializeSocket(server) {
       );
 
       let notifications = await getNotifications(commentData.author);
-      const user_to_send_noti = Object.values(usersConnected).find(
+      const targetUser = Object.values(usersConnected).find(
         (user) => user.username === commentData.author
       );
-      user_to_send_noti.socket.emit("updateNotificationTray", ...notifications);
+      targetUser.socket.emit("updateNotificationTray", ...notifications);
     });
 
     socket.on("getNotifications", async (data) => {
       let notifications = await getNotifications(data.username);
-      const user_to_send_noti = Object.values(usersConnected).find(
+      const targetUser = Object.values(usersConnected).find(
         (user) => user.username === data.username
       );
-      user_to_send_noti.socket.emit("updateNotificationTray", ...notifications);
+      targetUser.socket.emit("updateNotificationTray", ...notifications);
     });
 
     socket.on("disconnect", () => {

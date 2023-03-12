@@ -69,7 +69,7 @@ function Navbar(props) {
               </span>
             ) : null}
             {toggleNotificationTray ? (
-              <NotificationDropDown notificationsData={props.notifications} />
+              <NotificationDropDown notificationsData={props.notifications} username={props.username}/>
             ) : null}
           </div>
 

@@ -28,7 +28,7 @@ function Login(props) {
       .then((res) => {
         setFormError("");
         props.setIsAuth(true);
-        props.setUsername(res.data.message.username);
+        props.setUserDetails(res.data.message);
       })
       .catch((e) => {
         setFormError(e.response.data.error?.error_message);

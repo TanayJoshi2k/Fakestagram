@@ -10,9 +10,18 @@ export const getAllEvents = async () => {
   return res.data.events;
 };
 
-export const getPostComments = async (eventId) => {
-  const res = await axios.get(`/events/${eventId}/comments`);
-  return res.data.comments;
+export const getPostComments = async (
+  eventId,
+  setLoadingComments,
+  eventComments,
+  setEventComments
+) => {
+  try {
+    setLoadingComments(true);
+    const res = await axios.get(`/events/${eventId}/comments`);
+    setLoadingComments(false);
+    setEventComments(...[...eventComments, res.data.comments]);
+  } catch (e) {}
 };
 
 export const addEventToBookmarks = async (
@@ -60,8 +69,8 @@ export const addComment = async (
     setComment("");
   } catch (e) {
     console.log(e);
-    setComment("");
     setEventComments([]);
+    setComment("");
   }
 };
 
