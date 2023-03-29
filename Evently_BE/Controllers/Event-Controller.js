@@ -2,6 +2,7 @@ const express = require("express");
 const Events = require("../Models/Events");
 const UserTrivia = require("../Models/UserTrivia");
 const eventRouter = express.Router();
+require("../Models/db");
 
 async function getPostComments(eventId) {
   const comments = await Events.findById(
@@ -147,6 +148,7 @@ eventRouter.get("/saved", async (req, res, next) => {
   const bookedmarkedEvents = await Events.find({
     _id: { $in: bookedmarkedEventIds.bookedmarkedEvents },
   }).lean();
+  
   let result = [];
   bookedmarkedEvents.map((event) => result.push(event));
 

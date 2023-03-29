@@ -59,8 +59,12 @@ const userTrivia = mongoose.Schema(
     eventsAttending: {
       type: [String],
     },
+    likedPosts: [mongoose.Schema.Types.ObjectId],
     notifications: [
       {
+        username: {
+          type: String,
+        },
         item: {
           type: String,
         },
@@ -73,10 +77,10 @@ const userTrivia = mongoose.Schema(
         },
       },
     ],
+    posts: [mongoose.Schema.Types.ObjectId],
   },
   { timestamps: true }
 );
 
 const UserTrivia = mongoose.model("UserTrivia", userTrivia);
-
 module.exports = UserTrivia;

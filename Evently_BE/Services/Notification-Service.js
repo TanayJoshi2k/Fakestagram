@@ -1,27 +1,66 @@
 const UserTrivia = require("../Models/UserTrivia");
 
-async function addNotificationToTray(eventAuthor, commenter, comment) {
-  if (eventAuthor !== commenter) {
+async function updateUserNotifications(
+  postAuthor,
+  loggedInUser,
+  item,
+  avatarURL
+) {
+  await UserTrivia.findOneAndUpdate(
+    { username: postAuthor },
+    {
+      $push: {
+        notifications: {
+          item: item,
+          avatarURL: avatarURL,
+          username: loggedInUser,
+        },
+      },
+    },
+    { new: true }
+  );
+}
+
+async function addNotificationToTray(postAuthor, loggedInUser, comment, type) {
+  if (postAuthor !== loggedInUser) {
     const result = await UserTrivia.findOne(
-      { username: commenter },
+      { username: loggedInUser },
       {
         avatarURL: 1,
         _id: 0,
       }
     ).lean();
+    switch (type) {
+      case "comment":
+        await updateUserNotifications(
+          postAuthor,
+          loggedInUser,
+          `commented ${comment} on your post`,
+          result.avatarURL
+        );
+        break;
 
-    await UserTrivia.findOneAndUpdate(
-      { username: eventAuthor },
-      {
-        $push: {
-          notifications: {
-            item: `${commenter} commented ${comment} on your post`,
-            avatarURL: result.avatarURL.toString(),
-          },
-        },
-      },
-      { new: true }
-    );
+      case "like":
+        await updateUserNotifications(
+          postAuthor,
+          loggedInUser,
+          "liked your post",
+          result.avatarURL
+        );
+        break;
+
+      case "follow":
+        await updateUserNotifications(
+          postAuthor,
+          loggedInUser,
+          "started following you",
+          result.avatarURL
+        );
+        break;
+
+      default:
+        break;
+    }
   }
 }
 
@@ -48,7 +87,7 @@ function initializeSocket(server) {
 
   io.on("connection", (socket) => {
     const user = { socket: socket };
-    console.log("connected", socket.id);
+
     socket.on("data", (userDetails) => {
       user.username = userDetails.username;
       usersConnected[userDetails.username] = user;
@@ -58,7 +97,8 @@ function initializeSocket(server) {
       await addNotificationToTray(
         commentData.author,
         commentData.username,
-        commentData.comment
+        commentData.comment,
+        "comment"
       );
 
       let notifications = await getNotifications(commentData.author);
@@ -72,6 +112,36 @@ function initializeSocket(server) {
       let notifications = await getNotifications(data.username);
       const targetUser = Object.values(usersConnected).find(
         (user) => user.username === data.username
+      );
+      targetUser.socket.emit("updateNotificationTray", ...notifications);
+    });
+
+    socket.on("likePost", async (data) => {
+      await addNotificationToTray(
+        data.postAuthor,
+        data.loggedInUser,
+        null,
+        "like"
+      );
+      let notifications = await getNotifications(data.postAuthor);
+      const targetUser = Object.values(usersConnected).find(
+        (user) => user.username === data.postAuthor
+      );
+      console.log("notifications", notifications);
+
+      targetUser.socket.emit("updateNotificationTray", ...notifications);
+    });
+
+    socket.on("follow", async (data) => {
+      await addNotificationToTray(
+        data.postAuthor,
+        data.loggedInUser,
+        null,
+        "follow"
+      );
+      let notifications = await getNotifications(data.postAuthor);
+      const targetUser = Object.values(usersConnected).find(
+        (user) => user.username === data.postAuthor
       );
       targetUser.socket.emit("updateNotificationTray", ...notifications);
     });

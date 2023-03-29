@@ -26,12 +26,15 @@ authRouter.get("/isAuth", async (req, res, next) => {
     });
   }
   try {
-    const user = await UserTrivia.findOne({
-      username: req.session.username,
-    }).lean();
+    const user = await UserTrivia.findOne(
+      {
+        username: req.session.username,
+      },
+      { _id: 0, __v: 0 }
+    ).lean();
     return res.status(200).json({
       message: { authorized: true, username: req.session.username, ...user },
-      error: {},
+      error: { authorized: false },
     });
   } catch (e) {
     return res.status(500).json({ error: "Internal Serve Error" });
@@ -66,17 +69,20 @@ authRouter.post("/login", limiter, async (req, res, next) => {
       });
     }
 
-    const userDetails = await UserTrivia.findOne({
-      username: user.username,
-    }).lean();
+    const userDetails = await UserTrivia.findOne(
+      {
+        username: user.username,
+      },
+      { _id: 0, __v: 0 }
+    ).lean();
 
     req.session.isLoggedIn = true;
     req.session.username = user.username;
     return res.status(200).json({
       message: {
         text: "Success",
-        isAuth: true,
         username: user.username,
+        authorized:true,
         ...userDetails,
       },
     });

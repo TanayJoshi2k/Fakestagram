@@ -5,13 +5,12 @@ const session = require("express-session");
 const mongoDBStore = require("connect-mongodb-session")(session);
 const mongoose = require("mongoose");
 const eventRouter = require("./Controllers/Event-Controller");
+const postRouter = require("./Controllers/Post-Controller")
 const authRouter = require("./Controllers/Auth-controller");
 const accountPageRouter = require("./Controllers/Account-Page-Controller");
 const searchRouter = require("./Controllers/Search-Controller");
 const notificationRouter = require("./Controllers/Notifications-Controller");
-
 const MONGODB_URI = process.env.MONGODB_URI;
-const UserTrivia = require("./Models/UserTrivia");
 const initializeSocket = require("./Services/Notification-Service");
 
 const app = express();
@@ -33,6 +32,7 @@ app.use(
 
 app.use(authRouter);
 app.use("/events", eventRouter);
+app.use("/posts", postRouter)
 app.use("/account", accountPageRouter);
 app.use(searchRouter);
 app.use(notificationRouter);

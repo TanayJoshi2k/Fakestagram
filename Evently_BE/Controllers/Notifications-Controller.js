@@ -15,6 +15,7 @@ notificationRouter.put(
         },
         { new: true, safe: true, upsert: true }
       );
+      
     } catch (e) {
       console.log(e);
     }
