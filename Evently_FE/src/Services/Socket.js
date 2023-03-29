@@ -9,7 +9,7 @@ export function socketConnection() {
 
 export function emitClientData(loggedInUser) {
   socket.emit("data", {
-    username: loggedInUser
+    username: loggedInUser,
   });
 }
 
@@ -26,5 +26,19 @@ export function emitAddComment(eventId, comment, loggedInUser, eventAuthor) {
     comment: comment,
     username: loggedInUser,
     author: eventAuthor,
+  });
+}
+
+export function emitLikePost(postAuthor, loggedInUser) {
+  socket.emit("likePost", {
+    postAuthor: postAuthor,
+    loggedInUser: loggedInUser,
+  });
+}
+
+export function emitFollowNotification(postAuthor, loggedInUser) {
+  socket.emit("follow", {
+    postAuthor: postAuthor,
+    loggedInUser: loggedInUser,
   });
 }

@@ -24,32 +24,6 @@ export const getPostComments = async (
   } catch (e) {}
 };
 
-export const addEventToBookmarks = async (
-  eventId,
-  username,
-  setShowToast,
-  setToastMessage,
-  setBookmarkedEvent
-) => {
-  try {
-    const res = await axios.post(`events/addToBookmarks/${eventId}`, {
-      username: username,
-    });
-    setToastMessage({ text: res.data.message, error: false });
-    setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 2000);
-    setBookmarkedEvent(res.data.bookedmarkedEvents);
-  } catch (e) {
-    setToastMessage({ text: e.response.data.error, error: true });
-    setShowToast(true);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 2000);
-    setBookmarkedEvent(e.response.data.bookedmarkedEvents);
-  }
-};
 
 export const addComment = async (
   eventId,
@@ -81,15 +55,5 @@ export const eventParticipation = async (
   setEventsAttending,
   setShowLoading
 ) => {
-  try {
-    setShowLoading(true);
-    const res = await axios.post(`/events/${action}/${eventId}`, {
-      username: userDetails.username,
-    });
-
-    setEventsAttending(res.data.eventsAttending);
-    setShowLoading(false);
-  } catch (e) {
-    console.log(e);
-  }
+  
 };

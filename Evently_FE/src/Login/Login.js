@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { saveUserDetails } from "../redux/actions/eventActions";
 import { Link } from "react-router-dom";
 import ExtraSignupDetails from "../ExtraSignupDetails/ExtraSignupDetails";
 import axios from "axios";
 import classes from "./Login.module.css";
 
 function Login(props) {
-  const [userDetails, setUserDetails] = useState({
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
+
+  const [loginDetails, setLoginDetails] = useState({
     username: "",
     password: "",
   });
@@ -15,8 +20,8 @@ function Login(props) {
   const [confirmedDetails, setConfirmedDetails] = useState("");
 
   const inputHandler = (e) => {
-    setUserDetails({
-      ...userDetails,
+    setLoginDetails({
+      ...loginDetails,
       [e.target.name]: e.target.value,
     });
   };
@@ -24,31 +29,23 @@ function Login(props) {
   const loginSubmitHandler = (e) => {
     e.preventDefault();
     axios
-      .post("/login", userDetails)
+      .post("/login", loginDetails)
       .then((res) => {
         setFormError("");
-        props.setIsAuth(true);
-        props.setUserDetails(res.data.message);
+        dispatch(saveUserDetails(res.data.message));
       })
       .catch((e) => {
         setFormError(e.response.data.error?.error_message);
-        props.setIsAuth(false);
         if (e.response.data.status === 429) {
           setRateError(e.response.data.error);
         }
         setUserVerifiedError(e.response.data.message);
         setConfirmedDetails(e.response.data.confirmedDetails);
-
       });
-  }
+  };
 
   if (confirmedDetails === false) {
-    return (
-      <ExtraSignupDetails
-        username={userDetails.username}
-        setIsAuth={props.setIsAuth}
-      />
-    );
+    return <ExtraSignupDetails username={state.userReducer.username} />;
   }
 
   return (
@@ -87,7 +84,7 @@ function Login(props) {
                 type="submit"
                 onClick={loginSubmitHandler}
                 disabled={
-                  !userDetails.username || userDetails.password.length < 6
+                  !loginDetails.username || loginDetails.password.length < 6
                 }
               >
                 SUBMIT

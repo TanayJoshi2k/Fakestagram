@@ -1,20 +1,26 @@
 .accountPageContainer {
-    background: rgba(255, 204, 41, 0.2);
-    overflow: hidden;
+    width: 50%;
+    height: 100vh;
+    margin: 0 auto;
+    font-family: "Poppins", sans-serif;
 }
 
 .heroBanner {
-    width: 50%;
+    width: 100%;
     height: max-content;
-    margin: 5.5rem auto;
+    margin: 5.5rem auto 1rem;
     padding: 1rem;
-    border-radius: 10px;
-    background: rgba(255, 204, 41, 0.2);
-    border: 2px solid #ffcc29;
+    border-bottom: 1px solid #efefef;
     display: flex;
 }
 
-.profilePicContainer {}
+.profilePicContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+}
 
 .profilePicContainer img {
     width: 150px;
@@ -27,12 +33,16 @@
 .meta {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     padding: 1rem;
 }
-.meta>div {
-    display: flex;
-    gap: 1rem;
+.meta>div>p {
     margin-bottom: 1rem;
+}
+
+.meta>div>p>span {
+    margin-right: 5px;
+    font-weight: 600;
 }
 .meta>div>button {
     display: block;
@@ -45,19 +55,14 @@
 }
 
 .meta .followBtn {
-    background: #ffcc29;
-    padding: 0.25rem 1.5rem;
+    background: #007bff;
+    padding: 0.45rem 1.5rem;
+    color: white;
     width: max-content;
     transition: all 0.3s;
-    border: 2px solid #000;
     border-radius: 5px;
     font-size: 0.9rem;
-}
-
-.meta .followBtn:hover {
-    background-color: #000;
-    color: #ffcc29;
-    border: 2px solid #ffcc29;
+    border: none;
 }
 
 .meta h2 {
@@ -65,5 +70,54 @@
 }
 
 .meta .bio {
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
+
+.postsContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.postsContainer .post {
+    position: relative;
+    cursor: pointer;
+}
+
+.postsContainer .post img {
+    display: block;
+    height: 250px;
+    aspect-ratio: 1/1;
+}
+.postsContainer .post .postInfoOverlay {
+    visibility: hidden;
+    position: absolute;
+    inset: 0 0 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    background-color: rgb(0, 0, 0, 0.2);
+}
+
+.postsContainer .post:hover .postInfoOverlay {
+    visibility: visible;
+}
+
+.postsContainer .post:hover .postInfoOverlay div {
+    display: flex;
+    align-items: center;
+    margin: 0 0.5rem;
+}
+
+.postsContainer .post .postInfoOverlay span {
+    color: white;
+    margin-left: 3px;
+}
+
+.postsContainer .post .postInfoOverlay img {
+    height: 22px;
+    aspect-ratio: 1/1;
+    margin-bottom: 3px;
+}
+

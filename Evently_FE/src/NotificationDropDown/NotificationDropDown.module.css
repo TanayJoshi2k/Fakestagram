@@ -1,13 +1,14 @@
 .notificationContainer {
     position: absolute;
     width: 350px;
-    top: 105%;
+    top: 160%;
     overflow: hidden;
     border-bottom-left-radius: 5px;
     max-height: 200px;
     overflow-y: auto;
     border-bottom: 1px solid #dedede;
     background-color: white;
+    font-family: "Poppins", sans-serif;
 }
 
 .notificationContainer .notificationsBanner {
@@ -22,14 +23,6 @@
 
 .notificationContainer::-webkit-scrollbar {
     width: 3px;
-}
-
-.notificationContainer::-webkit-scrollbar-thumb {
-    background-color: #0969da;
-}
-
-.notificationContainer::-webkit-scrollbar-track-piece {
-    background-color: #9bcbff;
 }
 
 .unreadNotification,
@@ -73,4 +66,21 @@
     aspect-ratio: 1/1;
     border-radius: 100%;
     margin-right: 0.5rem;
+}
+
+.avatarURL {
+    display: flex;
+    align-items: center;
+    
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.8rem;
+}
+
+.content > p:first-child {
+    font-weight: 600;
 }

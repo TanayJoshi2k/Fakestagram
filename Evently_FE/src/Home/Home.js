@@ -1,119 +1,86 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import axios from "axios";
 import classes from "./Home.module.css";
 import Navbar from "../Navbar/Navbar";
-import EventModal from "../EventModal/EventModal";
-import EventItem from "../Event/EventItem";
+import Modal from "../Modal/Modal";
+import PostModal from "../PostModal/PostModal";
+import Post from "../Post/Post";
 import {
   socketConnection,
   emitClientData,
   getNotifications,
 } from "../Services/Socket";
-import { getSavedEvents, getAllEvents } from "../Services/EventHelpers";
+import { setPosts } from "../redux/actions/postActions";
+import { useSelector, useDispatch } from "react-redux";
+import { saveUserDetails } from "../redux/actions/eventActions";
 
 function Home(props) {
-  const [events, setEvents] = useState([]);
-  const [showEventModal, setShowEventModal] = useState(false);
-  const location = useLocation();
-  const [username, setUsername] = useState(
-    props.username || location.state.username
-  );
-  const [eventsAttending, setEventsAttending] = useState(
-    props.userDetails.eventsAttending || []
-  );
-  const [bookmarkedEvents, setBookmarkedEvent] = useState(
-    props.userDetails.bookedmarkedEvents || []
-  );
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
+  const [showPostModal, setShowPostModal] = useState(false);
   const [notifications, setNotifications] = useState([]);
-    console.log(props.userDetails.eventsAttending)
-  useEffect(() => {
-    let socket = socketConnection();
-    socket.on("connect", () => {
-      emitClientData(props.username);
-      getNotifications(props.username, (data) => {
-        setNotifications([...notifications, ...data.notifications]);
-      });
-    });
-  }, []);
+  const [showModal, setShowModal] = useState(false);
+  const [usersWhoLiked, setUsersWhoLiked] = useState([]);
 
-  const getAllEventsHandler = async () => {
-    const events = await getAllEvents();
-    setEvents(events);
-  };
-
-  useEffect(() => {
-    getAllEventsHandler();
-  }, [eventsAttending, bookmarkedEvents]);
-
-  const getEvent = (event) => {
-    let eventId = event.target.id;
+  const getPosts = async () => {
     axios
-      .get(`/events/event/${eventId}`)
+      .get("/posts")
       .then((res) => {
-        console.log(res);
+        dispatch(setPosts(res.data.posts));
       })
       .catch((e) => {
         console.log(e);
       });
   };
 
-  const getSavedEventsHandler = async () => {
-    const savedEvents = await getSavedEvents();
-    setEvents(savedEvents);
-  };
+  useEffect(() => {
+    getPosts();
+    let socket = socketConnection();
+    socket.on("connect", () => {
+      emitClientData(state.userReducer.username);
+      getNotifications(state.userReducer.username, (data) => {
+        dispatch(saveUserDetails({ notifications: [...data.notifications] }));
+      });
+    });
+  }, []);
 
+  useEffect(() => {
+    getPosts();
+  }, [state.userReducer.likedPosts]);
+  if (showPostModal) {
+    // document.body.style.overflowY = "hidden";
+  }
   return (
     <div className={classes.parentContainer}>
-      {showEventModal && (
-        <EventModal
-          username={username}
-          setShowEventModal={setShowEventModal}
-          setEvents={setEvents}
-          events={events}
-        />
-      )}
+      {showModal && <Modal users={usersWhoLiked} />}
+      {showPostModal && <PostModal />}
 
-      <Navbar
-        username={username}
-        setIsAuth={props.setIsAuth}
-        notifications={notifications}
-      />
+      <Navbar notifications={notifications} />
 
       <div className={classes.homePageContainer}>
-        <div className={classes.eventsContainer}>
-          <ul className={classes.filterOptions}>
-            <li onClick={getAllEventsHandler}>All</li>
-            <li onClick={getSavedEventsHandler}>Saved</li>
-          </ul>
-          {events.length
-            ? events.map((event) => {
-                return (
-                  <EventItem
-                    key={event._id}
-                    eventData={event}
-                    isAttending={eventsAttending.includes(event._id)}
-                    isBookMarked={bookmarkedEvents.includes(event._id)}
-                    userDetails={props.userDetails}
-                    getEvent={getEvent}
-                    setEventsAttending={setEventsAttending}
-                    setBookmarkedEvent={setBookmarkedEvent}
-                  />
-                );
-              })
-            : null}
-        </div>
-        <div className={classes.sideContainer}>
-          <button
-            onClick={() => {
-              setShowEventModal(true);
-            }}
-          >
-            <span>Create Event</span>
-          </button>
+        <div className={classes.postContainer}>
+          {state.postReducer?.posts.map((post) => (
+            <Post
+              key={post._id}
+              setShowModal={setShowModal}
+              setUsersWhoLiked={() => setUsersWhoLiked(post.usernamesWhoLiked)}
+              postData={post}
+              isLiked={state.userReducer.likedPosts.includes(post._id)}
+            />
+          ))}
         </div>
       </div>
+
+      {/* <div className={classes.sideContainer}>
+        <button
+            onClick={() => {
+              setShowPostModal(true);
+            }}
+          >
+            <span>Create Post</span>
+          </button>
+      </div> */}
     </div>
   );
 }

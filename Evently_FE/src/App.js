@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Route, Routes, Navigate } from "react-router-dom";
+import { saveUserDetails } from "./redux/actions/eventActions";
 import Home from "./Home/Home";
 import Login from "./Login/Login";
 import Signup from "./Signup/Signup";
@@ -10,18 +12,17 @@ import AccountPage from "./AccountPage/AccountPage";
 import "./App.css";
 
 function App() {
-  const [isAuth, setIsAuth] = useState(false);
-  const [userDetails, setUserDetails] = useState({});
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     axios
       .get("/isAuth")
       .then((res) => {
-        setIsAuth(true);
-        setUserDetails(res.data.message);
+        dispatch(saveUserDetails(res.data.message))
       })
       .catch((e) => {
-        setIsAuth(false);
+        dispatch(saveUserDetails({}))
       });
   }, []);
 
@@ -30,10 +31,8 @@ function App() {
       <Route
         path="/account/:username"
         element={
-          isAuth ? (
+          state.userReducer.authorized ? (
             <AccountPage
-              setIsAuth={setIsAuth}
-              username={userDetails.username}
             />
           ) : (
             <Navigate to="/" />
@@ -43,42 +42,37 @@ function App() {
       <Route
         path="/"
         element={
-          isAuth ? (
+          state.userReducer.authorized ? (
             <Navigate to="/home" />
           ) : (
-            <Login setIsAuth={setIsAuth} setUserDetails={setUserDetails} />
+            <Login/>
           )
         }
       ></Route>
       <Route
         path="/home"
         element={
-          !isAuth ? (
+          !state.userReducer.authorized ? (
             <Navigate to="/" />
           ) : (
             <Home
-              setIsAuth={setIsAuth}
-              username={userDetails.username}
-              userDetails={userDetails}
             />
           )
         }
       ></Route>
 
-      <Route path="/signup" element={<Signup setIsAuth={setIsAuth} />}></Route>
+      <Route path="/signup" element={<Signup />}></Route>
       <Route
         path="/users/:user_id/verify/:token"
-        element={<EmailVerify setIsAuth={setIsAuth} />}
+        element={<EmailVerify />}
       ></Route>
       <Route
         path="/extra-details"
         element={
-          !isAuth ? (
+          !state.userReducer.authorized ? (
             <Navigate to="/" />
           ) : (
             <ExtraSignupDetails
-              setIsAuth={setIsAuth}
-              username={userDetails.username}
             />
           )
         }

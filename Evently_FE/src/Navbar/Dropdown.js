@@ -1,4 +1,6 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { saveUserDetails } from "../redux/actions/eventActions";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import LogoutIcon from "../Assets/logout.png";
@@ -6,13 +8,18 @@ import UserIcon from "../Assets/user.svg";
 import classes from "./Dropdown.module.css";
 
 function Dropdown(props) {
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const logoutHandler = () => {
     axios
       .post("/logout")
       .then((res) => {
-        props.setIsAuth(false);
+        dispatch(
+          saveUserDetails({
+            authorized: false,
+          })
+        );
         navigate("/");
       })
       .catch((e) => {
@@ -25,12 +32,12 @@ function Dropdown(props) {
     <div className={classes.dropdownContainer}>
       <div
         className={classes.profileLinkCotaniner}
-        onClick={() => navigate(`/account/${props.username}`)}
+        onClick={() => navigate(`/account/${state.userReducer.username}`)}
       >
         <img src={UserIcon} alt="" />
         <Link
           className={classes.profileLink}
-          to={`/account/:${props.username}`}
+          to={`/account/${state.userReducer.username}`}
         >
           Profile
         </Link>

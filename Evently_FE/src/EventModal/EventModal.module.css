@@ -5,7 +5,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    z-index: 100;
+
+    /* overflow: hidden; */
 }
 
 .EventModal {
@@ -18,7 +20,7 @@
     -webkit-box-shadow: 0px 0px 1px 0px #535353;
     -moz-box-shadow: 0px 0px 1px 0px #535353;
     box-shadow: 0px 0px 1px 0px #535353;
-    z-index: 100;
+    z-index: 101;
     overflow-y: scroll;
 }
 

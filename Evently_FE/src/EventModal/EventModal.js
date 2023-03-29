@@ -2,8 +2,10 @@ import axios from "axios";
 import react, { useEffect, useState } from "react";
 import classes from "./EventModal.module.css";
 import UsersDropdown from "../UsersDropdown/UsersDropdown";
+import { useSelector, useDispatch } from "react-redux";
 
 function EventModal(props) {
+  const state = useSelector((state) => state);
   const [guestUserSearch, setGetUserSearch] = useState("");
   const [matchedUsers, setMatchedUser] = useState([]);
   const [eventData, setEventFormData] = useState({
@@ -14,7 +16,7 @@ function EventModal(props) {
     description: "",
     duration: "",
     guests: [],
-    username:props.username
+    username: state.username,
   });
 
   const eventInputHandler = (e) => {

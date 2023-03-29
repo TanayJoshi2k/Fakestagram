@@ -1,0 +1,135 @@
+.post {
+    width: 45%;
+    border: 1px solid #e7e7e7;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 2.5rem;
+    background-color: white;
+}
+
+.post .postAuthorInfo {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: #f7f7f7;
+}
+
+.post .postAuthorInfo .moreActions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.post .postAuthorInfo .moreActions img {
+    height: 18px;
+    width: 18px;
+}
+.post .avatarURL {
+    height: 25px;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 100%;
+    margin: 0 0.5rem;
+}
+
+.post .postContent img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1/1;
+    margin-bottom: 0.5rem;
+}
+
+.post .postContent p {
+    padding: 0.5rem;
+}
+
+.post .inputCommentContainer {
+    margin-top: 1rem;
+    display: flex;
+    border-top: 1px solid #e7e7e7;
+}
+
+.post .inputCommentContainer button {
+    border: none;
+    background-color: white;
+    color: #00B2FF;
+    padding: 0.5rem;
+}
+
+.post .inputCommentContainer button:disabled {
+    color: #a0a0a0;
+}
+
+.post .inputCommentContainer input {
+    width: 100%;
+    padding: 0.3rem 0.4rem;
+    color: #000000;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    border: none;
+}
+
+.post .commentSection input:focus {
+    border: none
+}
+
+.post .commentSection .commentsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-height: 100px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+}
+
+.post .hideComments {
+    display: none !important;
+}
+
+.post .commentsContainer::-webkit-scrollbar {
+    width: 2px;
+}
+
+.post .commentsContainer::-webkit-scrollbar-thumb {
+    background-color: #9f9f9f;
+    border-radius: 5px;
+}
+
+.post .heartFill {
+    fill: red;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 3px;
+}
+
+.post .heartUnFill {
+    width: max-content;
+    fill: black;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 3px;
+}
+
+.post .commentIcon {
+    height: 24px !important;
+    width: 24px !important;
+    cursor: pointer;
+}
+
+.post .likes {
+    font-weight: 600;
+    font-size: 0.8rem;
+    height: max-content;
+    margin-top: 0;
+    line-height: 1px;
+    cursor: pointer;
+}
+
+.post .postActions {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+}

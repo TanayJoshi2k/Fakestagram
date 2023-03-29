@@ -4,23 +4,26 @@ nav {
     left: 0;
     right: 0;
     width: 100vw;
-    background-color: rgba(0, 0, 0, 1);
-    border-bottom: 1px solid #ccc;
-    color: white;
+    background-color: white;
+    border-bottom: 1px solid silver;
     font-size: 1.2rem;
     display: flex;
     align-items: center;
     height: 3.5rem;
+    z-index: 999;
 }
 
 .navbarContainer {
     position: relative;
     margin: 0 auto;
-    width: 75vw;
+    width: 75%;
+    padding: 0 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     list-style-type: none;
+    font-family: 'Grand Hotel', cursive;
+    font-size: 2rem;
 }
 
 .navbarContainer>div {
@@ -49,6 +52,7 @@ ul li:hover::after {
 nav .profileLink {
     color: #fff;
     text-decoration: none;
+    font-family: "Poppins", sans-serif;
 }
 
 nav .navbarContainer .menuCotainer {
@@ -63,13 +67,13 @@ nav .searchContainer {
     position: relative;
     width: 25%;
     margin-left: auto;
+    font-family: "Poppins", sans-serif;
 }
 
 nav .searchContainer>img {
     position: absolute;
     left: 2.5px;
     height: 25px;
-
 }
 
 nav .searchContainer input {
@@ -81,24 +85,31 @@ nav .searchContainer input {
     font-size: 1rem;
     color: white;
     border: 1px solid solid;
-    background-color: rgba(110, 110, 110, 0.35);
+    background-color: #e7e7e7;
 }
 
 nav .searchContainer input:focus {
     border: none;
     outline: none;
 }
+nav .iconsContainer {
+    position: relative;
+    cursor: pointer;
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+}
 
 nav .notificationsContainer {
     position: relative;
     cursor: pointer;
-    padding: 1rem;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
     margin-left: auto;
-    margin-right: 2.5rem;
+    display: flex;
+    gap: 15px;
 }
 
 nav .notificationCount {
@@ -108,8 +119,16 @@ nav .notificationCount {
     color: white;
     background-color: 	#ff003c;
     border-radius: 200%;
-    padding: 2px;
+    padding: 2px 5px;
     font-size: 12px;
+    font-family: "Poppins", sans-serif;
+}
+
+nav .navbarContainer .profilePic {
+    height: 25px;
+    aspect-ratio: 1/1;
+    border-radius: 100%;
+    object-fit: cover;
 }
 
 @media screen and (max-width:576px) {

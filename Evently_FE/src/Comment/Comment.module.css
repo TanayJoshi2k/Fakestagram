@@ -2,12 +2,8 @@
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 0.5rem;
     transition: all 0.3s;
-}
-
-.comment:hover {
-    background-color: white;
+    padding-left: 0.25rem;
 }
 
 .comment img {
@@ -19,16 +15,16 @@
 
 .comment .username {
     cursor: pointer;
-    color: #00B2FF;
+    color: black;
     text-decoration: none;
+    font-weight: 600;
+    font-size: 0.8rem;
 }
 
-.comment .username:hover {
-    color: #004bad;
-}
 .comment .commentText {
-    margin-left: 0.75rem;
+    margin-left: 0.5rem;
     font-size: 0.8rem;
+    
 }
 .comment .deleteComment {
     margin-left: auto;

@@ -18,12 +18,6 @@ function UsersDropdown(props) {
             <Link to={`/account/${searchItem?.username}`}>
               {searchItem?.username}
             </Link>
-
-            {searchItem?.title ? (
-              <Link to={`/account/${searchItem?.title}`}>
-                {searchItem?.title}
-              </Link>
-            ) : null}
             
           </div>
         );

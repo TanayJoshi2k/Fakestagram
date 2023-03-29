@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setBookmarkedEvents, setEventsAttending } from "../redux/actions/eventActions";
 import classes from "./Event.module.css";
 import BookmarkIcon from "../Logos/BookmarkIcon";
 import Toast from "../Toast/Toast";
@@ -16,6 +18,8 @@ import {
 } from "../Services/EventHelpers";
 
 function EventItem(props) {
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
   const [showToast, setShowToast] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState({
@@ -39,25 +43,42 @@ function EventItem(props) {
     getPostCommentsHandler(props.eventData._id);
   }, []);
 
-  const addEventToBookmarksHandler = () => {
-    addEventToBookmarks(
-      props.eventData._id,
-      props.userDetails.username,
-      setShowToast,
-      setToastMessage,
-      props.setBookmarkedEvent
-    );
+  const addEventToBookmarksHandler = async () => {
+    const eventId = props.eventData._id;
+    try {
+      const res = await axios.post(`events/addToBookmarks/${eventId}`, {
+        username: state.userReducer.username,
+      });
+      dispatch(setBookmarkedEvents(res.data.bookedmarkedEvents));
+      setToastMessage({ text: res.data.message, error: false });
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 2000);
+    } catch (e) {
+      dispatch(setBookmarkedEvents(e.response.data.bookedmarkedEvents));
+      setToastMessage({ text: e.response.data.error, error: true });
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 2000);
+    }
   };
 
-  const eventParticipationHandler = (event, action) => {
+  const eventParticipationHandler = async (event, action) => {
     let eventId = event.target.id;
-    eventParticipation(
-      eventId,
-      action,
-      props.userDetails,
-      props.setEventsAttending,
-      setShowLoading
-    );
+
+    try {
+      setShowLoading(true);
+      const res = await axios.post(`/events/${action}/${eventId}`, {
+        username: state.userReducer.username,
+      });
+
+      dispatch(setEventsAttending(res.data.eventsAttending));
+      setShowLoading(false);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const addCommentHandler = (event) => {
@@ -65,12 +86,12 @@ function EventItem(props) {
     emitAddComment(
       eventId,
       comment,
-      props.userDetails.username,
+      state.userReducer.username,
       props.eventData.createdBy
     );
     addComment(
       eventId,
-      props.userDetails,
+      state.userReducer,
       comment,
       setEventComments,
       setComment
@@ -135,7 +156,7 @@ function EventItem(props) {
                       <Comment
                         key={comment._id}
                         commentData={comment}
-                        signedInUsername={props.userDetails.username}
+                        signedInUsername={state.userReducer.username}
                         deleteCommentHandler={() =>
                           deleteCommentHandler(props.eventData._id, comment._id)
                         }
