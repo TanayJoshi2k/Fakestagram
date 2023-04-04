@@ -39,7 +39,7 @@ function Navbar(props) {
         axios
           .get(`/search/${search}`)
           .then((res) => {
-            setSearchResults(res.data.searchResults);
+            setSearchResults(res.data.usersFound);
           })
           .catch((e) => {
             console.log(e);
