@@ -1,21 +1,12 @@
 const express = require("express");
-const UserTrivia = require("../Models/UserTrivia");
 const notificationRouter = express.Router();
+const { markNotificationRead } = require("../Services/db_queries/User_queries");
 
 notificationRouter.put(
   "/notifications/:notificationId",
   async (req, res, next) => {
     try {
-      await UserTrivia.findOneAndUpdate(
-        { notifications: { $elemMatch: { _id: req.params.notificationId } } },
-        {
-          $set: {
-            "notifications.$.read": true,
-          },
-        },
-        { new: true, safe: true, upsert: true }
-      );
-      
+      await markNotificationRead(req.params.notificationId);
     } catch (e) {
       console.log(e);
     }

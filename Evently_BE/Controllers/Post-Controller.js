@@ -1,5 +1,4 @@
 const express = require("express");
-const UserTrivia = require("../Models/UserTrivia");
 const Post = require("../Models/Post");
 const postRouter = express.Router();
 require("../Models/db");
@@ -8,17 +7,23 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage }).single("post");
 
 const ImageUpload = require("../Services/Image-Upload-Service");
-global.XMLHttpRequest = require("xhr2");
+const {
+  getPostComments,
+  addComment,
+  deleteComment,
+  checkPostLiked,
+  updatePostLikesCount,
+  updateLikedUsersList,
+  createPost
+} = require("../Services/db_queries/Post_queries");
 
-async function getPostComments(postId) {
-  const comments = await Post.findById(
-    {
-      _id: postId,
-    },
-    { comments: 1 }
-  ).lean();
-  return comments;
-}
+const {
+  updateLikedPostsList,
+  getLikedPosts,
+  updateUserPostsList,
+} = require("../Services/db_queries/User_queries");
+
+global.XMLHttpRequest = require("xhr2");
 
 postRouter.get("/", async (req, res, next) => {
   try {
@@ -34,15 +39,11 @@ postRouter.get("/", async (req, res, next) => {
 
 postRouter.get("/:postId/users_who_liked", async (req, res, next) => {
   try {
-    const usernames = await Post.findById(
-      { _id: req.params.postId },
-      { usernamesWhoLiked: 1 }
-    ).lean();
-
+    const postId = req.params.postId;
+    const usernames = await getUsersWhoLikedPost(postId);
     return res.json({
-      ...usernames
-    })
-
+      ...usernames,
+    });
   } catch (e) {
     console.log(e);
   }
@@ -51,19 +52,13 @@ postRouter.get("/:postId/users_who_liked", async (req, res, next) => {
 postRouter.post("/", upload, async (req, res, next) => {
   try {
     const file = req.file;
-    const downloadURL = await ImageUpload(file, req.body.username, "post");
-    let newPost = new Post({
-      username: req.body.username,
-      caption: req.body.caption,
-      postURL: downloadURL,
-      avatarURL: req.body.avatarURL,
-    });
-    await newPost.save();
+    const { username, caption, avatarURL } = req.body;
+    const downloadURL = await ImageUpload(file, username, "post");
 
-    await UserTrivia.findOneAndUpdate({
-      username: req.body.username,
-      $push: { posts: newPost._id },
-    });
+    let newPost = await createPost(username, caption, downloadURL, avatarURL)
+
+    //push the new post's id in the user's postId list
+    await updateUserPostsList(newPost._id, username);
 
     return res.status(201).send({
       message: "Added post",
@@ -75,25 +70,19 @@ postRouter.post("/", upload, async (req, res, next) => {
 
 postRouter.post("/:postId/comments", async (req, res, next) => {
   try {
-    await Post.findByIdAndUpdate(
-      { _id: req.params.postId },
-      {
-        $push: {
-          comments: {
-            username: req.body.username,
-            comment: req.body.comment,
-            avatarURL: req.body.avatarURL,
-          },
-        },
-      }
-    );
-    const comments = await getPostComments(req.params.postId);
+    const postId = req.params.postId;
+    const { username, comment, avatarURL } = req.body;
+
+    await addComment(postId, username, comment, avatarURL);
+    const comments = await getPostComments(postId);
 
     return res.status(201).json({
       ...comments,
     });
   } catch (e) {
-    console.log(e);
+    return res.status(500).json({
+      error: "Internal Server Error",
+    });
   }
 });
 
@@ -104,7 +93,6 @@ postRouter.get("/:postId/comments", async (req, res, next) => {
       ...comments,
     });
   } catch (e) {
-    console.log(e);
     return res.status(500).json({
       error: "Internal Server Error",
     });
@@ -113,21 +101,15 @@ postRouter.get("/:postId/comments", async (req, res, next) => {
 
 postRouter.delete("/:postId/comments/:commentId", async (req, res, next) => {
   try {
-    await Post.findByIdAndUpdate(
-      { _id: req.params.postId },
-      {
-        $pull: { comments: { _id: req.params.commentId } },
-      },
-      { new: true }
-    );
+    const { postId, commentId } = req.params;
 
-    const comments = await getPostComments(req.params.postId);
+    await deleteComment(postId, commentId);
+    const comments = await getPostComments(postId);
 
     return res.json({
       ...comments,
     });
   } catch (e) {
-    console.log(e);
     return res.status(500).json({
       error: "Internal Server Error",
     });
@@ -136,93 +118,32 @@ postRouter.delete("/:postId/comments/:commentId", async (req, res, next) => {
 
 postRouter.put("/:postId", async (req, res, next) => {
   const postId = req.params.postId;
-  const isPostLiked = await Post.findOne({
-    _id: postId,
-    usernamesWhoLiked: req.body.username,
-  });
+  const username = req.body.username;
+  const isPostLiked = await checkPostLiked(postId, username);
+  let message = "";
+  let incLikeCount;
 
   if (isPostLiked) {
-    await Post.findOneAndUpdate(
-      { _id: postId },
-      { $pull: { usernamesWhoLiked: req.body.username } }
-    );
-
-    await Post.findOneAndUpdate({ _id: postId }, { $inc: { likes: -1 } });
-
-    await UserTrivia.findOneAndUpdate(
-      { username: req.body.username },
-      { $pull: { likedPosts: postId } }
-    );
-
-    const likedPosts = await UserTrivia.findOne(
-      { username: req.body.username },
-      { likedPosts: 1 }
-    ).lean();
-
-    return res.json({
-      message: "Post unliked",
-      ...likedPosts,
-    });
+    // If the post is already liked, unlike the post i.e inc likes by -1,
+    // remove the user from the list of users who liked the post
+    // and finally remove the post from the list of posts liked by user
+    message = "Post unliked";
+    incLikeCount = -1;
+    await updateLikedUsersList(postId, username, "$pull");
+    await updatePostLikesCount(postId, incLikeCount);
+    await updateLikedPostsList(postId, username, "$pull");
   } else {
-    await Post.findOneAndUpdate(
-      { _id: postId },
-      { $push: { usernamesWhoLiked: req.body.username } }
-    );
-
-    await Post.findOneAndUpdate({ _id: postId }, { $inc: { likes: 1 } });
-
-    await UserTrivia.findOneAndUpdate(
-      { username: req.body.username },
-      { $push: { likedPosts: postId } }
-    );
-
-    const likedPosts = await UserTrivia.findOne(
-      { username: req.body.username },
-      { likedPosts: 1 }
-    ).lean();
-
-    return res.json({
-      message: "Post liked",
-      ...likedPosts,
-    });
+    incLikeCount = 1;
+    message = "Post liked";
+    await updateLikedUsersList(postId, username, "$push");
+    await updatePostLikesCount(postId, incLikeCount);
+    await updateLikedPostsList(postId, username, "$push");
   }
-
-  // if (savedEvent) {
-  //   await UserTrivia.updateOne(
-  //     { username: req.body.username },
-  //     {
-  //       $pull: {
-  //         bookedmarkedEvents: eventId,
-  //       },
-  //     }
-  //   );
-
-  //   const bookmarkedEvents = await UserTrivia.findOne(
-  //     { username: req.body.username },
-  //     "bookedmarkedEvents"
-  //   ).lean();
-
-  //   return res.status(409).json({
-  //     error: "Removed from Bookmarks!",
-  //     ...bookmarkedEvents,
-  //   });
-  // }
-
-  // await UserTrivia.findOneAndUpdate(
-  //   { username: req.body.username },
-  //   { $push: { bookedmarkedEvents: eventId } }
-  // );
-
-  // const bookmarkedEvents = await UserTrivia.findOne(
-  //   { username: req.body.username },
-  //   "bookedmarkedEvents"
-  // ).lean();
-
-  // return res.status(201).json({
-  //   message: "Event successfully added to bookmarks!",
-
-  //   ...bookmarkedEvents,
-  // });
+  const likedPosts = await getLikedPosts(username);
+  return res.json({
+    message: message,
+    ...likedPosts,
+  });
 });
 
 module.exports = postRouter;
