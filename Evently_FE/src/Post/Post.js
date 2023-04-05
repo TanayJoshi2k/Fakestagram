@@ -14,10 +14,10 @@ import classes from "./Post.module.css";
 import { setLikedPosts } from "../redux/actions/eventActions";
 
 function Post(props) {
-  console.log(props)
   const [comment, setComment] = useState("");
   const [postComments, setPostComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
@@ -29,6 +29,7 @@ function Post(props) {
       setPostComments
     );
   };
+
   useEffect(() => {
     getPostCommentsHandler(props.postData._id);
   }, []);
@@ -50,25 +51,22 @@ function Post(props) {
     );
   };
 
-  const getUserLikes = () => {
-    props.setShowModal(true);
-    props.setUsersWhoLiked()
-
-  };
-
   const deleteCommentHandler = (postId, commentId) => {
     axios.delete(`/posts/${postId}/comments/${commentId}`).then((res) => {
       setPostComments([...res.data.comments]);
     });
   };
-
   const likePostHandler = () => {
     const postId = props.postData._id;
     if (!props.isLiked) {
       emitLikePost(props.postData.username, state.userReducer.username);
     }
     axios
-      .put(`/posts/${postId}`, { username: state.userReducer.username })
+      .put(`/posts/${postId}`, {
+        username: state.userReducer.username,
+        avatarURL: state.userReducer.avatarURL,
+        name: state.userReducer.firstName + " " + state.userReducer.lastName,
+      })
       .then((res) => {
         dispatch(setLikedPosts(res.data.likedPosts));
       })
@@ -77,8 +75,13 @@ function Post(props) {
 
   return (
     <>
+      {showModal && (
+        <Modal
+          users={props.postData.usernamesWhoLiked}
+          setShowModal={() => setShowModal(false)}
+        />
+      )}
       <div key={props.postData._id} className={classes.post}>
-
         <div className={classes.postAuthorInfo}>
           <img src={props.postData.avatarURL} className={classes.avatarURL} />
           <p>
@@ -108,7 +111,7 @@ function Post(props) {
           </div>
 
           {props.postData.usernamesWhoLiked.length ? (
-            <p className={classes.likes} onClick={getUserLikes}>
+            <p className={classes.likes} onClick={() => setShowModal(true)}>
               {props.postData.usernamesWhoLiked.length > 1
                 ? `${props.postData.usernamesWhoLiked.length} likes`
                 : `${props.postData.usernamesWhoLiked.length} like`}

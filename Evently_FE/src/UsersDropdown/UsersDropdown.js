@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import classes from "./UsersDropdown.module.css";
 
 function UsersDropdown(props) {
-  console.log(props);
   return (
     <div className={classes.dropdownContainer}>
       {props.searchResults.map((searchItem) => {

@@ -1,17 +1,14 @@
 .spinnerContainer {
-    height: max-content;
-    width: max-content;
-    max-width: 100%;
-    display: inline-block;
+    margin-left: auto;
+    margin-right: 10px;
+    padding: 0.25rem 0.45rem;
 }
 
 .spinner {
     width: 20px;
     height: 20px;
     margin: 0 auto;
-    margin-left: 0.5rem;
     background-color: #000;
-
     border-radius: 100%;
     -webkit-animation: sk-scaleout 0.8s infinite ease-in-out;
     animation: sk-scaleout 0.8s infinite ease-in-out;

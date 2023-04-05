@@ -9,6 +9,101 @@
 }
 
 .modal {
-    width: 50%;
+    position: relative;
+    width: 30%;
     background-color: white;
+    border-radius: 10px;
+}
+
+.modalRibbon {
+    display: flex;
+    border-bottom: 1px solid #ccc;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.modalRibbon p {
+    margin: 0 auto;
+    font-family: sans-serif;
+    padding: 0.5rem 0;
+}
+
+.modalRibbon .closeBtn {
+    position: relative;
+    padding: 1rem;
+    border: none;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.modalRibbon .closeBtn::after,
+.closeBtn::before {
+    position: absolute;
+    content: "";
+    height: 2px;
+    width: 25px;
+    text-align: center;
+    transform: rotate(-45deg);
+    background-color: #121212;
+    left: 0;
+    right: 0;
+    padding: 0;
+}
+
+.modalRibbon .closeBtn::after {
+    transform: rotate(45deg);
+}
+
+.modalContent {
+    font-family: 'Lato', sans-serif;
+}
+
+.modalContent .user {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.modalContent .user img {
+    height: 25px;
+    aspect-ratio: 1/1;
+    border-radius: 100%;
+    object-fit: cover;
+    margin-right: 7.5px;
+}
+
+.modalContent .user .userInfo {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.modalContent .user a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.modalContent .user .userInfo p:last-child {
+    font-weight: 500;
+}
+
+.user button {
+    padding: 0.25rem 0.45rem;
+    margin-left: auto;
+    margin-right: 10px;
+    border-radius: 2.5px;
+    font-size: 0.75rem;
+}
+
+.followBtn {
+    background-color: #006AFF;
+    border: 1px solid transparent;
+    color: white;
+}
+
+.unfollowBtn {
+    border: 1px solid #ccc;
+    background-color: #f3f3f3;
 }

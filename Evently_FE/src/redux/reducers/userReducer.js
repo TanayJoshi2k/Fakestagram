@@ -29,11 +29,6 @@ const initialState = {
 export const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case SAVE_USER_DETAILS:
-      console.log(action.payload)
-      console.log({
-        ...state,
-        ...action.payload
-      })
       return {
         ...state,
         ...action.payload,
@@ -52,7 +47,6 @@ export const userReducer = (state = initialState, action) => {
       };
 
       case SET_LIKED_POSTS:
-        console.log(action.payload)
       return {
         ...state,
         likedPosts: [...action.payload],
