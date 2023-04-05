@@ -14,7 +14,7 @@ const {
   checkPostLiked,
   updatePostLikesCount,
   updateLikedUsersList,
-  createPost
+  createPost,
 } = require("../Services/db_queries/Post_queries");
 
 const {
@@ -55,7 +55,7 @@ postRouter.post("/", upload, async (req, res, next) => {
     const { username, caption, avatarURL } = req.body;
     const downloadURL = await ImageUpload(file, username, "post");
 
-    let newPost = await createPost(username, caption, downloadURL, avatarURL)
+    let newPost = await createPost(username, caption, downloadURL, avatarURL);
 
     //push the new post's id in the user's postId list
     await updateUserPostsList(newPost._id, username);
@@ -118,7 +118,8 @@ postRouter.delete("/:postId/comments/:commentId", async (req, res, next) => {
 
 postRouter.put("/:postId", async (req, res, next) => {
   const postId = req.params.postId;
-  const username = req.body.username;
+  const { username, avatarURL, name } = req.body;
+
   const isPostLiked = await checkPostLiked(postId, username);
   let message = "";
   let incLikeCount;
@@ -129,13 +130,14 @@ postRouter.put("/:postId", async (req, res, next) => {
     // and finally remove the post from the list of posts liked by user
     message = "Post unliked";
     incLikeCount = -1;
-    await updateLikedUsersList(postId, username, "$pull");
+    await updateLikedUsersList(postId, username, avatarURL, name, "$pull");
     await updatePostLikesCount(postId, incLikeCount);
     await updateLikedPostsList(postId, username, "$pull");
+    
   } else {
     incLikeCount = 1;
     message = "Post liked";
-    await updateLikedUsersList(postId, username, "$push");
+    await updateLikedUsersList(postId, username, avatarURL, name, "$push");
     await updatePostLikesCount(postId, incLikeCount);
     await updateLikedPostsList(postId, username, "$push");
   }

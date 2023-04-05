@@ -22,7 +22,13 @@ const post = mongoose.Schema(
       type: Number,
       default: 0,
     },
-    usernamesWhoLiked: [String],
+    usernamesWhoLiked: [
+      {
+        username: { type: String },
+        avatarURL: { type: String },
+        name: { type: String },
+      },
+    ],
     comments: [
       {
         username: String,

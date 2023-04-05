@@ -54,7 +54,7 @@ exports.getUsersWhoLikedPost = async function (postId) {
 exports.checkPostLiked = async function (postId, username) {
   const isPostLiked = await Post.findOne({
     _id: postId,
-    usernamesWhoLiked: username,
+    usernamesWhoLiked: { $elemMatch: { username: username } },
   });
   return isPostLiked;
 };
@@ -66,9 +66,23 @@ exports.updatePostLikesCount = async function (postId, incLikeCount) {
   );
 };
 
-exports.updateLikedUsersList = async function (postId, username, action) {
+exports.updateLikedUsersList = async function (
+  postId,
+  username,
+  avatarURL,
+  name,
+  action
+) {
   return await Post.findOneAndUpdate(
     { _id: postId },
-    { [action]: { usernamesWhoLiked: username } }
+    {
+      [action]: {
+        usernamesWhoLiked: {
+          username: username,
+          avatarURL: avatarURL,
+          name: name,
+        },
+      },
+    }
   );
 };
