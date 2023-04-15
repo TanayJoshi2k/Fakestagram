@@ -12,6 +12,7 @@
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #fff;
+    font-family: 'Lato', sans-serif;
 }
 
 .dropdownContainer * {
@@ -53,7 +54,6 @@
 
 .dropdownContainer .profileLink {
     text-decoration: none;
-    /* margin-left: 1rem; */
     width: max-content;
     color: #000;
 }

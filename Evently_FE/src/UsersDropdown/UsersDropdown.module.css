@@ -9,6 +9,7 @@
     top: 95%;
     overflow-y: auto;
     z-index: 999;
+    font-size: 1rem;
 }
 
 .dropdownContainer div {
