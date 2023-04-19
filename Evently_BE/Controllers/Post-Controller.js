@@ -15,12 +15,15 @@ const {
   updatePostLikesCount,
   updateLikedUsersList,
   createPost,
-} = require("../Services/db_queries/Post_queries");
+  } = require("../Services/db_queries/Post_queries");
 
 const {
   updateLikedPostsList,
   getLikedPosts,
   updateUserPostsList,
+  updateSavedPostsList,
+  getSavedPosts,
+  checkPostSaved
 } = require("../Services/db_queries/User_queries");
 
 global.XMLHttpRequest = require("xhr2");
@@ -133,7 +136,6 @@ postRouter.put("/:postId", async (req, res, next) => {
     await updateLikedUsersList(postId, username, avatarURL, name, "$pull");
     await updatePostLikesCount(postId, incLikeCount);
     await updateLikedPostsList(postId, username, "$pull");
-    
   } else {
     incLikeCount = 1;
     message = "Post liked";
@@ -145,6 +147,31 @@ postRouter.put("/:postId", async (req, res, next) => {
   return res.json({
     message: message,
     ...likedPosts,
+  });
+});
+
+postRouter.put("/savepost/:postId", async (req, res, next) => {
+  const postId = req.params.postId;
+  const { username } = req.body;
+  let message;
+  
+
+  const isPostSaved = await checkPostSaved(postId, username);
+
+  if (isPostSaved) {
+    // If the post is already saved, remove the post from saved posts list
+    message = "Post unsaved";
+    await updateSavedPostsList(postId, username, "$pull");
+  } else {
+    message = "Post saved";
+    await updateSavedPostsList(postId, username, "$push");
+  }
+
+  let savedPosts = await getSavedPosts(username);
+  
+  return res.json({
+    message: message,
+    ...savedPosts,
   });
 });
 

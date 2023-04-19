@@ -33,11 +33,32 @@ exports.markNotificationRead = async function (notificationId) {
   );
 };
 
-exports.searchUsers = async function(keyword) {
+exports.searchUsers = async function (keyword) {
   return await UserTrivia.find(
     {
       username: { $regex: "^" + keyword, $options: "i" },
     },
     { username: 1, avatarURL: 1, _id: 0 }
   ).lean();
-}
+};
+
+exports.getSavedPosts = async function (username) {
+  return await UserTrivia.findOne(
+    { username: username },
+    { savedPosts: 1 }
+  ).lean();
+};
+
+exports.checkPostSaved = async function (postId, username) {
+  return await UserTrivia.findOne({
+    username: username,
+    savedPosts: postId,
+  });
+};
+
+exports.updateSavedPostsList = async function (postId, username, action) {
+  return await UserTrivia.findOneAndUpdate(
+    { username: username },
+    { [action]: { savedPosts: postId } }
+  );
+};

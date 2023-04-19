@@ -56,8 +56,8 @@ const userTrivia = mongoose.Schema(
         "https://t0.gstatic.com/images?q=tbn:ANd9GcSLjgzNXwdx8i6MpWP3v34obkH6E8_MECNh6J8jjvQ45m55Az63",
     },
 
-    eventsAttending: {
-      type: [String],
+    savedPosts: {
+      type: [mongoose.Schema.Types.ObjectId],
     },
     likedPosts: [mongoose.Schema.Types.ObjectId],
     notifications: [
