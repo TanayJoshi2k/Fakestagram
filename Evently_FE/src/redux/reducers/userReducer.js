@@ -1,6 +1,6 @@
 import {
   SAVE_USER_DETAILS,
-  SET_BOOKMARKED_EVENTS,
+  SET_SAVED_POSTS,
   SET_EVENTS_ATTENDING,
   SET_LIKED_POSTS
 } from "../actionTypes/actionTypes";
@@ -34,10 +34,10 @@ export const userReducer = (state = initialState, action) => {
         ...action.payload,
       };
 
-    case SET_BOOKMARKED_EVENTS:
+    case SET_SAVED_POSTS:
       return {
         ...state,
-        bookedmarkedEvents: [...action.payload],
+        savedPosts: [...action.payload],
       };
 
       case SET_EVENTS_ATTENDING:

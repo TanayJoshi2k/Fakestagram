@@ -4,3 +4,4 @@ export const SET_EVENTS_ATTENDING = "SET_EVENTS_ATTENDING";
 export const SET_EVENTS = "SET_EVENTS";
 export const SET_POSTS = "SET_POSTS";
 export const SET_LIKED_POSTS = "SET_LIKED_POSTS";
+export const SET_SAVED_POSTS = "SET_SAVED_POSTS";

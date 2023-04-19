@@ -12,7 +12,7 @@ import {
 } from "../Services/Socket";
 import { setPosts } from "../redux/actions/postActions";
 import { useSelector, useDispatch } from "react-redux";
-import { saveUserDetails } from "../redux/actions/eventActions";
+import { saveUserDetails } from "../redux/actions/userActions";
 
 function Home() {
   const state = useSelector((state) => state);
@@ -59,6 +59,7 @@ function Home() {
               usernameswholiked={post.usernamesWhoLiked}
               postData={post}
               isLiked={state.userReducer.likedPosts.includes(post._id)}
+              isSaved={state.userReducer.savedPosts.includes(post._id)}
             />
           ))}
         </div>

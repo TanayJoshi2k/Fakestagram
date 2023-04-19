@@ -8,7 +8,7 @@ import Heart from "../Logos/Heart";
 import HoverComment from "../Assets/comment_hover.png";
 import axios from "axios";
 import classes from "./AccountPage.module.css";
-import { saveUserDetails } from "../redux/actions/eventActions";
+import { saveUserDetails } from "../redux/actions/userActions";
 
 function AccountPage() {
   const state = useSelector((state) => state);

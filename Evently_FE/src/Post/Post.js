@@ -6,12 +6,14 @@ import { emitAddComment, emitLikePost } from "../Services/Socket";
 import EventActionSpinner from "../Spinner/EventActionSpinner";
 import Heart from "../Logos/Heart";
 import HeartUnfill from "../Logos/HeartUnfill";
+import SavePost from "../Logos/SavePost";
+import SavePostUnfill from "../Logos/SavePostUnfill";
 import CommentIcon from "../Assets/comment.png";
 import EllipsisMenu from "../Assets/ellipsisMenu.png";
 import Modal from "../Modal/Modal";
 import axios from "axios";
 import classes from "./Post.module.css";
-import { setLikedPosts } from "../redux/actions/eventActions";
+import { setLikedPosts, setSavedPosts } from "../redux/actions/userActions";
 
 function Post(props) {
   const [comment, setComment] = useState("");
@@ -56,6 +58,7 @@ function Post(props) {
       setPostComments([...res.data.comments]);
     });
   };
+
   const likePostHandler = () => {
     const postId = props.postData._id;
     if (!props.isLiked) {
@@ -71,6 +74,21 @@ function Post(props) {
         dispatch(setLikedPosts(res.data.likedPosts));
       })
       .catch((e) => console.log(e));
+  };
+
+  const savePostHandler = async () => {
+    const postId = props.postData._id;
+    axios
+      .put(`/posts/savepost/${postId}`, {
+        username: state.userReducer.username,
+      })
+      .then((res) => {
+        console.log(res);
+        dispatch(setSavedPosts(res.data.savedPosts));
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   return (
@@ -107,6 +125,17 @@ function Post(props) {
             </div>
             <div>
               <img src={CommentIcon} alt="" className={classes.commentIcon} />
+            </div>
+            <div className={classes.savePostUnFill} onClick={savePostHandler}>
+              {props.isSaved ? (
+                <div>
+                  <SavePost />
+                </div>
+              ) : (
+                <div>
+                  <SavePostUnfill />
+                </div>
+              )}
             </div>
           </div>
 

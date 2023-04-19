@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { saveUserDetails } from "../redux/actions/eventActions";
+import { saveUserDetails } from "../redux/actions/userActions";
 import { emitFollowNotification } from "../Services/Socket";
 import {Link} from "react-router-dom";
 import EventActionSpinner from "../Spinner/EventActionSpinner";

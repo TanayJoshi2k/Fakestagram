@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { saveUserDetails } from "../redux/actions/eventActions";
+import { saveUserDetails } from "../redux/actions/userActions";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import LogoutIcon from "../Assets/logout.png";

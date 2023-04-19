@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Route, Routes, Navigate } from "react-router-dom";
-import { saveUserDetails } from "./redux/actions/eventActions";
+import { saveUserDetails } from "./redux/actions/userActions";
 import Home from "./Home/Home";
 import Login from "./Login/Login";
 import Signup from "./Signup/Signup";

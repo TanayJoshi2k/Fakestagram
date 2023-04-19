@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { saveUserDetails } from "../redux/actions/eventActions";
+import { saveUserDetails } from "../redux/actions/userActions";
 import { Link } from "react-router-dom";
 import ExtraSignupDetails from "../ExtraSignupDetails/ExtraSignupDetails";
 import axios from "axios";
