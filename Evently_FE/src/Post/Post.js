@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Comment from "../Comment/Comment";
+import ShowUserLikes from "../ShowUserLikes/ShowUserLikes";
 import { addPostComment, getPostComments } from "../Services/PostService";
 import { emitAddComment, emitLikePost } from "../Services/Socket";
 import EventActionSpinner from "../Spinner/EventActionSpinner";
@@ -94,19 +95,16 @@ function Post(props) {
   return (
     <>
       {showModal && (
-        <Modal
-          users={props.postData.usernamesWhoLiked}
-          setShowModal={() => setShowModal(false)}
-        />
+        <Modal setShowModal={() => setShowModal(false)}>
+          <ShowUserLikes users={props.postData.usernamesWhoLiked} />
+        </Modal>
       )}
       <div key={props.postData._id} className={classes.post}>
         <div className={classes.postAuthorInfo}>
           <img src={props.postData.avatarURL} className={classes.avatarURL} />
-          <p>
-            {props.postData.username}
-          </p>
+          <p>{props.postData.username}</p>
           <div className={classes.moreActions}>
-            <img src={EllipsisMenu} alt="..." />
+            <img src={EllipsisMenu} alt="..."/>
           </div>
         </div>
         <div className={classes.postContent}>

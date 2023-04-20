@@ -1,0 +1,53 @@
+.modalContent {
+    font-family: 'Lato', sans-serif;
+}
+
+.modalContent .user {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.modalContent .user img {
+    height: 25px;
+    aspect-ratio: 1/1;
+    border-radius: 100%;
+    object-fit: cover;
+    margin-right: 7.5px;
+}
+
+.modalContent .user .userInfo {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.modalContent .user a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.modalContent .user .userInfo p:last-child {
+    font-weight: 500;
+}
+
+.user button {
+    padding: 0.25rem 0.45rem;
+    margin-left: auto;
+    margin-right: 10px;
+    border-radius: 2.5px;
+    font-size: 0.75rem;
+}
+
+.followBtn {
+    background-color: #006AFF;
+    border: 1px solid transparent;
+    color: white;
+}
+
+.unfollowBtn {
+    border: 1px solid #ccc;
+    background-color: #f3f3f3;
+}
