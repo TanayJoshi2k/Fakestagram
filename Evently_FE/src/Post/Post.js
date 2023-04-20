@@ -103,7 +103,7 @@ function Post(props) {
         <div className={classes.postAuthorInfo}>
           <img src={props.postData.avatarURL} className={classes.avatarURL} />
           <p>
-            <strong>{props.postData.username}</strong>
+            {props.postData.username}
           </p>
           <div className={classes.moreActions}>
             <img src={EllipsisMenu} alt="..." />

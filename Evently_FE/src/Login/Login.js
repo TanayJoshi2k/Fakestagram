@@ -3,6 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { saveUserDetails } from "../redux/actions/userActions";
 import { Link } from "react-router-dom";
 import ExtraSignupDetails from "../ExtraSignupDetails/ExtraSignupDetails";
+import HomePhones from "../Assets/home_phones_2x.png";
+import PhoneDisplay from "../Assets/screenshot1_2x.png";
+import PhoneDisplayAlternate from "../Assets/screenshot4_2x.png";
+
 import axios from "axios";
 import classes from "./Login.module.css";
 
@@ -14,10 +18,23 @@ function Login(props) {
     username: "",
     password: "",
   });
+
   const [formError, setFormError] = useState("");
   const [rateError, setRateError] = useState("");
   const [userVerifiedError, setUserVerifiedError] = useState("");
   const [confirmedDetails, setConfirmedDetails] = useState("");
+  const [displayImage, setDisplayImage] = useState(PhoneDisplay);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDisplayImage(
+        displayImage === PhoneDisplay ? PhoneDisplayAlternate : PhoneDisplay
+      );
+    }, 3000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [displayImage]);
 
   const inputHandler = (e) => {
     setLoginDetails({
@@ -51,14 +68,17 @@ function Login(props) {
   return (
     <div className={classes.loginContainer}>
       <div className={classes.imgContainer}>
-        <h1>Evently.</h1>
+        <img src={HomePhones} />
+        <div>
+          <img src={displayImage} />
+        </div>
       </div>
       <div className={classes.loginFormContainer}>
         <div className={classes.loginForm}>
+          <h1>Instagram</h1>
           <form>
             <div className={classes.inputControlGroup}>
               <div className={classes.inputControl}>
-                <label>Username</label>
                 <input
                   disabled={rateError}
                   type="text"
@@ -68,7 +88,6 @@ function Login(props) {
                 />
               </div>
               <div className={classes.inputControl}>
-                <label>Password</label>
                 <input
                   disabled={rateError}
                   type="password"
@@ -87,12 +106,10 @@ function Login(props) {
                   !loginDetails.username || loginDetails.password.length < 6
                 }
               >
-                SUBMIT
+                Log in
               </button>
             </div>
-            <p className={classes.signupLink}>
-              Don't have an account? <Link to="/signup">Create one</Link>
-            </p>
+
             {rateError ? (
               <p className={classes.rateError}>{rateError}</p>
             ) : null}
@@ -103,7 +120,14 @@ function Login(props) {
               <p className={classes.rateError}>{formError}</p>
             ) : null} */}
           </form>
+          <p className={classes.hr}>OR</p>
+          <p className={classes.fbLink}>Login with Facebook</p>
+
         </div>
+        <p className={classes.signupLink}>
+          Don't have an account? <Link to="/signup">Sign up</Link>
+        </p>
+
       </div>
     </div>
   );
