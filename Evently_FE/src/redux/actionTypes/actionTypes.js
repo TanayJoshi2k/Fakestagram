@@ -5,3 +5,4 @@ export const SET_EVENTS = "SET_EVENTS";
 export const SET_POSTS = "SET_POSTS";
 export const SET_LIKED_POSTS = "SET_LIKED_POSTS";
 export const SET_SAVED_POSTS = "SET_SAVED_POSTS";
+export const VIEW_CURRENT_POST = "VIEW_CURRENT_POST";

@@ -2,15 +2,14 @@ import React from "react";
 import classes from "./Modal.module.css";
 
 function Modal(props) {
-  
   return (
     <div className={classes.modalContainer}>
       <div className={classes.modal}>
         <div className={classes.modalRibbon}>
-          <p>Likes</p>
+          <p>{props.title}</p>
           <button
             onClick={() => {
-              props.setShowModal(false);
+              props.closeModal(false);
             }}
             className={classes.closeBtn}
           ></button>

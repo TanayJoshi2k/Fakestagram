@@ -10,16 +10,16 @@
 
 .modal {
     position: relative;
-    width: 30%;
+    width: 25%;
     background-color: white;
     border-radius: 10px;
+    overflow: hidden !important;
 }
 
 .modalRibbon {
     display: flex;
     border-bottom: 1px solid #ccc;
     align-items: center;
-    margin-bottom: 0.5rem;
 }
 
 .modalRibbon p {
@@ -41,10 +41,10 @@
     position: absolute;
     content: "";
     height: 2px;
-    width: 25px;
+    width: 20px;
     text-align: center;
     transform: rotate(-45deg);
-    background-color: #121212;
+    background-color: #737373;
     left: 0;
     right: 0;
     padding: 0;

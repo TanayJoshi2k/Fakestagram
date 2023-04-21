@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Comment from "../Comment/Comment";
+import PostActions from "./PostActions";
 import ShowUserLikes from "../ShowUserLikes/ShowUserLikes";
 import { addPostComment, getPostComments } from "../Services/PostService";
 import { emitAddComment, emitLikePost } from "../Services/Socket";
@@ -14,15 +15,20 @@ import EllipsisMenu from "../Assets/ellipsisMenu.png";
 import Modal from "../Modal/Modal";
 import axios from "axios";
 import classes from "./Post.module.css";
-import { setLikedPosts, setSavedPosts } from "../redux/actions/userActions";
+import {
+  setLikedPosts,
+  setSavedPosts,
+  viewCurrentPost,
+} from "../redux/actions/userActions";
 
 function Post(props) {
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch();
   const [comment, setComment] = useState("");
   const [postComments, setPostComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const state = useSelector((state) => state);
-  const dispatch = useDispatch();
+  const [showPostActionsModal, setShowPostActionsModal] = useState(false);
 
   const getPostCommentsHandler = async (postId) => {
     await getPostComments(
@@ -95,16 +101,34 @@ function Post(props) {
   return (
     <>
       {showModal && (
-        <Modal setShowModal={() => setShowModal(false)}>
+        <Modal closeModal={() => setShowModal(false)} title="Likes">
           <ShowUserLikes users={props.postData.usernamesWhoLiked} />
         </Modal>
       )}
+
+      {showPostActionsModal && (
+        <Modal closeModal={() => setShowPostActionsModal(false)}>
+          <PostActions
+            postId={props.postData._id}
+            users={props.postData.usernamesWhoLiked}
+            postData={props.postData}
+          />
+        </Modal>
+      )}
+
       <div key={props.postData._id} className={classes.post}>
         <div className={classes.postAuthorInfo}>
           <img src={props.postData.avatarURL} className={classes.avatarURL} />
           <p>{props.postData.username}</p>
           <div className={classes.moreActions}>
-            <img src={EllipsisMenu} alt="..."/>
+            <img
+              src={EllipsisMenu}
+              alt="..."
+              onClick={() => {
+                setShowPostActionsModal(true);
+                dispatch(viewCurrentPost(props.postData))
+              }}
+            />
           </div>
         </div>
         <div className={classes.postContent}>

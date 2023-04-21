@@ -2,6 +2,7 @@ import {
   SAVE_USER_DETAILS,
   SET_SAVED_POSTS,
   SET_LIKED_POSTS,
+  VIEW_CURRENT_POST
 } from "../actionTypes/actionTypes";
 
 const saveUserDetails = (payload) => {
@@ -25,8 +26,16 @@ const setLikedPosts = (payload) => {
   };
 };
 
+const viewCurrentPost = (payload) => {
+  return {
+    type: VIEW_CURRENT_POST,
+    payload: payload,
+  };
+};
+
 export {
   saveUserDetails,
   setSavedPosts,
   setLikedPosts,
+  viewCurrentPost
 };

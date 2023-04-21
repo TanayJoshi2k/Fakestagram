@@ -1,0 +1,27 @@
+.modalContent {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.modalContent div {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    background-color: inherit;
+    transition: all 0.3s;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+}
+
+.modalContent div:hover {
+    background-color: #e5e5e5;
+}
+
+.modalContent a {
+    text-decoration: none;
+    font-size: 0.9rem;
+}

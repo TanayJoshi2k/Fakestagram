@@ -2,7 +2,8 @@ import {
   SAVE_USER_DETAILS,
   SET_SAVED_POSTS,
   SET_EVENTS_ATTENDING,
-  SET_LIKED_POSTS
+  SET_LIKED_POSTS,
+  VIEW_CURRENT_POST,
 } from "../actionTypes/actionTypes";
 
 const initialState = {
@@ -23,7 +24,8 @@ const initialState = {
   updatedAt: "",
   username: "",
   likedPosts: [],
-  posts:[]
+  posts: [],
+  viewPost: {},
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -40,18 +42,23 @@ export const userReducer = (state = initialState, action) => {
         savedPosts: [...action.payload],
       };
 
-      case SET_EVENTS_ATTENDING:
+    case SET_EVENTS_ATTENDING:
       return {
         ...state,
         eventsAttending: [...action.payload],
       };
 
-      case SET_LIKED_POSTS:
+    case SET_LIKED_POSTS:
       return {
         ...state,
         likedPosts: [...action.payload],
       };
-      
+
+    case VIEW_CURRENT_POST:
+      return {
+        ...state,
+        viewPost: action.payload,
+      };
 
     default:
       return state;
