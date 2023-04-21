@@ -3,7 +3,12 @@
     align-items: center;
     width: 100%;
     transition: all 0.3s;
-    padding-left: 0.25rem;
+    padding-left: 0.3rem;
+}
+
+.comment:first-child {
+    margin-top: 10px;
+
 }
 
 .comment img {

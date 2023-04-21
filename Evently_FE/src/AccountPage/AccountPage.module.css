@@ -82,13 +82,19 @@
 .postsContainer .post {
     position: relative;
     cursor: pointer;
+    width: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden
 }
 
 .postsContainer .post img {
-    display: block;
-    height: 250px;
-    aspect-ratio: 1/1;
+    flex-shrink: 0;
+    max-width: 100%;
+    min-height: 100%;
 }
+
 .postsContainer .post .postInfoOverlay {
     visibility: hidden;
     position: absolute;

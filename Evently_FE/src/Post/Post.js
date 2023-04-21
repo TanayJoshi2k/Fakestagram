@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Comment from "../Comment/Comment";
 import PostActions from "./PostActions";
-import ShowUserLikes from "../ShowUserLikes/ShowUserLikes";
+import ShowUserLikes from "../DisplayUserLikes/ShowUserLikes";
 import { addPostComment, getPostComments } from "../Services/PostService";
 import { emitAddComment, emitLikePost } from "../Services/Socket";
 import EventActionSpinner from "../Spinner/EventActionSpinner";

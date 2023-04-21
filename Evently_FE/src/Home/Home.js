@@ -58,14 +58,14 @@ function Home() {
               key={post._id}
               usernameswholiked={post.usernamesWhoLiked}
               postData={post}
-              isLiked={state.userReducer.likedPosts.includes(post._id)}
-              isSaved={state.userReducer.savedPosts.includes(post._id)}
+              isLiked={state.userReducer.likedPosts?.includes(post._id)}
+              isSaved={state.userReducer.savedPosts?.includes(post._id)}
             />
           ))}
         </div>
       </div>
 
-      {/* <div className={classes.sideContainer}>
+      <div className={classes.sideContainer}>
         <button
             onClick={() => {
               setShowPostModal(true);
@@ -73,7 +73,7 @@ function Home() {
           >
             <span>Create Post</span>
           </button>
-      </div> */}
+      </div>
     </div>
   );
 }

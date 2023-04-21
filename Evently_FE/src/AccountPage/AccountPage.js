@@ -28,6 +28,7 @@ function AccountPage() {
     axios
       .get(`/account/${username}`)
       .then((res) => {
+        console.log(username, res)
         setPosts(res.data.posts);
         setBio(res.data.userDetails.bio);
         setFirstName(res.data.userDetails.firstName);

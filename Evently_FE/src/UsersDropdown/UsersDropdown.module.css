@@ -33,6 +33,8 @@
     aspect-ratio: 1/1;
     border-radius: 100%;
     margin-right: 0.5rem;
+    border: 1px solid transparent;
+
 }
 
 .dropdownContainer div p {

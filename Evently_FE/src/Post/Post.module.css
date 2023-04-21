@@ -10,7 +10,7 @@
     display: flex;
     align-items: center;
     padding: 0.5rem;
-    background-color: #f7f7f7;
+    font-family: 'Lato', sans-serif;
 }
 
 .post .postAuthorInfo .moreActions {
@@ -62,7 +62,7 @@
 
 .post .inputCommentContainer input {
     width: 100%;
-    padding: 0.3rem 0.4rem;
+    padding: 0.7rem 0.5rem;
     color: #000000;
     font-size: 0.9rem;
     border-radius: 5px;

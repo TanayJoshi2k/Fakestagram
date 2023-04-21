@@ -14,6 +14,7 @@ import "./App.css";
 
 function App() {
   const state = useSelector((state) => state);
+  console.log(state.userReducer)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,26 +30,6 @@ function App() {
 
   return (
     <Routes>
-      <Route
-        path="/posts/:postId"
-        element={
-          state.userReducer.authorized ? (
-            <Post
-              key={state.userReducer.viewPost._id}
-              usernameswholiked={state.userReducer.viewPost.usernameswhoLiked}
-              postData={state.userReducer.viewPost}
-              isLiked={state.userReducer.likedPosts.includes(
-                state.userReducer.viewPost._id
-              )}
-              isSaved={state.userReducer.savedPosts.includes(
-                state.userReducer.viewPost._id
-              )}
-            />
-          ) : (
-            <Navigate to="/" />
-          )
-        }
-      ></Route>
       <Route
         path="/account/:username"
         element={
@@ -78,6 +59,26 @@ function App() {
             <Navigate to="/" />
           ) : (
             <ExtraSignupDetails />
+          )
+        }
+      ></Route>
+      <Route
+        path="/posts/:postId"
+        element={
+          state.userReducer.authorized ? (
+            <Post
+              key={state.userReducer.viewPost?._id}
+              usernameswholiked={state.userReducer.viewPost?.usernameswhoLiked}
+              postData={state.userReducer.viewPost}
+              isLiked={state.userReducer.likedPosts?.includes(
+                state.userReducer.viewPost?._id
+              )}
+              isSaved={state.userReducer.savedPosts?.includes(
+                state.userReducer.viewPost?._id
+              )}
+            />
+          ) : (
+            <Navigate to="/" />
           )
         }
       ></Route>
