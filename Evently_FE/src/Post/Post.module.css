@@ -1,7 +1,7 @@
 .post {
     width: 45%;
     border: 1px solid #e7e7e7;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Lato', sans-serif;
     margin-top: 2.5rem;
     background-color: white;
 }
@@ -137,7 +137,9 @@
     line-height: 1px;
     cursor: pointer;
 }
-
+.post .caption {
+    margin-left: 5px;
+}
 .post .postActions {
     display: flex;
     justify-content: flex-start;

@@ -97,7 +97,6 @@ function Post(props) {
         console.log(e);
       });
   };
-
   return (
     <>
       {showModal && (
@@ -112,6 +111,7 @@ function Post(props) {
             postId={props.postData._id}
             users={props.postData.usernamesWhoLiked}
             postData={props.postData}
+            loggedInUser = {state.userReducer.username}
           />
         </Modal>
       )}
@@ -173,7 +173,7 @@ function Post(props) {
             <p>
               <strong>{props.postData.username}</strong>
 
-              <span>{props.postData.caption}</span>
+              <span className={classes.caption}>{props.postData.caption}</span>
             </p>
           ) : null}
         </div>

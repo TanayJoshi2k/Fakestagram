@@ -1,5 +1,5 @@
 import io from "socket.io-client";
-const ENDPOINT = "http://192.168.1.8:4000";
+const ENDPOINT = "http://192.168.29.112:4000";
 var socket;
 
 export function socketConnection() {

@@ -14,7 +14,6 @@ import "./App.css";
 
 function App() {
   const state = useSelector((state) => state);
-  console.log(state.userReducer)
   const dispatch = useDispatch();
 
   useEffect(() => {

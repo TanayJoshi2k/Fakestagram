@@ -1,10 +1,12 @@
 import react, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { setPosts } from "../redux/actions/postActions";
 import axios from "axios";
 import classes from "./PostModal.module.css";
 
 function PostModal() {
   const state = useSelector((state) => state);
+  const dispatch = useDispatch();
   const [postURL, setPostURL] = useState("");
   const [caption, setCaption] = useState("");
   const [file, setFile] = useState(null);
@@ -20,6 +22,7 @@ function PostModal() {
     formData.append("username", state.userReducer.username);
     formData.append("post", file);
     formData.append("avatarURL", state.userReducer.avatarURL);
+    formData.append("caption", caption);
 
     axios
       .post("/posts", formData, {
@@ -27,7 +30,9 @@ function PostModal() {
           "Content-Type": "multipart/form-data",
         },
       })
-      .then((res) => console.log(res))
+      .then((res) => {
+        dispatch(setPosts(res.data.posts))
+      })
       .catch((e) => console.log(e));
   };
 

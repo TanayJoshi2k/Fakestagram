@@ -1,21 +1,35 @@
 import React from "react";
 import classes from "./PostActions.module.css";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setPosts } from "../redux/actions/postActions";
+import axios from "axios";
 
 function PostActions(props) {
-  console.log(props);
+  const dispatch = useDispatch();
+  const deletePostHandler = () => {
+    const postId = props.postId;
+    axios
+      .delete(`/posts/${postId}`)
+      .then((res) => {
+        dispatch(setPosts(res.data.posts));
+      })
+      .catch((e) => console.log(e));
+  };
+
   return (
     <div className={classes.modalContent}>
       <div>
-        <Link
-          to={`/posts/${props.postId}`}
-        >
-          Go to post
-        </Link>
+        <Link to={`/posts/${props.postId}`}>Go to post</Link>
       </div>
       <div>
         <Link to={`/`}>Copy link</Link>
       </div>
+      {props.postData.username === props.loggedInUser ? (
+        <button className={classes.deleteBtn} onClick={deletePostHandler}>
+          Delete
+        </button>
+      ) : null}
     </div>
   );
 }

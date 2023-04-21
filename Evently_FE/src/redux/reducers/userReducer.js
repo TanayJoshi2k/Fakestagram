@@ -31,6 +31,7 @@ const initialState = {
 export const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case SAVE_USER_DETAILS:
+    console.log("this ran here", action.payload)
       return {
         ...state,
         ...action.payload,
@@ -40,12 +41,6 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         savedPosts: [...action.payload],
-      };
-
-    case SET_EVENTS_ATTENDING:
-      return {
-        ...state,
-        eventsAttending: [...action.payload],
       };
 
     case SET_LIKED_POSTS:

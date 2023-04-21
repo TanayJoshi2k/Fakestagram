@@ -25,3 +25,18 @@
     text-decoration: none;
     font-size: 0.9rem;
 }
+
+.modalContent .deleteBtn {
+    width: 100%;
+    height: 100%;
+    border: none;
+    color: red;
+    padding: 0.7rem 1rem;
+    background-color: inherit;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
+
+.modalContent .deleteBtn:hover {
+    background-color: #e5e5e5;
+}
