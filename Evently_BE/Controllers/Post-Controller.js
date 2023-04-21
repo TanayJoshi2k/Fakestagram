@@ -15,7 +15,8 @@ const {
   updatePostLikesCount,
   updateLikedUsersList,
   createPost,
-  } = require("../Services/db_queries/Post_queries");
+  deletePost,
+} = require("../Services/db_queries/Post_queries");
 
 const {
   updateLikedPostsList,
@@ -23,7 +24,7 @@ const {
   updateUserPostsList,
   updateSavedPostsList,
   getSavedPosts,
-  checkPostSaved
+  checkPostSaved,
 } = require("../Services/db_queries/User_queries");
 
 global.XMLHttpRequest = require("xhr2");
@@ -59,12 +60,13 @@ postRouter.post("/", upload, async (req, res, next) => {
     const downloadURL = await ImageUpload(file, username, "post");
 
     let newPost = await createPost(username, caption, downloadURL, avatarURL);
-
     //push the new post's id in the user's postId list
     await updateUserPostsList(newPost._id, username);
+    const posts = await Post.find({});
 
     return res.status(201).send({
       message: "Added post",
+      posts
     });
   } catch (e) {
     console.log(e);
@@ -154,7 +156,6 @@ postRouter.put("/savepost/:postId", async (req, res, next) => {
   const postId = req.params.postId;
   const { username } = req.body;
   let message;
-  
 
   const isPostSaved = await checkPostSaved(postId, username);
 
@@ -168,11 +169,26 @@ postRouter.put("/savepost/:postId", async (req, res, next) => {
   }
 
   let savedPosts = await getSavedPosts(username);
-  
+
   return res.json({
     message: message,
     ...savedPosts,
   });
+});
+
+postRouter.delete("/:postId", async (req, res, next) => {
+  const postId = req.params.postId;
+  try {
+    await deletePost(postId);
+    const posts = await Post.find({});
+
+    return res.status(202).json({
+      message: "deleted",
+      posts,
+    });
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 module.exports = postRouter;

@@ -15,10 +15,10 @@ exports.updateLikedPostsList = async function (postId, username, action) {
 };
 
 exports.updateUserPostsList = async function (newPostId, username) {
-  return await UserTrivia.findOneAndUpdate({
-    username: username,
-    $push: { posts: newPostId },
-  });
+  return await UserTrivia.findOneAndUpdate(
+   { username: username},
+    {$push: { posts: newPostId }},
+  );
 };
 
 exports.markNotificationRead = async function (notificationId) {

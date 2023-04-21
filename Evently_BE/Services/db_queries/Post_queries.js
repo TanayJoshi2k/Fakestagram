@@ -1,11 +1,11 @@
 const Post = require("../../Models/Post");
 
-exports.createPost = async function (username, caption, postURL, avatarURL) {
-  let newPost = new Post({
+exports.createPost = async function (username, caption, downloadURL, avatarURL) {
+  let newPost = await new Post({
     username: username,
     caption: caption,
     postURL: downloadURL,
-    avatarURL: req.body.avatarURL,
+    avatarURL: avatarURL,
   });
 
   await newPost.save();
@@ -86,3 +86,7 @@ exports.updateLikedUsersList = async function (
     }
   );
 };
+
+exports.deletePost = async function(postId) {
+  await Post.deleteOne({_id : postId})
+}
