@@ -141,10 +141,6 @@ nav .navbarContainer .profilePic {
         font-size: 2rem;
     }
 
-    .navbarContainer div {
-        display: none;
-    }
-
     .navbarContainer>p {
         font-size: 1.125rem;
         letter-spacing: 0.25px;
@@ -155,5 +151,4 @@ nav .navbarContainer .profilePic {
         display: flex;
         margin-left: auto;
     }
-
 }

@@ -79,17 +79,16 @@ function Navbar(props) {
 
           <div className={classes.iconsContainer}>
       
-            <img src={Home} width={23} />
-            <img src={Compass} width={23} />
+            <img src={Home} width={23} height={23} alt="Home Icon"/>
+            <img src={Compass} width={23} height={23} alt="Explore Icon"/>
             <div className={classes.notificationsContainer} onClick={() => {
                   setToggleNotificationTray(!toggleNotificationTray);
                 }}>
               <img
                 src={notificationTray}
-                alt=""
+                alt="Notification Tray"
                 height={20}
                 width={20}
-                
               />
               {notificationCount ? (
                 <span className={classes.notificationCount}>
@@ -103,10 +102,13 @@ function Navbar(props) {
             <img
               className={classes.profilePic}
               src={state.userReducer.avatarURL}
+              aria-hidden="true"
+              alt=""
               onClick={() => setToggleDropdown(!toggleDropdown)}
             />
             {toggleDropdown ? <Dropdown /> : null}
           </div>
+          
         </ul>
       </nav>
     </header>

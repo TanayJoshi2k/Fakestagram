@@ -1,5 +1,5 @@
 .accountPageContainer {
-    width: 50%;
+    width: 75%;
     height: 100vh;
     margin: 0 auto;
     font-family: "Poppins", sans-serif;
@@ -74,19 +74,20 @@
 }
 
 .postsContainer {
+    max-width: 100%;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(3, auto);
+    justify-items: center;
+    gap: 1rem;
 }
 
 .postsContainer .post {
     position: relative;
     cursor: pointer;
-    width: 250px;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden
+    overflow: hidden;
 }
 
 .postsContainer .post img {

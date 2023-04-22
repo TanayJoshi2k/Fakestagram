@@ -190,28 +190,20 @@
 
     .loginContainer {
         width: 100%;
-        height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
     .imgContainer {
-        width: 100%;
-        height: 100%;
-        background: url("../Assets/HomePage.jpg");
-        background-size: 100% 100%;
-        position: relative;
-        z-index: -100;
-        overflow: hidden;
+        display: none;
     }
 
     .loginFormContainer {
-        position: absolute;
-        width: 70%;
+        width: 75%;
         height: max-content;
-        background-color: white;
-        border-radius: 5px;
+        justify-content: center;
+        align-items: center;
     }
 
     .loginForm {
@@ -220,17 +212,16 @@
         justify-content: center;
     }
 
-    .loginForm .signupLink {
-        font-size: 0.8rem;
-    }
-
-    .loginForm .inputControl label {
-        font-size: 0.8rem;
-        margin-bottom: 0.3rem;
-    }
-
     .loginForm button {
         padding: 0.6rem;
+    }
+
+    .loginFormContainer .signupLink {
+        text-align: center;
+        margin-top: 0.5rem auto;
+        font-size: 0.8rem;
+        padding: 1.25rem;
+        width: 90%;
     }
 }
 

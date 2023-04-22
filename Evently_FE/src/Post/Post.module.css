@@ -1,5 +1,5 @@
 .post {
-    width: 45%;
+    width: 50%;
     border: 1px solid #e7e7e7;
     font-family: 'Lato', sans-serif;
     margin-top: 2.5rem;
@@ -9,8 +9,11 @@
 .post .postAuthorInfo {
     display: flex;
     align-items: center;
-    padding: 0.5rem;
+    padding: 0.35rem;
     font-family: 'Lato', sans-serif;
+}
+.post .postAuthorInfo a {
+    text-decoration: none;
 }
 
 .post .postAuthorInfo .moreActions {
@@ -31,10 +34,9 @@
     margin: 0 0.5rem;
 }
 
-.post .postContent img {
+.post .postContent > img {
     display: block;
     width: 100%;
-    height: auto;
     aspect-ratio: 1/1;
     margin-bottom: 0.5rem;
 }
@@ -133,16 +135,31 @@
     font-weight: 600;
     font-size: 0.8rem;
     height: max-content;
-    margin-top: 0;
     line-height: 1px;
     cursor: pointer;
 }
+
+.post {
+    font-size: 14px;
+}
+
 .post .caption {
     margin-left: 5px;
 }
+
 .post .postActions {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     gap: 5px;
+}
+
+@media screen and (max-width:576px) {
+
+    .post {
+        width: 95%;
+        margin: 1.5rem auto;
+        font-size: 0.8rem;
+    }
+
 }

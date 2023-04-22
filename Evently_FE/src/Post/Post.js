@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Comment from "../Comment/Comment";
+import { Link } from "react-router-dom";
 import PostActions from "./PostActions";
 import ShowUserLikes from "../DisplayUserLikes/ShowUserLikes";
 import { addPostComment, getPostComments } from "../Services/PostService";
@@ -66,6 +67,12 @@ function Post(props) {
     });
   };
 
+  const doubleClickHandler = (e) => {
+    if (e.detail === 2) {
+      likePostHandler();
+    }
+  };
+
   const likePostHandler = () => {
     const postId = props.postData._id;
     if (!props.isLiked) {
@@ -90,7 +97,6 @@ function Post(props) {
         username: state.userReducer.username,
       })
       .then((res) => {
-        console.log(res);
         dispatch(setSavedPosts(res.data.savedPosts));
       })
       .catch((e) => {
@@ -111,7 +117,7 @@ function Post(props) {
             postId={props.postData._id}
             users={props.postData.usernamesWhoLiked}
             postData={props.postData}
-            loggedInUser = {state.userReducer.username}
+            loggedInUser={state.userReducer.username}
           />
         </Modal>
       )}
@@ -119,25 +125,33 @@ function Post(props) {
       <div key={props.postData._id} className={classes.post}>
         <div className={classes.postAuthorInfo}>
           <img src={props.postData.avatarURL} className={classes.avatarURL} />
-          <p>{props.postData.username}</p>
+          <Link to={`/account/${props.postData.username}`}>
+            {props.postData.username}
+          </Link>
           <div className={classes.moreActions}>
             <img
               src={EllipsisMenu}
               alt="..."
               onClick={() => {
                 setShowPostActionsModal(true);
-                dispatch(viewCurrentPost(props.postData))
+                dispatch(viewCurrentPost(props.postData));
               }}
             />
           </div>
         </div>
         <div className={classes.postContent}>
-          <img src={props.postData.postURL} height={100} />
+          <div className={classes.doubleTapHeartOverlay}>heart</div>
+
+          <img
+            src={props.postData.postURL}
+            onClick={doubleClickHandler}
+            alt={`A post by ${props.postData.username}`}
+          />
           <div className={classes.postActions}>
             <div id={props.postData._id} onClick={likePostHandler}>
               {props.isLiked ? (
                 <div className={classes.heartFill}>
-                  <Heart className={classes.heartFill} width={22} heiht={22} />
+                  <Heart className={classes.heartFill} width={24} height={20} />
                 </div>
               ) : (
                 <div className={classes.heartUnFill}>

@@ -9,6 +9,7 @@ function Heart(props) {
       fill={props.fillColor}
       class="bi bi-heart-fill"
       viewBox="0 0 16 16"
+      style={{marginTop:"4px"}}
     >
       <path
         fill-rule="evenodd"

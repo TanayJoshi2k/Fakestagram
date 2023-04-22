@@ -31,6 +31,7 @@ function Login(props) {
         displayImage === PhoneDisplay ? PhoneDisplayAlternate : PhoneDisplay
       );
     }, 3000);
+
     return () => {
       clearTimeout(timer);
     };
