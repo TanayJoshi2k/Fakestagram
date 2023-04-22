@@ -140,8 +140,6 @@ function Post(props) {
           </div>
         </div>
         <div className={classes.postContent}>
-          <div className={classes.doubleTapHeartOverlay}>heart</div>
-
           <img
             src={props.postData.postURL}
             onClick={doubleClickHandler}
