@@ -17,7 +17,6 @@ const authRouter = express.Router();
 
 authRouter.get("/isAuth", async (req, res, next) => {
   if (!req.session.isLoggedIn) {
-    console.log("here");
     return res.status(401).json({
       message: "",
       error: {
