@@ -36,6 +36,13 @@ const post = mongoose.Schema(
         avatarURL: String,
       },
     ],
+    day: {
+      type: String,
+    },
+
+    date: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

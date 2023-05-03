@@ -1,11 +1,13 @@
 const Post = require("../../Models/Post");
 
-exports.createPost = async function (username, caption, downloadURL, avatarURL) {
+exports.createPost = async function (username, caption, downloadURL, avatarURL, day, date) {
   let newPost = await new Post({
     username: username,
     caption: caption,
     postURL: downloadURL,
     avatarURL: avatarURL,
+    day: day,
+    date: date
   });
 
   await newPost.save();

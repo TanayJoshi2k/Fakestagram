@@ -59,7 +59,11 @@ postRouter.post("/", upload, async (req, res, next) => {
     const { username, caption, avatarURL } = req.body;
     const downloadURL = await ImageUpload(file, username, "post");
 
-    let newPost = await createPost(username, caption, downloadURL, avatarURL);
+    const timePosted = Date().split(" ");
+    const day = timePosted[1]
+    const date = timePosted[2]
+
+    let newPost = await createPost(username, caption, downloadURL, avatarURL, day, date);
     //push the new post's id in the user's postId list
     await updateUserPostsList(newPost._id, username);
     const posts = await Post.find({});
