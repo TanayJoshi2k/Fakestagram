@@ -181,6 +181,8 @@ function Post(props) {
             </p>
           ) : null}
 
+        <p className={classes.date}>{props.postData.day + " " + props.postData.date}</p>
+
           {props.postData.caption ? (
             <p>
               <strong>{props.postData.username}</strong>
@@ -189,6 +191,7 @@ function Post(props) {
             </p>
           ) : null}
         </div>
+
         <div className={classes.commentSection}>
           {postComments ? (
             loadingComments ? (
