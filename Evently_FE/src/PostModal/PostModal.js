@@ -1,16 +1,17 @@
 import react, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import ProgressBar from "../ProgressBar/ProgressBar";
 import { setPosts } from "../redux/actions/postActions";
 import axios from "axios";
 import classes from "./PostModal.module.css";
 
-function PostModal() {
+function PostModal(props) {
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
   const [postURL, setPostURL] = useState("");
   const [caption, setCaption] = useState("");
   const [file, setFile] = useState(null);
-
+  const [progress, setProgress] = useState(0);
   const handlePostInput = (e) => {
     setFile(e.target.files[0]);
     const url = URL.createObjectURL(e.target.files[0]);
@@ -29,9 +30,15 @@ function PostModal() {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        onUploadProgress: (data) => {
+          //Set the progress value to show the progress bar
+          setProgress(Math.round((100 * data.loaded) / data.total));
+        },
       })
       .then((res) => {
-        dispatch(setPosts(res.data.posts))
+        props.setShowPostModal(false);
+        setProgress(0);
+        dispatch(setPosts(res.data.posts));
       })
       .catch((e) => console.log(e));
   };
@@ -39,6 +46,12 @@ function PostModal() {
   return (
     <div className={classes.postModalContainer}>
       <div className={classes.postModal}>
+        <button
+          onClick={() => {
+            props.setShowPostModal(false);
+          }}
+          className={classes.closeBtn}
+        ></button>
         <h2>New Post</h2>
         <hr />
         <div>
@@ -67,6 +80,7 @@ function PostModal() {
             <button onClick={sharePost}>Share</button>
           </div>
         )}
+        <ProgressBar progress={progress} />
       </div>
     </div>
   );

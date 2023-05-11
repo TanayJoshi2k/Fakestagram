@@ -48,7 +48,7 @@ function Home() {
 
   return (
     <div className={classes.parentContainer}>
-      {showPostModal && <PostModal />}
+      {showPostModal && <PostModal setShowPostModal={setShowPostModal} />}
       <Navbar notifications={notifications} />
 
       <div className={classes.homePageContainer}>
@@ -67,12 +67,12 @@ function Home() {
 
       <div className={classes.sideContainer}>
         <button
-            onClick={() => {
-              setShowPostModal(true);
-            }}
-          >
-            <span>Create Post</span>
-          </button>
+          onClick={() => {
+            setShowPostModal(true);
+          }}
+        >
+          <span>Create Post</span>
+        </button>
       </div>
     </div>
   );
