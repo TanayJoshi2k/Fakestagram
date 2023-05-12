@@ -24,7 +24,12 @@ function Home() {
     axios
       .get("/posts")
       .then((res) => {
-        dispatch(setPosts(res.data.posts));
+        let posts = {};
+        res.data.posts.forEach((post) => {
+          const postId = post._id;
+          posts[postId] = post;
+        });
+        dispatch(setPosts(posts));
       })
       .catch((e) => {
         console.log(e);
@@ -41,28 +46,27 @@ function Home() {
       });
     });
   }, []);
-
-  useEffect(() => {
-    getPosts();
-  }, [state.userReducer.likedPosts]);
-
+  const posts = [];
+  Object.keys(state.postReducer.posts).forEach((postId) => {
+    posts.push(
+      <Post
+        key={state.postReducer.posts[postId]._id}
+        postId={state.postReducer.posts[postId]._id}
+        usernamesWhoLiked={state.postReducer.posts[postId].usernamesWhoLiked}
+        postData={state.postReducer.posts[postId]}
+        isLiked={state.userReducer.likedPosts?.includes(postId)}
+        isSaved={state.userReducer.savedPosts?.includes(postId)}
+        likes={state.postReducer.posts[postId].likes}
+      />
+    );
+  });
   return (
     <div className={classes.parentContainer}>
       {showPostModal && <PostModal setShowPostModal={setShowPostModal} />}
       <Navbar notifications={notifications} />
 
       <div className={classes.homePageContainer}>
-        <div className={classes.postContainer}>
-          {state.postReducer?.posts.map((post) => (
-            <Post
-              key={post._id}
-              usernameswholiked={post.usernamesWhoLiked}
-              postData={post}
-              isLiked={state.userReducer.likedPosts?.includes(post._id)}
-              isSaved={state.userReducer.savedPosts?.includes(post._id)}
-            />
-          ))}
-        </div>
+        <div className={classes.postContainer}>{posts}</div>
       </div>
 
       <div className={classes.sideContainer}>

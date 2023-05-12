@@ -3,17 +3,19 @@ export const addPostComment = async (
   postId,
   userDetails,
   comment,
+  postComments,
   setPostComments,
   setComment
 ) => {
   try {
-    const res = await axios.post(`/posts/${postId}/comments`, {
+
+    const commentData = {
       username: userDetails.username,
       comment: comment,
       avatarURL: userDetails.avatarURL,
-    });
-    const comments = res.data.comments;
-    setPostComments([...comments]);
+    }
+    const res = await axios.post(`/posts/${postId}/comments`, commentData);
+    setPostComments([...postComments, commentData]);
     setComment("");
   } catch (e) {
     console.log(e);

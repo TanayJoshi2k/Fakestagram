@@ -21,9 +21,8 @@ function getNotificationCount(notifications) {
   return notificationCount;
 }
 
-function Navbar(props) {
+function Navbar() {
   const state = useSelector((state) => state);
-  console.log(state.userReducer.avatarURL)
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [toggleNotificationTray, setToggleNotificationTray] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);

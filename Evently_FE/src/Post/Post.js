@@ -21,6 +21,7 @@ import {
   setSavedPosts,
   viewCurrentPost,
 } from "../redux/actions/userActions";
+import { setPostDetails } from "../redux/actions/postActions";
 
 function Post(props) {
   const state = useSelector((state) => state);
@@ -76,7 +77,7 @@ function Post(props) {
   const likePostHandler = () => {
     const postId = props.postData._id;
     if (!props.isLiked) {
-      emitLikePost(props.postData.username, state.userReducer.username);
+      // emitLikePost(props.postData.username, state.userReducer.username);
     }
     axios
       .put(`/posts/${postId}`, {
@@ -86,6 +87,13 @@ function Post(props) {
       })
       .then((res) => {
         dispatch(setLikedPosts(res.data.likedPosts));
+        dispatch(
+          setPostDetails({
+            postId: postId,
+            likes: res.data.likes,
+            usernamesWhoLiked: res.data.usernamesWhoLiked,
+          })
+        );
       })
       .catch((e) => console.log(e));
   };
@@ -107,7 +115,7 @@ function Post(props) {
     <>
       {showModal && (
         <Modal closeModal={() => setShowModal(false)} title="Likes">
-          <ShowUserLikes users={props.postData.usernamesWhoLiked} />
+          <ShowUserLikes users={props.usernamesWhoLiked} />
         </Modal>
       )}
 
@@ -173,15 +181,15 @@ function Post(props) {
             </div>
           </div>
 
-          {props.postData.usernamesWhoLiked.length ? (
+          {props.likes > 0 ? (
             <p className={classes.likes} onClick={() => setShowModal(true)}>
-              {props.postData.usernamesWhoLiked.length > 1
-                ? `${props.postData.usernamesWhoLiked.length} likes`
-                : `${props.postData.usernamesWhoLiked.length} like`}
+              {props.likes > 1 ? `${props.likes} likes` : `${props.likes} like`}
             </p>
           ) : null}
 
-        <p className={classes.date}>{props.postData.day + " " + props.postData.date}</p>
+          <p className={classes.date}>
+            {props.postData.day + " " + props.postData.date}
+          </p>
 
           {props.postData.caption ? (
             <p>

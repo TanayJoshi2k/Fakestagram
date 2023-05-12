@@ -1,7 +1,6 @@
 import {
   SAVE_USER_DETAILS,
   SET_SAVED_POSTS,
-  SET_EVENTS_ATTENDING,
   SET_LIKED_POSTS,
   VIEW_CURRENT_POST,
 } from "../actionTypes/actionTypes";
@@ -31,7 +30,6 @@ const initialState = {
 export const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case SAVE_USER_DETAILS:
-    console.log("this ran here", action.payload)
       return {
         ...state,
         ...action.payload,
