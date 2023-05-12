@@ -57,7 +57,8 @@ accountPageRouter.get("/:username", async (req, res, next) => {
       username: 1,
       followers: 1,
       following: 1,
-      avatarURL:1
+      avatarURL:1,
+      posts:1
     }
   ).lean();
 

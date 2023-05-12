@@ -1,13 +1,21 @@
 const Post = require("../../Models/Post");
+const UserTrivia = require("../../Models/UserTrivia");
 
-exports.createPost = async function (username, caption, downloadURL, avatarURL, day, date) {
+exports.createPost = async function (
+  username,
+  caption,
+  downloadURL,
+  avatarURL,
+  day,
+  date
+) {
   let newPost = await new Post({
     username: username,
     caption: caption,
     postURL: downloadURL,
     avatarURL: avatarURL,
     day: day,
-    date: date
+    date: date,
   });
 
   await newPost.save();
@@ -50,7 +58,7 @@ exports.deleteComment = async function (postId, commentId) {
 };
 
 exports.getUsersWhoLikedPost = async function (postId) {
-  await Post.findById({ _id: postId }, { usernamesWhoLiked: 1 }).lean();
+  return await Post.findById({ _id: postId }, { usernamesWhoLiked: 1 }).lean();
 };
 
 exports.checkPostLiked = async function (postId, username) {
@@ -89,6 +97,13 @@ exports.updateLikedUsersList = async function (
   );
 };
 
-exports.deletePost = async function(postId) {
-  await Post.deleteOne({_id : postId})
-}
+exports.deletePost = async function (postId) {
+  const deletedPost = await Post.findOneAndDelete({ _id: postId });
+  await UserTrivia.findOneAndUpdate(
+    { username: deletedPost.username },
+    {
+      $pull: { posts: { _id: postId } },
+    },
+    { new: true }
+  );
+};

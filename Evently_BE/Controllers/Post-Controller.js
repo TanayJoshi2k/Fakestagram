@@ -16,6 +16,7 @@ const {
   updateLikedUsersList,
   createPost,
   deletePost,
+  getUsersWhoLikedPost
 } = require("../Services/db_queries/Post_queries");
 
 const {
@@ -45,6 +46,7 @@ postRouter.get("/:postId/users_who_liked", async (req, res, next) => {
   try {
     const postId = req.params.postId;
     const usernames = await getUsersWhoLikedPost(postId);
+    
     return res.json({
       ...usernames,
     });
@@ -60,17 +62,24 @@ postRouter.post("/", upload, async (req, res, next) => {
     const downloadURL = await ImageUpload(file, username, "post");
 
     const timePosted = Date().split(" ");
-    const day = timePosted[1]
-    const date = timePosted[2]
+    const day = timePosted[1];
+    const date = timePosted[2];
 
-    let newPost = await createPost(username, caption, downloadURL, avatarURL, day, date);
+    let newPost = await createPost(
+      username,
+      caption,
+      downloadURL,
+      avatarURL,
+      day,
+      date
+    );
     //push the new post's id in the user's postId list
     await updateUserPostsList(newPost._id, username);
     const posts = await Post.find({});
 
     return res.status(201).send({
       message: "Added post",
-      posts
+      posts,
     });
   } catch (e) {
     console.log(e);
@@ -83,10 +92,12 @@ postRouter.post("/:postId/comments", async (req, res, next) => {
     const { username, comment, avatarURL } = req.body;
 
     await addComment(postId, username, comment, avatarURL);
-    const comments = await getPostComments(postId);
+    // const comments = await getPostComments(postId);
 
     return res.status(201).json({
-      ...comments,
+      username: username,
+      comment: comment,
+      avatarURL: avatarURL,
     });
   } catch (e) {
     return res.status(500).json({
@@ -130,29 +141,38 @@ postRouter.put("/:postId", async (req, res, next) => {
   const { username, avatarURL, name } = req.body;
 
   const isPostLiked = await checkPostLiked(postId, username);
-  let message = "";
   let incLikeCount;
-
   if (isPostLiked) {
     // If the post is already liked, unlike the post i.e inc likes by -1,
     // remove the user from the list of users who liked the post
     // and finally remove the post from the list of posts liked by user
-    message = "Post unliked";
     incLikeCount = -1;
-    await updateLikedUsersList(postId, username, avatarURL, name, "$pull");
     await updatePostLikesCount(postId, incLikeCount);
+    await updateLikedUsersList(
+      postId,
+      username,
+      avatarURL,
+      name,
+      "$pull"
+    );
     await updateLikedPostsList(postId, username, "$pull");
   } else {
     incLikeCount = 1;
-    message = "Post liked";
-    await updateLikedUsersList(postId, username, avatarURL, name, "$push");
     await updatePostLikesCount(postId, incLikeCount);
+    await updateLikedUsersList(
+      postId,
+      username,
+      avatarURL,
+      name,
+      "$push"
+    );
     await updateLikedPostsList(postId, username, "$push");
   }
   const likedPosts = await getLikedPosts(username);
+  const usernamesWhoLiked = await getUsersWhoLikedPost(postId)
   return res.json({
-    message: message,
     ...likedPosts,
+    ...usernamesWhoLiked
   });
 });
 
@@ -181,7 +201,7 @@ postRouter.put("/savepost/:postId", async (req, res, next) => {
 });
 
 postRouter.delete("/:postId", async (req, res, next) => {
-  const postId = req.params.postId;
+  const {postId, username} = req.params;
   try {
     await deletePost(postId);
     const posts = await Post.find({});
