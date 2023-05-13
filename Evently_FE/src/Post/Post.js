@@ -21,7 +21,8 @@ import {
   setSavedPosts,
   viewCurrentPost,
 } from "../redux/actions/userActions";
-import { setPostDetails } from "../redux/actions/postActions";
+import { motion, AnimatePresence } from "framer-motion";
+import FramerHeart from "../Logos/FramerHeart";
 
 function Post(props) {
   const state = useSelector((state) => state);
@@ -31,6 +32,7 @@ function Post(props) {
   const [loadingComments, setLoadingComments] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showPostActionsModal, setShowPostActionsModal] = useState(false);
+  const [hasClicked, setHasClicked] = useState(false);
 
   const getPostCommentsHandler = async (postId) => {
     await getPostComments(
@@ -113,22 +115,28 @@ function Post(props) {
   };
   return (
     <>
-      {showModal && (
-        <Modal closeModal={() => setShowModal(false)} title="Likes">
-          <ShowUserLikes users={props.usernamesWhoLiked} />
-        </Modal>
-      )}
+      <AnimatePresence>
+        {showModal && (
+          <Modal
+            key="likesModal"
+            closeModal={() => setShowModal(false)}
+            title="Likes"
+          >
+            <ShowUserLikes users={props.postData.usernamesWhoLiked} />
+          </Modal>
+        )}
 
-      {showPostActionsModal && (
-        <Modal closeModal={() => setShowPostActionsModal(false)}>
-          <PostActions
-            postId={props.postData._id}
-            users={props.postData.usernamesWhoLiked}
-            postData={props.postData}
-            loggedInUser={state.userReducer.username}
-          />
-        </Modal>
-      )}
+        {showPostActionsModal && (
+          <Modal key="modal" closeModal={() => setShowPostActionsModal(false)}>
+            <PostActions
+              postId={props.postData._id}
+              users={props.postData.usernamesWhoLiked}
+              postData={props.postData}
+              loggedInUser={state.userReducer.username}
+            />
+          </Modal>
+        )}
+      </AnimatePresence>
 
       <div key={props.postData._id} className={classes.post}>
         <div className={classes.postAuthorInfo}>
@@ -156,13 +164,9 @@ function Post(props) {
           <div className={classes.postActions}>
             <div id={props.postData._id} onClick={likePostHandler}>
               {props.isLiked ? (
-                <div className={classes.heartFill}>
-                  <Heart className={classes.heartFill} width={24} height={20} />
-                </div>
+                <FramerHeart hasClicked={true} />
               ) : (
-                <div className={classes.heartUnFill}>
-                  <HeartUnfill className={classes.heartUnFill} />
-                </div>
+                <FramerHeart hasClicked={false} />
               )}
             </div>
             <div>
@@ -212,21 +216,18 @@ function Post(props) {
                     : classes.hideComments
                 }
               >
-                {postComments?.map((comment) => {
-                  if (comment) {
-                    return (
-                      <Comment
-                        key={comment._id}
-                        commentData={comment}
-                        signedInUsername={state.userReducer.username}
-                        deleteCommentHandler={() =>
-                          deleteCommentHandler(props.postData._id, comment._id)
-                        }
-                      />
-                    );
-                  }
-                  return null;
-                })}
+                {postComments?.map((comment) => (
+                  <AnimatePresence>
+                    <Comment
+                      key={comment._id}
+                      commentData={comment}
+                      signedInUsername={state.userReducer.username}
+                      deleteCommentHandler={() =>
+                        deleteCommentHandler(props.postData._id, comment._id)
+                      }
+                    />
+                  </AnimatePresence>
+                ))}
               </div>
             )
           ) : null}

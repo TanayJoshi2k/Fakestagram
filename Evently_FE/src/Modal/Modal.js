@@ -1,10 +1,33 @@
 import React from "react";
 import classes from "./Modal.module.css";
+import { motion } from "framer-motion";
 
 function Modal(props) {
   return (
-    <div className={classes.modalContainer}>
-      <div className={classes.modal}>
+    <motion.div className={classes.modalContainer}>
+      <motion.div
+        className={classes.modal}
+        initial={{
+          opacity: 0,
+          scale: 0.75,
+        }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+          transition: {
+            ease: "easeOut",
+            duration: 0.15,
+          },
+        }}
+        exit={{
+          opacity: 0,
+          scale: 0.75,
+          transition: {
+            ease: "easeIn",
+            duration: 0.15,
+          },
+        }}
+      >
         <div className={classes.modalRibbon}>
           <p>{props.title}</p>
           <button
@@ -15,8 +38,8 @@ function Modal(props) {
           ></button>
         </div>
         {props.children}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 

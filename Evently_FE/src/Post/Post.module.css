@@ -64,15 +64,15 @@
 
 .post .inputCommentContainer input {
     width: 100%;
-    padding: 0.7rem 0.5rem;
+    padding: 0.5rem;
     color: #000000;
     font-size: 0.9rem;
-    border-radius: 5px;
-    border: none;
+    border: 1px solid transparent;
 }
 
 .post .commentSection input:focus {
-    border: none
+    border: 1px solid black;
+    outline: none;
 }
 
 .post .commentSection .commentsContainer {
@@ -111,7 +111,6 @@
     margin-left: 0.5rem;
     cursor: pointer;
     padding: 0;
-    margin-bottom: 3px;
 }
 
 .post .savePostUnFill {

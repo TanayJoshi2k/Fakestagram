@@ -8,8 +8,9 @@
 .heroBanner {
     width: 100%;
     height: max-content;
-    margin: 5.5rem auto 1rem;
+    margin: 0 auto 1rem;
     padding: 1rem;
+    padding-top: 5rem;
     border-bottom: 1px solid #efefef;
     display: flex;
 }
@@ -36,6 +37,7 @@
     justify-content: center;
     padding: 1rem;
 }
+
 .meta>div>p {
     margin-bottom: 1rem;
 }
@@ -43,7 +45,10 @@
 .meta>div>p>span {
     margin-right: 5px;
     font-weight: 600;
+    color: #3c4043;
+
 }
+
 .meta>div>button {
     display: block;
     background-color: transparent;
@@ -67,10 +72,12 @@
 
 .meta h2 {
     margin: 0;
+    color: #3c4043;
 }
 
 .meta .bio {
     margin-bottom: 1rem;
+    
 }
 
 .postsContainer {
@@ -128,3 +135,59 @@
     margin-bottom: 3px;
 }
 
+@media screen and (max-width:576px) {
+
+    .accountPageContainer {
+        width: 100%;
+    }
+
+    .profilePicContainer img {
+        width: 100px;
+        height: 100px;
+        margin: 0;
+    }
+
+    .meta {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .meta>div>p {
+        margin-bottom: 0.5rem;
+    }
+
+    .meta>div>button {
+        display: block;
+        background-color: transparent;
+        padding: 0;
+        margin-top: 0.5rem;
+        border: none;
+        font-size: 0.9rem;
+        text-decoration: none;
+    }
+
+    .meta .followBtn {
+        padding: 0.45rem 1.5rem;
+        width: max-content;
+        transition: all 0.3s;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        border: none;
+    }
+
+    .postsContainer {
+        gap: 5px;
+        padding: 5px;
+    }
+
+    .postsContainer .post {
+        position: relative;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+
+}

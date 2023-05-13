@@ -1,14 +1,26 @@
 import React, { useEffect, useState } from "react";
 import classes from "./Comment.module.css";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { motion } from "framer-motion";
 
 function Comment(props) {
-  
   return (
-    <div className={classes.comment}>
+    <motion.div
+      className={classes.comment}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1, transition: { ease: "easeInOut", duration: 1 } }}
+      exit={{
+        transition: {
+          ease: "easeInOut",
+          duration: 2,
+        },
+      }}
+    >
       <img src={props.commentData.avatarURL} />
-      <Link className={classes.username} to={`/account/${props.commentData.username}`}>
+      <Link
+        className={classes.username}
+        to={`/account/${props.commentData.username}`}
+      >
         {props.commentData.username}
       </Link>
       <span className={classes.commentText}>{props.commentData.comment}</span>
@@ -18,7 +30,7 @@ function Comment(props) {
           <button onClick={props.deleteCommentHandler}>Delete</button>
         </div>
       ) : null}
-    </div>
+    </motion.div>
   );
 }
 

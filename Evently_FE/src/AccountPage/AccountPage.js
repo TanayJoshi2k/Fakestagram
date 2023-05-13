@@ -9,6 +9,7 @@ import HoverComment from "../Assets/comment_hover.png";
 import axios from "axios";
 import classes from "./AccountPage.module.css";
 import { saveUserDetails } from "../redux/actions/userActions";
+import { motion } from "framer-motion";
 
 function AccountPage() {
   const state = useSelector((state) => state);
@@ -55,7 +56,12 @@ function AccountPage() {
   };
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <Navbar notifications={state.userReducer.notifications} />
       <div className={classes.accountPageContainer}>
         <div className={classes.heroBanner}>
@@ -111,7 +117,7 @@ function AccountPage() {
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
