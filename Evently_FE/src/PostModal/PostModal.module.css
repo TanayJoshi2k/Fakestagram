@@ -10,7 +10,7 @@
 
 .postModal {
     height: max-content;
-    width: 50vw;
+    width: 50%;
     background-color: white;
     padding: 1rem;
     display: flex;
@@ -95,4 +95,9 @@
 .postModal img {
     height: 250px;
     aspect-ratio: 1/1;
+}
+
+@media screen and (max-width:576px) {
+
+
 }

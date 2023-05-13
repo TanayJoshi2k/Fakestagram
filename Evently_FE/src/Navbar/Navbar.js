@@ -10,6 +10,7 @@ import axios from "axios";
 import classes from "./Navbar.module.css";
 import Home from "../Assets/home.png";
 import Compass from "../Assets/compass.png";
+import AddPost from "../Assets/add.png";
 
 function getNotificationCount(notifications) {
   let notificationCount = 0;
@@ -23,7 +24,6 @@ function getNotificationCount(notifications) {
 
 function Navbar(props) {
   const state = useSelector((state) => state);
-  console.log(state.userReducer.avatarURL)
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [toggleNotificationTray, setToggleNotificationTray] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -59,9 +59,46 @@ function Navbar(props) {
   return (
     <header>
       <nav>
-        <div className={classes.mobileMenu}>
-          <span onClick={() => setShowMobileMenu(!showMobileMenu)}>☰</span>
-        </div>
+        {!showMobileMenu && (
+          <div
+            className={classes.hamburgerIcon}
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+          >
+            ☰
+          </div>
+        )}
+
+        {showMobileMenu && (
+          <div
+            className={classes.hamburgerIcon}
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+          >
+            ✖
+          </div>
+        )}
+
+        {showMobileMenu && (
+          <div className={classes.mobileMenuContainer}>
+            <p onClick={() => navigate("/")}>Instagram</p>
+            <img
+              width={23}
+              src={AddPost}
+              alt="Add Post"
+              onClick={() => {
+                props.setShowPostModal(true);
+              }}
+            />
+            <img src={Home} width={23} height={23} alt="Home Icon" />
+            <img src={Compass} width={23} height={23} alt="Explore Icon" />
+            <img
+              className={classes.mobileProfilePic}
+              src={state.userReducer.avatarURL}
+              aria-hidden="true"
+              alt=""
+              onClick={() => setToggleDropdown(!toggleDropdown)}
+            />
+          </div>
+        )}
 
         <ul className={classes.navbarContainer}>
           <p onClick={() => navigate("/")}>Instagram</p>
@@ -78,12 +115,22 @@ function Navbar(props) {
           </div>
 
           <div className={classes.iconsContainer}>
-      
-            <img src={Home} width={23} height={23} alt="Home Icon"/>
-            <img src={Compass} width={23} height={23} alt="Explore Icon"/>
-            <div className={classes.notificationsContainer} onClick={() => {
-                  setToggleNotificationTray(!toggleNotificationTray);
-                }}>
+            <img
+              width={23}
+              src={AddPost}
+              alt="Add Post"
+              onClick={() => {
+                props.setShowPostModal(true);
+              }}
+            />
+            <img src={Home} width={23} height={23} alt="Home Icon" />
+            <img src={Compass} width={23} height={23} alt="Explore Icon" />
+            <div
+              className={classes.notificationsContainer}
+              onClick={() => {
+                setToggleNotificationTray(!toggleNotificationTray);
+              }}
+            >
               <img
                 src={notificationTray}
                 alt="Notification Tray"
@@ -96,9 +143,7 @@ function Navbar(props) {
                 </span>
               ) : null}
             </div>
-            {toggleNotificationTray ? (
-              <NotificationDropDown />
-            ) : null}
+            {toggleNotificationTray ? <NotificationDropDown /> : null}
             <img
               className={classes.profilePic}
               src={state.userReducer.avatarURL}
@@ -108,7 +153,6 @@ function Navbar(props) {
             />
             {toggleDropdown ? <Dropdown /> : null}
           </div>
-          
         </ul>
       </nav>
     </header>

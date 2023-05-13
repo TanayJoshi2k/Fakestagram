@@ -13,6 +13,7 @@ import {
 import { setPosts } from "../redux/actions/postActions";
 import { useSelector, useDispatch } from "react-redux";
 import { saveUserDetails } from "../redux/actions/userActions";
+import { motion, AnimatePresence } from "framer-motion";
 
 function Home() {
   const state = useSelector((state) => state);
@@ -34,6 +35,7 @@ function Home() {
   useEffect(() => {
     getPosts();
     let socket = socketConnection();
+    
     socket.on("connect", () => {
       emitClientData(state.userReducer.username);
       getNotifications(state.userReducer.username, (data) => {
@@ -47,9 +49,23 @@ function Home() {
   }, [state.userReducer.likedPosts]);
 
   return (
-    <div className={classes.parentContainer}>
-      {showPostModal && <PostModal setShowPostModal={setShowPostModal} />}
-      <Navbar notifications={notifications} />
+    <motion.div
+      className={classes.parentContainer}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      {showPostModal && (
+        <AnimatePresence>
+          <PostModal key="addPostModal" setShowPostModal={setShowPostModal} />
+        </AnimatePresence>
+      )}
+
+      <Navbar
+        notifications={notifications}
+        setShowPostModal={setShowPostModal}
+      />
 
       <div className={classes.homePageContainer}>
         <div className={classes.postContainer}>
@@ -64,17 +80,7 @@ function Home() {
           ))}
         </div>
       </div>
-
-      <div className={classes.sideContainer}>
-        <button
-          onClick={() => {
-            setShowPostModal(true);
-          }}
-        >
-          <span>Create Post</span>
-        </button>
-      </div>
-    </div>
+    </motion.div>
   );
 }
 export default Home;
