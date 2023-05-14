@@ -63,7 +63,7 @@ authRouter.post("/login", limiter, async (req, res, next) => {
     const confirmedDetails = userFound.confirmedDetails;
 
     if (!confirmedDetails) {
-      res.status(404).json({
+      return res.status(404).json({
         confirmedDetails: false,
       });
     }
@@ -81,7 +81,7 @@ authRouter.post("/login", limiter, async (req, res, next) => {
       message: {
         text: "Success",
         username: user.username,
-        authorized:true,
+        authorized: true,
         ...userDetails,
       },
     });
@@ -179,7 +179,7 @@ authRouter.get("/users/:user_id/verify/:token", async (req, res, next) => {
     await User.findOneAndUpdate({ _id: user._id }, { verified: true });
     await token.remove();
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Email Verified",
     });
   } catch (e) {
@@ -191,15 +191,17 @@ authRouter.get("/users/:user_id/verify/:token", async (req, res, next) => {
 authRouter.post("/secondSignupStep", upload, async (req, res, next) => {
   try {
     const file = req.file;
-    const downloadURL = await ImageUpload(file, req.body.username, "avatar");
-
+    let downloadURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png"
+    if (file) {
+      downloadURL = await ImageUpload(file, req.body.username, "avatar");
+    }
     await new UserTrivia({
       username: req.body.username,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       bio: req.body.bio,
       gender: req.body.gender,
-      avatarURL: downloadURL,
+      avatarURL: downloadURL
     }).save();
 
     await User.findOneAndUpdate(
@@ -210,6 +212,7 @@ authRouter.post("/secondSignupStep", upload, async (req, res, next) => {
     return res.status(203).json({
       message: "Details confirmed. Success.",
     });
+    
   } catch (e) {
     res.status(500).json({ error: "Internal Server Error" });
     console.log(e);

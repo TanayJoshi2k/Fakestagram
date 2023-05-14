@@ -16,7 +16,7 @@ const {
   updateLikedUsersList,
   createPost,
   deletePost,
-  getUsersWhoLikedPost
+  getUsersWhoLikedPost,
 } = require("../Services/db_queries/Post_queries");
 
 const {
@@ -46,7 +46,7 @@ postRouter.get("/:postId/users_who_liked", async (req, res, next) => {
   try {
     const postId = req.params.postId;
     const usernames = await getUsersWhoLikedPost(postId);
-    
+
     return res.json({
       ...usernames,
     });
@@ -88,13 +88,11 @@ postRouter.post("/", upload, async (req, res, next) => {
 
 postRouter.post("/:postId/comments", async (req, res, next) => {
   try {
-    
     const postId = req.params.postId;
     const { username, comment, avatarURL } = req.body;
     await addComment(postId, username, comment, avatarURL);
     const comments = await getPostComments(postId);
-    return res.status(201).json({...comments});
-
+    return res.status(201).json({ ...comments });
   } catch (e) {
     return res.status(500).json({
       error: "Internal Server Error",
@@ -134,9 +132,10 @@ postRouter.delete("/:postId/comments/:commentId", async (req, res, next) => {
 
 postRouter.put("/:postId", async (req, res, next) => {
   const postId = req.params.postId;
+  console.log("postId", postId)
   const { username, avatarURL, name } = req.body;
-
   const isPostLiked = await checkPostLiked(postId, username);
+  console.log(isPostLiked)
   let incLikeCount;
   if (isPostLiked) {
     // If the post is already liked, unlike the post i.e inc likes by -1,
@@ -144,31 +143,20 @@ postRouter.put("/:postId", async (req, res, next) => {
     // and finally remove the post from the list of posts liked by user
     incLikeCount = -1;
     await updatePostLikesCount(postId, incLikeCount);
-    await updateLikedUsersList(
-      postId,
-      username,
-      avatarURL,
-      name,
-      "$pull"
-    );
+    await updateLikedUsersList(postId, username, avatarURL, name, "$pull");
     await updateLikedPostsList(postId, username, "$pull");
   } else {
     incLikeCount = 1;
     await updatePostLikesCount(postId, incLikeCount);
-    await updateLikedUsersList(
-      postId,
-      username,
-      avatarURL,
-      name,
-      "$push"
-    );
+    await updateLikedUsersList(postId, username, avatarURL, name, "$push");
     await updateLikedPostsList(postId, username, "$push");
   }
   const likedPosts = await getLikedPosts(username);
-  const usernamesWhoLiked = await getUsersWhoLikedPost(postId)
+  const usernamesWhoLiked = await getUsersWhoLikedPost(postId);
+
   return res.json({
     ...likedPosts,
-    ...usernamesWhoLiked
+    ...usernamesWhoLiked,
   });
 });
 
@@ -197,7 +185,7 @@ postRouter.put("/savepost/:postId", async (req, res, next) => {
 });
 
 postRouter.delete("/:postId", async (req, res, next) => {
-  const {postId, username} = req.params;
+  const { postId, username } = req.params;
   try {
     await deletePost(postId);
     const posts = await Post.find({});

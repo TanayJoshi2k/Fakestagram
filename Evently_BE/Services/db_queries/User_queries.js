@@ -8,7 +8,7 @@ exports.getLikedPosts = async function (username) {
 };
 
 exports.updateLikedPostsList = async function (postId, username, action) {
-  return await UserTrivia.findOneAndUpdate(
+  await UserTrivia.findOneAndUpdate(
     { username: username },
     { [action]: { likedPosts: postId } }
   );

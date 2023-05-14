@@ -81,7 +81,7 @@ function getTargetUser(usersConnected, destinationUser) {
 function sendNotification(targetUserSocket, data, item) {
   let notification = {
     postAuthor: data.postAuthor,
-    loggedInUser: data.loggedInUser.username,
+    username: data.loggedInUser.username,
     item: item,
     avatarURL: data.loggedInUser.avatarURL,
   };
@@ -114,7 +114,7 @@ function initializeSocket(server) {
       );
 
       const targetUser = getTargetUser(usersConnected, data.postAuthor);
-      if (targetUser) {
+      if (targetUser && data.postAuthor !== data.loggedInUser.username) {
         sendNotification(
           targetUser,
           data,
@@ -139,7 +139,7 @@ function initializeSocket(server) {
         "like"
       );
       const targetUser = getTargetUser(usersConnected, data.postAuthor);
-      if (targetUser) {
+      if (targetUser && data.postAuthor !== data.loggedInUser.username) {
         sendNotification(targetUser, data, "liked your post");
       }
     });
@@ -152,7 +152,7 @@ function initializeSocket(server) {
         "follow"
       );
       const targetUser = getTargetUser(usersConnected, data.postAuthor);
-      if (targetUser) {
+      if (targetUser && data.postAuthor !== data.loggedInUser.username) {
         sendNotification(targetUser, data, "started following you");
       }
     });
