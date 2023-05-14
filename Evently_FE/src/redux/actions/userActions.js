@@ -2,7 +2,8 @@ import {
   SAVE_USER_DETAILS,
   SET_SAVED_POSTS,
   SET_LIKED_POSTS,
-  VIEW_CURRENT_POST
+  VIEW_CURRENT_POST,
+  SET_NOTIFICATION,
 } from "../actionTypes/actionTypes";
 
 const saveUserDetails = (payload) => {
@@ -33,9 +34,17 @@ const viewCurrentPost = (payload) => {
   };
 };
 
+const setNotification = (payload) => {
+  return {
+    type: SET_NOTIFICATION,
+    payload: payload,
+  };
+};
+
 export {
   saveUserDetails,
   setSavedPosts,
   setLikedPosts,
-  viewCurrentPost
+  viewCurrentPost,
+  setNotification
 };

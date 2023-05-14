@@ -3,6 +3,7 @@ import {
   SET_SAVED_POSTS,
   SET_LIKED_POSTS,
   VIEW_CURRENT_POST,
+  SET_NOTIFICATION,
 } from "../actionTypes/actionTypes";
 
 const initialState = {
@@ -51,6 +52,12 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         viewPost: action.payload,
+      };
+
+    case SET_NOTIFICATION:
+      return {
+        ...state,
+        notifications: [...state.notifications, action.payload],
       };
 
     default:

@@ -9,17 +9,17 @@ import {
   socketConnection,
   emitClientData,
   getNotifications,
+  getLastNotification,
 } from "../Services/Socket";
 import { setPosts } from "../redux/actions/postActions";
 import { useSelector, useDispatch } from "react-redux";
-import { saveUserDetails } from "../redux/actions/userActions";
+import { saveUserDetails, setNotification } from "../redux/actions/userActions";
 import { motion, AnimatePresence } from "framer-motion";
 
 function Home() {
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
   const [showPostModal, setShowPostModal] = useState(false);
-  const [notifications, setNotifications] = useState([]);
 
   const getPosts = async () => {
     axios
@@ -40,14 +40,19 @@ function Home() {
   useEffect(() => {
     getPosts();
     let socket = socketConnection();
-    
+
     socket.on("connect", () => {
       emitClientData(state.userReducer.username);
       getNotifications(state.userReducer.username, (data) => {
         dispatch(saveUserDetails({ notifications: [...data.notifications] }));
       });
     });
+    
+    getLastNotification((data) => {
+      dispatch(setNotification(data));
+    });
   }, []);
+
   const posts = [];
   Object.keys(state.postReducer.posts).forEach((postId) => {
     posts.push(
@@ -76,10 +81,7 @@ function Home() {
         </AnimatePresence>
       )}
 
-      <Navbar
-        notifications={notifications}
-        setShowPostModal={setShowPostModal}
-      />
+      <Navbar setShowPostModal={setShowPostModal} />
 
       <div className={classes.homePageContainer}>
         <div className={classes.postContainer}>{posts}</div>

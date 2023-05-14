@@ -22,7 +22,7 @@ function getNotificationCount(notifications) {
   return notificationCount;
 }
 
-function Navbar() {
+function Navbar(props) {
   const state = useSelector((state) => state);
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [toggleNotificationTray, setToggleNotificationTray] = useState(false);

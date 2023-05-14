@@ -8,7 +8,7 @@ import Heart from "../Logos/Heart";
 import HoverComment from "../Assets/comment_hover.png";
 import axios from "axios";
 import classes from "./AccountPage.module.css";
-import { saveUserDetails } from "../redux/actions/userActions";
+import { saveUserDetails, setNotification } from "../redux/actions/userActions";
 import { motion } from "framer-motion";
 
 function AccountPage() {
@@ -16,12 +16,25 @@ function AccountPage() {
   const dispatch = useDispatch();
   const params = useParams();
   const [username, setUsername] = useState(params.username);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [bio, setBio] = useState("");
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+  const [posts, setPosts] = useState([]);
+  const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
     axios
       .get(`/account/${username}`)
       .then((res) => {
-        dispatch(saveUserDetails({ posts: res.data.posts }));
+        setPosts(res.data.posts);
+        setBio(res.data.userDetails.bio);
+        setFirstName(res.data.userDetails.firstName);
+        setLastName(res.data.userDetails.lastName);
+        setAvatar(res.data.userDetails.avatarURL);
+        setFollowersCount(res.data.userDetails.followers.length);
+        setFollowingCount(res.data.userDetails.following.length);
       })
       .catch((e) => {
         console.log(e);
@@ -62,27 +75,27 @@ function AccountPage() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Navbar notifications={state.userReducer.notifications} />
+      <Navbar />
       <div className={classes.accountPageContainer}>
         <div className={classes.heroBanner}>
           <div className={classes.profilePicContainer}>
-            <img src={state.userReducer.avatarURL} alt="Profile Pic" />
-            <p>{state.userReducer.username}</p>
+          <img src={avatar} alt="Profile Pic" />
+            <p>{username}</p>
           </div>
           <div className={classes.meta}>
             <h2>
-              {state.userReducer.firstName + " " + state.userReducer.lastName}
+              {firstName + " " + lastName}
             </h2>
-            <p className={classes.bio}>{state.userReducer.bio}</p>
+            <p className={classes.bio}>{bio}</p>
             <div>
               <p>
-                <span>{state.userReducer.posts.length}</span>Posts
+                <span>{posts.length}</span>Posts
               </p>
               <p>
-                <span>{state.userReducer.followersCount}</span>Followers
+                <span>{followersCount}</span>Followers
               </p>
               <p>
-                <span>{state.userReducer.followingCount}</span>Following
+                <span>{followingCount}</span>Following
               </p>
             </div>
             {state.userReducer.username !== username &&
@@ -100,7 +113,7 @@ function AccountPage() {
           </div>
         </div>
         <div className={classes.postsContainer}>
-          {state.userReducer.posts.map((post) => (
+          {posts.map((post) => (
             <div className={classes.post}>
               <img src={post.postURL} alt="" />
               <div className={classes.postInfoOverlay}>

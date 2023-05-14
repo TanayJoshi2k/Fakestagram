@@ -83,11 +83,12 @@ function EventItem(props) {
 
   const addCommentHandler = (event) => {
     const eventId = event.target.id;
+    
     emitAddComment(
       eventId,
       comment,
-      state.userReducer.username,
-      props.eventData.createdBy
+      props.eventData.createdBy,
+      loggedInUser
     );
     addComment(
       eventId,

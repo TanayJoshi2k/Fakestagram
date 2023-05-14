@@ -7,8 +7,6 @@ import ShowUserLikes from "../DisplayUserLikes/ShowUserLikes";
 import { addPostComment, getPostComments } from "../Services/PostService";
 import { emitAddComment, emitLikePost } from "../Services/Socket";
 import EventActionSpinner from "../Spinner/EventActionSpinner";
-import Heart from "../Logos/Heart";
-import HeartUnfill from "../Logos/HeartUnfill";
 import SavePost from "../Logos/SavePost";
 import SavePostUnfill from "../Logos/SavePostUnfill";
 import CommentIcon from "../Assets/comment.png";
@@ -21,7 +19,8 @@ import {
   setSavedPosts,
   viewCurrentPost,
 } from "../redux/actions/userActions";
-import { motion, AnimatePresence } from "framer-motion";
+import { setPostDetails } from "../redux/actions/postActions";
+import { AnimatePresence } from "framer-motion";
 import FramerHeart from "../Logos/FramerHeart";
 
 function Post(props) {
@@ -32,7 +31,6 @@ function Post(props) {
   const [loadingComments, setLoadingComments] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showPostActionsModal, setShowPostActionsModal] = useState(false);
-  const [hasClicked, setHasClicked] = useState(false);
 
   const getPostCommentsHandler = async (postId) => {
     await getPostComments(
@@ -49,16 +47,21 @@ function Post(props) {
 
   const addCommentHandler = (event) => {
     const postId = event.target.id;
+    let loggedInUser = {
+      username: state.userReducer.username,
+      avatarURL: state.userReducer.avatarURL
+    }
     emitAddComment(
-      postId,
       comment,
-      state.userReducer.username,
+      loggedInUser,
       props.postData.username
     );
+    
     addPostComment(
       postId,
       state.userReducer,
       comment,
+      postComments,
       setPostComments,
       setComment
     );
@@ -79,7 +82,11 @@ function Post(props) {
   const likePostHandler = () => {
     const postId = props.postData._id;
     if (!props.isLiked) {
-      // emitLikePost(props.postData.username, state.userReducer.username);
+      let loggedInUser = {
+        username: state.userReducer.username,
+        avatarURL: state.userReducer.avatarURL,
+      };
+      emitLikePost(props.postData.username, loggedInUser);
     }
     axios
       .put(`/posts/${postId}`, {

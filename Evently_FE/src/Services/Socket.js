@@ -20,25 +20,31 @@ export function getNotifications(loggedInUser, callback) {
   });
 }
 
-export function emitAddComment(eventId, comment, loggedInUser, eventAuthor) {
+export function emitAddComment(comment, loggedInUser, eventAuthor) {
   socket.emit("addComment", {
-    eventId: eventId,
     comment: comment,
-    username: loggedInUser,
-    author: eventAuthor,
+    loggedInUser: loggedInUser,
+    postAuthor: eventAuthor,
   });
 }
 
 export function emitLikePost(postAuthor, loggedInUser) {
   socket.emit("likePost", {
     postAuthor: postAuthor,
-    loggedInUser: loggedInUser,
+    loggedInUser: loggedInUser
   });
+
 }
 
 export function emitFollowNotification(postAuthor, loggedInUser) {
   socket.emit("follow", {
     postAuthor: postAuthor,
     loggedInUser: loggedInUser,
+  });
+}
+
+export function getLastNotification(callback) {
+  socket.on("getLastNotification", (data) => {
+    callback(data);
   });
 }
