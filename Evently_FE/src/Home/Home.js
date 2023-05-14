@@ -49,6 +49,7 @@ function Home() {
     });
     
     getLastNotification((data) => {
+      console.log(data)
       dispatch(setNotification(data));
     });
   }, []);

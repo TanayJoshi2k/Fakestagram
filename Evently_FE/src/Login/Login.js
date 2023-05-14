@@ -53,6 +53,7 @@ function Login(props) {
         dispatch(saveUserDetails(res.data.message));
       })
       .catch((e) => {
+        console.log(e.response.data)
         setFormError(e.response.data.error?.error_message);
         if (e.response.data.status === 429) {
           setRateError(e.response.data.error);
@@ -63,7 +64,7 @@ function Login(props) {
   };
 
   if (confirmedDetails === false) {
-    return <ExtraSignupDetails username={state.userReducer.username} />;
+    return <ExtraSignupDetails username={loginDetails.username} />;
   }
 
   return (

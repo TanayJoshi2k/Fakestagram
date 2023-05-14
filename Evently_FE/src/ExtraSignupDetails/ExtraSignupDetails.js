@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import classes from "./ExtraSignupDetails.module.css";
@@ -7,10 +8,12 @@ import Spinner from "../Spinner/Spinner";
 import DefaultProfilePic from "../Assets/download.png"
 
 function ExtraSignupDetails(props) {
+  console.log(props)
+  const state = useSelector(state => state)
   const bioRegex = /[^a-z A-Z0-9@_.!-#*]*$/i;
   const nameRegex = /[^a-z A-Z]*$/i;
   const [displayAvatarURL, setDisplayAvatarURL] = useState(DefaultProfilePic);
-
+  alert(state.userReducer.username)
   const [extraFormData, setExtraFormData] = useState({
     firstName: "",
     lastName: "",
@@ -66,7 +69,6 @@ function ExtraSignupDetails(props) {
       })
       .then((res) => {
         setShowSpinner(false);
-        props.setIsAuth(true);
         navigate("/home", { state: { username: props.username } });
       })
       .catch((e) => console.log(e));

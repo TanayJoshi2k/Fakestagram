@@ -4,9 +4,7 @@ import classes from "./NotificationDropDown.module.css";
 import { useSelector } from "react-redux";
 
 function NotificationDropDown(props) {
-
   const state = useSelector(state => state);
-
   const readNotificationHandler = (notificationId) => {
     axios.put(`/notifications/${notificationId}`, {
       username: props.username,
