@@ -88,17 +88,13 @@ postRouter.post("/", upload, async (req, res, next) => {
 
 postRouter.post("/:postId/comments", async (req, res, next) => {
   try {
+    
     const postId = req.params.postId;
     const { username, comment, avatarURL } = req.body;
-
     await addComment(postId, username, comment, avatarURL);
-    // const comments = await getPostComments(postId);
+    const comments = await getPostComments(postId);
+    return res.status(201).json({...comments});
 
-    return res.status(201).json({
-      username: username,
-      comment: comment,
-      avatarURL: avatarURL,
-    });
   } catch (e) {
     return res.status(500).json({
       error: "Internal Server Error",

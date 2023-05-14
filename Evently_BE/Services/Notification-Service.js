@@ -22,39 +22,33 @@ async function updateUserNotifications(
 }
 
 async function addNotificationToTray(postAuthor, loggedInUser, comment, type) {
-  if (postAuthor !== loggedInUser) {
-    const result = await UserTrivia.findOne(
-      { username: loggedInUser },
-      {
-        avatarURL: 1,
-        _id: 0,
-      }
-    ).lean();
+  if (postAuthor !== loggedInUser.username) {
+    
     switch (type) {
       case "comment":
         await updateUserNotifications(
           postAuthor,
-          loggedInUser,
+          loggedInUser.username,
           `commented ${comment} on your post`,
-          result.avatarURL
+          loggedInUser.avatarURL
         );
         break;
 
       case "like":
         await updateUserNotifications(
           postAuthor,
-          loggedInUser,
+          loggedInUser.username,
           "liked your post",
-          result.avatarURL
+          loggedInUser.avatarURL
         );
         break;
 
       case "follow":
         await updateUserNotifications(
           postAuthor,
-          loggedInUser,
+          loggedInUser.username,
           "started following you",
-          result.avatarURL
+          loggedInUser.avatarURL
         );
         break;
 
@@ -77,6 +71,24 @@ async function getNotifications(username) {
   return result;
 }
 
+function getTargetUser(usersConnected, destinationUser) {
+  const targetUser = Object.values(usersConnected).find(
+    (user) => user.username === destinationUser
+  );
+  return targetUser;
+}
+
+function sendNotification(targetUserSocket, data, item) {
+  let notification = {
+    postAuthor: data.postAuthor,
+    loggedInUser: data.loggedInUser.username,
+    item: item,
+    avatarURL: data.loggedInUser.avatarURL,
+  };
+
+  targetUserSocket.socket.emit("getLastNotification", notification);
+}
+
 function initializeSocket(server) {
   const usersConnected = {};
   const io = require("socket.io")(server, {
@@ -93,27 +105,30 @@ function initializeSocket(server) {
       usersConnected[userDetails.username] = user;
     });
 
-    socket.on("addComment", async (commentData) => {
+    socket.on("addComment", async (data) => {
       await addNotificationToTray(
-        commentData.author,
-        commentData.username,
-        commentData.comment,
+        data.postAuthor,
+        data.loggedInUser,
+        data.comment,
         "comment"
       );
 
-      let notifications = await getNotifications(commentData.author);
-      const targetUser = Object.values(usersConnected).find(
-        (user) => user.username === commentData.author
-      );
-      targetUser.socket.emit("updateNotificationTray", ...notifications);
+      const targetUser = getTargetUser(usersConnected, data.postAuthor);
+      if (targetUser) {
+        sendNotification(
+          targetUser,
+          data,
+          `commented ${data.comment} on your post`
+        );
+      }
     });
 
     socket.on("getNotifications", async (data) => {
       let notifications = await getNotifications(data.username);
-      const targetUser = Object.values(usersConnected).find(
-        (user) => user.username === data.username
-      );
-      targetUser.socket.emit("updateNotificationTray", ...notifications);
+      const targetUser = getTargetUser(usersConnected, data.username);
+      if (targetUser) {
+        targetUser.socket.emit("updateNotificationTray", ...notifications);
+      }
     });
 
     socket.on("likePost", async (data) => {
@@ -123,13 +138,10 @@ function initializeSocket(server) {
         null,
         "like"
       );
-      let notifications = await getNotifications(data.postAuthor);
-      const targetUser = Object.values(usersConnected).find(
-        (user) => user.username === data.postAuthor
-      );
-      console.log("notifications", notifications);
-
-      targetUser.socket.emit("updateNotificationTray", ...notifications);
+      const targetUser = getTargetUser(usersConnected, data.postAuthor);
+      if (targetUser) {
+        sendNotification(targetUser, data, "liked your post");
+      }
     });
 
     socket.on("follow", async (data) => {
@@ -139,11 +151,10 @@ function initializeSocket(server) {
         null,
         "follow"
       );
-      let notifications = await getNotifications(data.postAuthor);
-      const targetUser = Object.values(usersConnected).find(
-        (user) => user.username === data.postAuthor
-      );
-      targetUser.socket.emit("updateNotificationTray", ...notifications);
+      const targetUser = getTargetUser(usersConnected, data.postAuthor);
+      if (targetUser) {
+        sendNotification(targetUser, data, "started following you");
+      }
     });
 
     socket.on("disconnect", () => {
