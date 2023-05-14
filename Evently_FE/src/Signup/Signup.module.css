@@ -1,46 +1,67 @@
-html,
-body {
-    margin: 0;
-    padding: 0;
+.loginContainer * {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-.loginContainer {
+.loginContainer{
     width: 100vw;
     height: 100vh;
     overflow: hidden;
     display: flex;
+    margin-top: 1rem;
 }
 
 .imgContainer {
     width: 50%;
     height: 100%;
-    background: url("../Assets/HomePage.jpg");
-    background-size: 100% 100%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
 }
 
-.imgContainer h1 {
-    font-size: 6rem;
-    color: #ffffff;
+.imgContainer>img {
+    height: 100%;
+    margin-top: 2rem;
+}
+
+.imgContainer div {
+    margin-right: 3.125rem;
+    position: absolute;
+}
+
+.imgContainer div img {
+    height: 490px;
 }
 
 .loginFormContainer {
     width: 50%;
     height: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+}
 
+.loginFormContainer>* {
+    width: 50%;
 }
 
 .loginForm {
-    height: 50vh;
-    width: 60%;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    border: 1px solid #ccc;
+    margin-top: 2rem;
+}
+
+.loginForm h1 {
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+    font-family: 'Grand Hotel', cursive;
+    font-size: 3rem;
+    font-weight: 100;
 }
 
 .inputControlGroup {
@@ -49,148 +70,159 @@ body {
 }
 
 .loginForm .inputControl {
-    position: relative;
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin-bottom: 1rem;
-}
-
-.loginForm .inputControl label {
-    display: block;
-    font-size: 1rem;
-    margin-bottom: 0.3rem;
-    font-weight: 600;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
+    margin-bottom: 0.5rem;
 }
 
 .loginForm .inputControl input {
     padding: 0.5rem;
     color: #000000;
-    font-size: 1rem;
-    letter-spacing: 1px;
-    border-radius: 5px;
-    border: 1px solid #cacaca;
+    border: 1px solid #ccc;
+    background-color: #fafafa;
+    font-size: 0.8rem;
 }
 
 .loginForm .inputControl input:focus {
-    outline: 1px solid black;
+    outline: 1px solid #eee;
 }
 
 .loginForm button {
-    background-color: #000000;
+    background-color: #0095f6;
     color: white;
-    letter-spacing: 3px;
     width: 100%;
-    padding: 0.6rem;
+    padding: 0.5rem;
+    margin: 0.5rem auto 1rem;
     cursor: pointer;
     font-weight: 600;
+    border: none;
+    overflow: hidden;
+    border-radius: 5px;
 }
 
 .loginForm button:disabled {
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: #4cb5f9;
     cursor: not-allowed;
+    overflow: hidden;
+
 }
 
-.loginForm .signupFormErrors {
+.loginForm .hr {
+    color: #737373;
+    font-size: 0.8rem;
+    font-weight: 600;
+    position: relative;
+}
+
+.loginForm .hr::before {
+    content: "";
+    display: block;
+    width: 90px;
+    height: 1px;
+    background: #dbdbdb;
+    left: 30px;
+    top: 50%;
+    position: absolute;
+}
+
+.loginForm .hr::after {
+    content: "";
+    display: block;
+    width: 90px;
+    height: 1px;
+    background: #dbdbdb;
+    right: 30px;
+    top: 50%;
+    position: absolute;
+}
+
+.loginForm .fbLink {
+    color: #385185;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin: 1rem auto;
+}
+
+.loginForm .formError {
     text-align: center;
     color: rgb(255, 0, 51);
-    background-color: transparent;
-    font-size: 0.75rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    bottom: -1rem;
-
+    font-size: 0.9rem;
 }
 
-.loginForm .signupLink {
+.loginFormContainer .signupLink {
     text-align: center;
-    margin: 1rem auto;
-    color: #535353;
+    color: #000;
+    border: 1px solid #ccc;
+    margin-top: 0.5rem;
     font-size: 0.9rem;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    padding: 1.25rem;
 }
 
-.emailVerification {
-    color: green;
-    background-color: palegreen;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-size: 0.9rem;
-    padding: 1rem;
+.loginFormContainer .signupLink a {
+    text-decoration: none;
+    color: #0095f6;
 }
 
-.signupFormErrors {
-    position: absolute;
+.rateError {
     color: red;
     background-color: pink;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-size: 0.75rem;
-    padding: 0.2rem 0.3rem;
-    margin-top: 0;
-    margin-bottom: 0;
-    bottom: 0;
-    border-radius: 10px;
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+}
+
+.rateError::before {
+    content: "❌";
+    color: red;
+    background-color: rgb(255, 227, 227);
+    padding: 0.5rem;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    font-size: 0.5rem;
 }
 
 @media screen and (max-width:576px) {
 
     .loginContainer {
         width: 100%;
-        height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
     .imgContainer {
-        width: 100%;
-        height: 100%;
-        background: url("../Assets/HomePage.jpg");
-        background-size: 100% 100%;
-        position: relative;
-        z-index: -100;
-        overflow: hidden;
-    }
-
-    .imgContainer h1 {
-        position: absolute;
-        top: 15%;
-        text-align: center;
-        font-size: 4.5rem;
+        display: none;
     }
 
     .loginFormContainer {
-        position: absolute;
-        width: 70%;
+        width: 75%;
         height: max-content;
-        background-color: white;
-        border-radius: 5px;
+        justify-content: center;
+        align-items: center;
     }
 
     .loginForm {
         width: 100%;
-        height: 25rem;
+        height: 20rem;
         justify-content: center;
     }
 
-    .loginForm .signupLink {
-        font-size: 0.8rem;
-    }
-
-    .loginForm .inputControl label {
-        font-size: 0.8rem;
-        margin-bottom: 0.3rem;
-        font-weight: 600;
-    }
-
     .loginForm button {
-        background-color: #000000;
-        font-size: 0.9rem;
-        color: white;
-        letter-spacing: 3px;
         padding: 0.6rem;
     }
 
+    .loginFormContainer .signupLink {
+        text-align: center;
+        margin-top: 0.5rem auto;
+        font-size: 0.8rem;
+        padding: 1.25rem;
+        width: 90%;
+    }
 }
 
 @media screen and (min-width:577px) and (max-width:768px) {
@@ -217,7 +249,7 @@ body {
         text-align: center;
         font-size: 6rem;
     }
-    
+
     .loginFormContainer {
         position: absolute;
         width: 50%;

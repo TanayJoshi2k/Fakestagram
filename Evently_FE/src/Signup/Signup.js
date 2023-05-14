@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import classes from "./Signup.module.css";
 import { Link } from "react-router-dom";
+import HomePhones from "../Assets/home_phones_2x.png";
+import PhoneDisplay from "../Assets/screenshot1_2x.png";
+import PhoneDisplayAlternate from "../Assets/screenshot4_2x.png";
 import axios from "axios";
 
 function Signup() {
@@ -15,6 +18,20 @@ function Signup() {
     passwordError: "",
     emailError: "",
   });
+
+  const [displayImage, setDisplayImage] = useState(PhoneDisplay);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDisplayImage(
+        displayImage === PhoneDisplay ? PhoneDisplayAlternate : PhoneDisplay
+      );
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [displayImage]);
 
   const inputHandler = (e) => {
     setSignupDetails({
@@ -43,7 +60,10 @@ function Signup() {
   return (
     <div className={classes.loginContainer}>
       <div className={classes.imgContainer}>
-        <h1>Evently.</h1>
+      <img src={HomePhones} />
+        <div>
+          <img src={displayImage} />
+        </div>
       </div>
       <div className={classes.loginFormContainer}>
         <div className={classes.loginForm}>
