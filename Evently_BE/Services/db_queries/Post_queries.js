@@ -48,6 +48,16 @@ exports.addComment = async function (postId, username, comment, avatarURL) {
 };
 
 exports.deleteComment = async function (postId, commentId) {
+  const comment = await Post.findOne(
+    {
+      _id: postId,
+      comments: { $elemMatch: { _id: commentId } },
+    },
+    { comments: 1, _id: 0 }
+  );
+  if (!comment) {
+    throw { message: "Sorry, the comment could not be found", status: 404 };
+  }
   await Post.findByIdAndUpdate(
     { _id: postId },
     {
@@ -71,7 +81,7 @@ exports.checkPostLiked = async function (postId, username) {
 
 exports.updatePostLikesCount = async function (postId, incLikeCount) {
   return await Post.findOneAndUpdate(
-    { _id: postId },
+    { _id: "64438a499e1e1b88fdf8ef81" },
     { $inc: { likes: incLikeCount } }
   );
 };
@@ -98,12 +108,28 @@ exports.updateLikedUsersList = async function (
 };
 
 exports.deletePost = async function (postId) {
-  const deletedPost = await Post.findOneAndDelete({ _id: postId });
-  await UserTrivia.findOneAndUpdate(
-    { username: deletedPost.username },
+  const deletedPost = await Post.findOneAndDelete({
+    _id: "645e45fe74497ac84d1c763a",
+  });
+  if (!deletedPost) {
+    throw { message: "Sorry, the post could not be found", status: 404 };
+  }
+  const user = await UserTrivia.findOneAndUpdate(
+    { username: "username" },
     {
       $pull: { posts: { _id: postId } },
     },
     { new: true }
   );
+  if (!user) {
+    throw { message: "Sorry, the user could not be found", status: 404 };
+  }
+};
+
+exports.getPost = async function (postId) {
+  const post = await Post.find({ _id: postId });
+  if (!post) {
+    throw { message: "Sorry, the post could not be found", status: 404 };
+  }
+  return post;
 };

@@ -8,8 +8,10 @@ import Heart from "../Logos/Heart";
 import HoverComment from "../Assets/comment_hover.png";
 import axios from "axios";
 import classes from "./AccountPage.module.css";
-import { saveUserDetails, setNotification } from "../redux/actions/userActions";
+import { saveUserDetails } from "../redux/actions/userActions";
 import { motion } from "framer-motion";
+import Modal from "../Modal/Modal";
+import Post from "../Post/Post";
 
 function AccountPage() {
   const state = useSelector((state) => state);
@@ -23,6 +25,8 @@ function AccountPage() {
   const [followingCount, setFollowingCount] = useState(0);
   const [posts, setPosts] = useState([]);
   const [avatar, setAvatar] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [postData, setPostData] = useState({});
 
   useEffect(() => {
     axios
@@ -68,6 +72,18 @@ function AccountPage() {
       });
   };
 
+  const viewPostHandler = (event) => {
+    setShowModal(true);
+    event.stopPropagation();
+    const postId = event.target.id;
+    axios
+      .get(`/posts/${postId}`)
+      .then((res) => {
+        setPostData(res.data);
+      })
+      .catch((e) => console.log(e));
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -75,17 +91,31 @@ function AccountPage() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
+      {showModal && postData && (
+        <Modal closeModal={()=>setShowModal(false)}>
+          <Post
+            key={postData._id}
+            postId={postData._id}
+            usernamesWhoLiked={
+              state.postReducer.posts[postData._id]?.usernamesWhoLiked
+            }
+            postData={postData}
+            isLiked={state.userReducer.likedPosts?.includes(postData._id)}
+            isSaved={state.userReducer.savedPosts?.includes(postData._id)}
+            likes={state.postReducer.posts[postData._id]?.likes}
+            viewPost={"viewPost"}
+          />
+        </Modal>
+      )}
       <Navbar />
       <div className={classes.accountPageContainer}>
         <div className={classes.heroBanner}>
           <div className={classes.profilePicContainer}>
-          <img src={avatar} alt="Profile Pic" />
+            <img src={avatar} alt="Profile Pic" />
             <p>{username}</p>
           </div>
           <div className={classes.meta}>
-            <h2>
-              {firstName + " " + lastName}
-            </h2>
+            <h2>{firstName + " " + lastName}</h2>
             <p className={classes.bio}>{bio}</p>
             <div>
               <p>
@@ -116,7 +146,11 @@ function AccountPage() {
           {posts.map((post) => (
             <div className={classes.post}>
               <img src={post.postURL} alt="" />
-              <div className={classes.postInfoOverlay}>
+              <div
+                id={post._id}
+                className={classes.postInfoOverlay}
+                onClick={viewPostHandler}
+              >
                 <div>
                   <Heart fillColor={"white"} width={20} height={20} />
                   <span>{post.likes}</span>

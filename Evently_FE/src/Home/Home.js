@@ -15,11 +15,13 @@ import { setPosts } from "../redux/actions/postActions";
 import { useSelector, useDispatch } from "react-redux";
 import { saveUserDetails, setNotification } from "../redux/actions/userActions";
 import { motion, AnimatePresence } from "framer-motion";
+import Toast from "../Toast/Toast";
 
 function Home() {
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
   const [showPostModal, setShowPostModal] = useState(false);
+  const [error, setError] = useState("");
 
   const getPosts = async () => {
     axios
@@ -47,9 +49,9 @@ function Home() {
         dispatch(saveUserDetails({ notifications: [...data.notifications] }));
       });
     });
-    
+
     getLastNotification((data) => {
-      console.log(data)
+      console.log(data);
       dispatch(setNotification(data));
     });
   }, []);
@@ -65,9 +67,18 @@ function Home() {
         isLiked={state.userReducer.likedPosts?.includes(postId)}
         isSaved={state.userReducer.savedPosts?.includes(postId)}
         likes={state.postReducer.posts[postId].likes}
+        setError={setError}
       />
     );
   });
+
+  useEffect(() => {
+    if (error !== "") {
+      setTimeout(() => {
+        setError("");
+      }, 1000);
+    }
+  }, [error]);
   return (
     <motion.div
       className={classes.parentContainer}
@@ -86,6 +97,7 @@ function Home() {
 
       <div className={classes.homePageContainer}>
         <div className={classes.postContainer}>{posts}</div>
+        {error && <Toast isErrorMessage={true}>{error}</Toast>}
       </div>
     </motion.div>
   );

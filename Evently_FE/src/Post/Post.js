@@ -49,14 +49,10 @@ function Post(props) {
     const postId = event.target.id;
     let loggedInUser = {
       username: state.userReducer.username,
-      avatarURL: state.userReducer.avatarURL
-    }
-    emitAddComment(
-      comment,
-      loggedInUser,
-      props.postData.username
-    );
-    
+      avatarURL: state.userReducer.avatarURL,
+    };
+    emitAddComment(comment, loggedInUser, props.postData.username);
+
     addPostComment(
       postId,
       state.userReducer,
@@ -68,9 +64,14 @@ function Post(props) {
   };
 
   const deleteCommentHandler = (postId, commentId) => {
-    axios.delete(`/posts/${postId}/comments/${commentId}`).then((res) => {
-      setPostComments([...res.data.comments]);
-    });
+    axios
+      .delete(`/posts/${postId}/comments/${commentId}`)
+      .then((res) => {
+        setPostComments([...res.data.comments]);
+      })
+      .catch((e) => {
+        props.setError(e.response.data.error);
+      });
   };
 
   const doubleClickHandler = (e) => {
@@ -95,7 +96,7 @@ function Post(props) {
         name: state.userReducer.firstName + " " + state.userReducer.lastName,
       })
       .then((res) => {
-        console.log(res.data)
+        console.log(res.data);
         dispatch(setLikedPosts(res.data.likedPosts));
         dispatch(
           setPostDetails({
@@ -141,6 +142,7 @@ function Post(props) {
               users={props.postData.usernamesWhoLiked}
               postData={props.postData}
               loggedInUser={state.userReducer.username}
+              setError={props.setError}
             />
           </Modal>
         )}
@@ -233,6 +235,7 @@ function Post(props) {
                       deleteCommentHandler={() =>
                         deleteCommentHandler(props.postData._id, comment._id)
                       }
+                      setError={props.setError}
                     />
                   </AnimatePresence>
                 ))}

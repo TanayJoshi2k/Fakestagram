@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import classes from "./PostActions.module.css";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "../redux/actions/postActions";
+import Toast from "../Toast/Toast";
 import axios from "axios";
 
 function PostActions(props) {
@@ -14,7 +15,9 @@ function PostActions(props) {
       .then((res) => {
         dispatch(setPosts(res.data.posts));
       })
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        props.setError(e.response.data.error);
+      });
   };
 
   return (
