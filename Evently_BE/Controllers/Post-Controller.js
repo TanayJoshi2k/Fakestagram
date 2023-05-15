@@ -17,6 +17,7 @@ const {
   createPost,
   deletePost,
   getUsersWhoLikedPost,
+  getPost,
 } = require("../Services/db_queries/Post_queries");
 
 const {
@@ -38,7 +39,9 @@ postRouter.get("/", async (req, res, next) => {
       posts,
     });
   } catch (e) {
-    console.log(e);
+    return res.status(500).json({
+      error: "Internal Server Error",
+    });
   }
 });
 
@@ -51,7 +54,9 @@ postRouter.get("/:postId/users_who_liked", async (req, res, next) => {
       ...usernames,
     });
   } catch (e) {
-    console.log(e);
+    return res.status(500).json({
+      error: "Internal Server Error",
+    });
   }
 });
 
@@ -82,7 +87,9 @@ postRouter.post("/", upload, async (req, res, next) => {
       posts,
     });
   } catch (e) {
-    console.log(e);
+    return res.status(500).json({
+      error: "Internal Server Error",
+    });
   }
 });
 
@@ -124,78 +131,99 @@ postRouter.delete("/:postId/comments/:commentId", async (req, res, next) => {
       ...comments,
     });
   } catch (e) {
+    next(e)
+  }
+});
+
+postRouter.put("/:postId", async (req, res, next) => {
+  try {
+    const postId = req.params.postId;
+    const { username, avatarURL, name } = req.body;
+    const isPostLiked = await checkPostLiked(postId, username);
+    let incLikeCount;
+    if (isPostLiked) {
+      // If the post is already liked, unlike the post i.e inc likes by -1,
+      // remove the user from the list of users who liked the post
+      // and finally remove the post from the list of posts liked by user
+      incLikeCount = -1;
+      await updatePostLikesCount(postId, incLikeCount);
+      await updateLikedUsersList(postId, username, avatarURL, name, "$pull");
+      await updateLikedPostsList(postId, username, "$pull");
+    } else {
+      incLikeCount = 1;
+      await updatePostLikesCount(postId, incLikeCount);
+      await updateLikedUsersList(postId, username, avatarURL, name, "$push");
+      await updateLikedPostsList(postId, username, "$push");
+    }
+    const likedPosts = await getLikedPosts(username);
+    const usernamesWhoLiked = await getUsersWhoLikedPost(postId);
+
+    return res.json({
+      ...likedPosts,
+      ...usernamesWhoLiked,
+    });
+  } catch (e) {
     return res.status(500).json({
       error: "Internal Server Error",
     });
   }
 });
 
-postRouter.put("/:postId", async (req, res, next) => {
-  const postId = req.params.postId;
-  console.log("postId", postId)
-  const { username, avatarURL, name } = req.body;
-  const isPostLiked = await checkPostLiked(postId, username);
-  console.log(isPostLiked)
-  let incLikeCount;
-  if (isPostLiked) {
-    // If the post is already liked, unlike the post i.e inc likes by -1,
-    // remove the user from the list of users who liked the post
-    // and finally remove the post from the list of posts liked by user
-    incLikeCount = -1;
-    await updatePostLikesCount(postId, incLikeCount);
-    await updateLikedUsersList(postId, username, avatarURL, name, "$pull");
-    await updateLikedPostsList(postId, username, "$pull");
-  } else {
-    incLikeCount = 1;
-    await updatePostLikesCount(postId, incLikeCount);
-    await updateLikedUsersList(postId, username, avatarURL, name, "$push");
-    await updateLikedPostsList(postId, username, "$push");
-  }
-  const likedPosts = await getLikedPosts(username);
-  const usernamesWhoLiked = await getUsersWhoLikedPost(postId);
-
-  return res.json({
-    ...likedPosts,
-    ...usernamesWhoLiked,
-  });
-});
-
 postRouter.put("/savepost/:postId", async (req, res, next) => {
-  const postId = req.params.postId;
-  const { username } = req.body;
-  let message;
+  try {
+    const postId = req.params.postId;
+    const { username } = req.body;
+    let message;
 
-  const isPostSaved = await checkPostSaved(postId, username);
+    const isPostSaved = await checkPostSaved(postId, username);
 
-  if (isPostSaved) {
-    // If the post is already saved, remove the post from saved posts list
-    message = "Post unsaved";
-    await updateSavedPostsList(postId, username, "$pull");
-  } else {
-    message = "Post saved";
-    await updateSavedPostsList(postId, username, "$push");
+    if (isPostSaved) {
+      // If the post is already saved, remove the post from saved posts list
+      message = "Post unsaved";
+      await updateSavedPostsList(postId, username, "$pull");
+    } else {
+      message = "Post saved";
+      await updateSavedPostsList(postId, username, "$push");
+    }
+
+    let savedPosts = await getSavedPosts(username);
+
+    return res.json({
+      message: message,
+      ...savedPosts,
+    });
+  } catch (e) {
+    return res.status(500).json({
+      error: "Internal Server Error",
+    });
   }
-
-  let savedPosts = await getSavedPosts(username);
-
-  return res.json({
-    message: message,
-    ...savedPosts,
-  });
 });
 
 postRouter.delete("/:postId", async (req, res, next) => {
-  const { postId, username } = req.params;
+  const { postId } = req.params;
   try {
     await deletePost(postId);
     const posts = await Post.find({});
-
     return res.status(202).json({
       message: "deleted",
       posts,
     });
   } catch (e) {
-    console.log(e);
+    next(e)
+  }
+});
+
+postRouter.get("/:postId", async (req, res, next) => {
+  try {
+    const postId = req.params.postId;
+    const post = await getPost(postId);
+    return res.status(200).json(...post);
+  } catch (e) {
+    const statusCode = e.status || 500;
+    const message = e.message || "Internal Server Error";
+    return res.status(statusCode).json({
+      error: message,
+    });
   }
 });
 

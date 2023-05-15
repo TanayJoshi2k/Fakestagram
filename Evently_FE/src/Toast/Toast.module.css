@@ -1,20 +1,40 @@
 .successToast,
 .errorToast {
-    position: relative;
-    width: 40%;
-    text-align: center;
+    position: fixed;
+    width: 300px;
     background-color: #fff5d4;
     color: #f7c229;
-    padding: 0.3rem 0.6rem;
-    border: 2px solid #f7c229;
+    padding: 1rem;
     border-radius: 5px;
     float: right;
-    margin-top: -20px;
-    z-index: 100;
+    z-index: 99999;
+    top: 5%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.25rem;
+    font-family: 'Lato', sans-serif;
+    letter-spacing: 0.25px;
 }
 
 .errorToast {
-    background-color: pink;
-    color: red;
-    border: 2px solid red;
+    background-color: #ffb7b7;
+}
+
+.errorToast * {
+    color: #282828;
+}
+
+.errorToast .crossIcon {
+    font-size: 1rem;
+    margin-right: 5px;
+}
+
+.errorToast h5 {
+    margin-bottom: 5px;
+}
+
+.errorToast h6 {
+    font-weight:500;
 }

@@ -5,7 +5,7 @@ const session = require("express-session");
 const mongoDBStore = require("connect-mongodb-session")(session);
 const mongoose = require("mongoose");
 const eventRouter = require("./Controllers/Event-Controller");
-const postRouter = require("./Controllers/Post-Controller")
+const postRouter = require("./Controllers/Post-Controller");
 const authRouter = require("./Controllers/Auth-controller");
 const accountPageRouter = require("./Controllers/Account-Page-Controller");
 const searchRouter = require("./Controllers/Search-Controller");
@@ -30,9 +30,17 @@ app.use(
   })
 );
 
+function errorHandler(err, req, res, next) {
+  const statusCode = err?.status || 500;
+  const message = err?.message || "Internal Server Error";
+  return res.status(statusCode).json({
+    error: message,
+  });
+}
+
 app.use(authRouter);
 app.use("/events", eventRouter);
-app.use("/posts", postRouter)
+app.use("/posts", postRouter);
 app.use("/account", accountPageRouter);
 app.use(searchRouter);
 app.use(notificationRouter);
@@ -46,3 +54,5 @@ mongoose
 
     initializeSocket(server);
   });
+
+app.use(errorHandler);
