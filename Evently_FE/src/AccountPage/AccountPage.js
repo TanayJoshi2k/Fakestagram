@@ -156,7 +156,7 @@ function AccountPage() {
                   <span>{post.likes}</span>
                 </div>
                 <div>
-                  <img src={HoverComment} alt="..." />
+                  <img className={classes.hoverComment} src={HoverComment} alt="..." />
                   <span>{post.comments?.length}</span>
                 </div>
               </div>

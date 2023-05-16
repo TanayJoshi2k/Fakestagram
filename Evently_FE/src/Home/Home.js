@@ -22,7 +22,7 @@ function Home() {
   const dispatch = useDispatch();
   const [showPostModal, setShowPostModal] = useState(false);
   const [error, setError] = useState("");
-
+  console.log(state.userReducer)
   const getPosts = async () => {
     axios
       .get("/posts")
@@ -76,9 +76,10 @@ function Home() {
     if (error !== "") {
       setTimeout(() => {
         setError("");
-      }, 1000);
+      }, 2000);
     }
   }, [error]);
+
   return (
     <motion.div
       className={classes.parentContainer}

@@ -77,15 +77,16 @@
 
 .meta .bio {
     margin-bottom: 1rem;
-    
+
 }
 
 .postsContainer {
     max-width: 100%;
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(3, 1fr);
     justify-items: center;
-    gap: 1rem;
+    row-gap: 1rem;
+    padding: 1rem;
 }
 
 .postsContainer .post {
@@ -95,12 +96,15 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    height: 300px;
+    width: 300px;
 }
 
 .postsContainer .post img {
-    flex-shrink: 0;
-    max-width: 100%;
-    min-height: 100%;
+    height: 100%;
+    width: 100%;
+    max-height: 100%;
+    object-fit: cover;
 }
 
 .postsContainer .post .postInfoOverlay {
@@ -121,6 +125,7 @@
 .postsContainer .post:hover .postInfoOverlay div {
     display: flex;
     align-items: center;
+    justify-content: center;
     margin: 0 0.5rem;
 }
 
@@ -144,6 +149,7 @@
     .profilePicContainer img {
         width: 100px;
         height: 100px;
+        max-width: 100%;
         margin: 0;
     }
 
@@ -178,6 +184,8 @@
 
     .postsContainer {
         gap: 5px;
+        padding: 0;
+        grid-template-columns: repeat(3, 1fr);
         padding: 5px;
     }
 
@@ -188,6 +196,19 @@
         justify-content: center;
         align-items: center;
         overflow: hidden;
+        width: 100%;
+        height: 150px;
     }
 
+    .postsContainer .post img {
+        height: 100%;
+        width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+    }
+
+    .postsContainer .post .hoverComment {
+        width: 20px;
+        margin-top: 4px;
+    }
 }
