@@ -80,8 +80,9 @@ exports.checkPostLiked = async function (postId, username) {
 };
 
 exports.updatePostLikesCount = async function (postId, incLikeCount) {
+
   return await Post.findOneAndUpdate(
-    { _id: "64438a499e1e1b88fdf8ef81" },
+    { _id: postId },
     { $inc: { likes: incLikeCount } }
   );
 };
@@ -93,7 +94,7 @@ exports.updateLikedUsersList = async function (
   name,
   action
 ) {
-  return await Post.findOneAndUpdate(
+  await Post.findOneAndUpdate(
     { _id: postId },
     {
       [action]: {
@@ -107,20 +108,38 @@ exports.updateLikedUsersList = async function (
   );
 };
 
-exports.deletePost = async function (postId) {
+exports.deletePost = async function (postId, username) {
+  //Additional check if user is deleting their own post
+  const post = await Post.findById(
+    { _id: postId },
+    { _id: 0, username: 1 }
+  ).lean();
+
+
+  if (username !== post.username) {
+    throw {
+      message: "Sorry, you are not authorized to delete the post",
+      status: 404,
+    };
+  }
+
   const deletedPost = await Post.findOneAndDelete({
-    _id: "645e45fe74497ac84d1c763a",
+    _id: postId,
   });
+
   if (!deletedPost) {
     throw { message: "Sorry, the post could not be found", status: 404 };
   }
+
+  //Pull the postId from the user's list of postIds
   const user = await UserTrivia.findOneAndUpdate(
-    { username: "username" },
+    { username: deletedPost.username },
     {
       $pull: { posts: { _id: postId } },
     },
     { new: true }
   );
+
   if (!user) {
     throw { message: "Sorry, the user could not be found", status: 404 };
   }

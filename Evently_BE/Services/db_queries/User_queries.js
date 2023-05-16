@@ -38,7 +38,7 @@ exports.searchUsers = async function (keyword) {
     {
       username: { $regex: "^" + keyword, $options: "i" },
     },
-    { username: 1, avatarURL: 1, _id: 0 }
+    { username: 1, avatarURL: 1 }
   ).lean();
 };
 

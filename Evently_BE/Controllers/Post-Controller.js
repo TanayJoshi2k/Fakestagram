@@ -202,7 +202,7 @@ postRouter.put("/savepost/:postId", async (req, res, next) => {
 postRouter.delete("/:postId", async (req, res, next) => {
   const { postId } = req.params;
   try {
-    await deletePost(postId);
+    await deletePost(postId, req.session.username);
     const posts = await Post.find({});
     return res.status(202).json({
       message: "deleted",
