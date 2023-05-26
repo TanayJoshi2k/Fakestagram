@@ -4,7 +4,6 @@ const cors = require("cors");
 const session = require("express-session");
 const mongoDBStore = require("connect-mongodb-session")(session);
 const mongoose = require("mongoose");
-const eventRouter = require("./Controllers/Event-Controller");
 const postRouter = require("./Controllers/Post-Controller");
 const authRouter = require("./Controllers/Auth-controller");
 const accountPageRouter = require("./Controllers/Account-Page-Controller");
@@ -39,7 +38,6 @@ function errorHandler(err, req, res, next) {
 }
 
 app.use(authRouter);
-app.use("/events", eventRouter);
 app.use("/posts", postRouter);
 app.use("/account", accountPageRouter);
 app.use(searchRouter);

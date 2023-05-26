@@ -13,6 +13,8 @@ const upload = multer({ storage: storage }).single("avatar");
 const ImageUpload = require("../Services/Image-Upload-Service");
 global.XMLHttpRequest = require("xhr2");
 
+const DEFAULT_AVATAR = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png";
+
 const authRouter = express.Router();
 
 authRouter.get("/isAuth", async (req, res, next) => {
@@ -191,10 +193,7 @@ authRouter.get("/users/:user_id/verify/:token", async (req, res, next) => {
 authRouter.post("/secondSignupStep", upload, async (req, res, next) => {
   try {
     const file = req.file;
-    let downloadURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png"
-    if (file) {
-      downloadURL = await ImageUpload(file, req.body.username, "avatar");
-    }
+    downloadURL = await ImageUpload(file, req.body.username, "avatar") || DEFAULT_AVATAR;
     await new UserTrivia({
       username: req.body.username,
       firstName: req.body.firstName,

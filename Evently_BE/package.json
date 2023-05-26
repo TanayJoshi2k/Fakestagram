@@ -24,10 +24,11 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.1",
     "react-calendar": "^4.0.0",
+    "sharp": "^0.32.1",
     "socket.io": "^4.6.1",
     "xhr2": "^0.2.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.22"
   }
 }
