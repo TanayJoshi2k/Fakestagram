@@ -13,7 +13,6 @@ function ExtraSignupDetails(props) {
   const bioRegex = /[^a-z A-Z0-9@_.!-#*]*$/i;
   const nameRegex = /[^a-z A-Z]*$/i;
   const [displayAvatarURL, setDisplayAvatarURL] = useState(DefaultProfilePic);
-  alert(state.userReducer.username)
   const [extraFormData, setExtraFormData] = useState({
     firstName: "",
     lastName: "",

@@ -23,7 +23,7 @@ function getNotificationCount(notifications) {
 }
 
 function Navbar(props) {
-  const state = useSelector((state) => state);
+  const userData = useSelector((state) => state.userReducer);
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [toggleNotificationTray, setToggleNotificationTray] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -31,7 +31,7 @@ function Navbar(props) {
   const [searchResults, setSearchResults] = useState([]);
   const [notificationCount, setNotificationCount] = useState(0);
   const navigate = useNavigate();
-
+  console.log("Rendering Navbar")
   useEffect(() => {
     if (search === "") {
       setSearchResults([]);
@@ -53,8 +53,8 @@ function Navbar(props) {
   }, [search]);
 
   useEffect(() => {
-    setNotificationCount(getNotificationCount(state.userReducer.notifications));
-  });
+    setNotificationCount(getNotificationCount(userData.notifications));
+  }, []);
 
   return (
     <header>
@@ -92,7 +92,7 @@ function Navbar(props) {
             <img src={Compass} width={23} height={23} alt="Explore Icon" />
             <img
               className={classes.mobileProfilePic}
-              src={state.userReducer.avatarURL}
+              src={userData.userReducer.avatarURL}
               aria-hidden="true"
               alt=""
               onClick={() => setToggleDropdown(!toggleDropdown)}
@@ -146,7 +146,7 @@ function Navbar(props) {
             {toggleNotificationTray ? <NotificationDropDown /> : null}
             <img
               className={classes.profilePic}
-              src={state.userReducer.avatarURL}
+              src={userData.avatarURL}
               aria-hidden="true"
               alt=""
               onClick={() => setToggleDropdown(!toggleDropdown)}

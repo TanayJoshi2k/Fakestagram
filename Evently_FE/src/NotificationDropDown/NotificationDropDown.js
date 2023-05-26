@@ -10,7 +10,6 @@ function NotificationDropDown(props) {
       username: props.username,
     });
   };
-
   const notifications = state.userReducer.notifications;
   return (
     <div className={classes.notificationContainer}>
@@ -40,4 +39,4 @@ function NotificationDropDown(props) {
   );
 }
 
-export default React.memo(NotificationDropDown);
+export default NotificationDropDown;

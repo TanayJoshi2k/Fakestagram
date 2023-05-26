@@ -96,7 +96,6 @@ function Post(props) {
         name: state.userReducer.firstName + " " + state.userReducer.lastName,
       })
       .then((res) => {
-        console.log(res.data);
         dispatch(setLikedPosts(res.data.likedPosts));
         dispatch(
           setPostDetails({

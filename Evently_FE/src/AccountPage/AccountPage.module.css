@@ -3,6 +3,7 @@
     height: 100vh;
     margin: 0 auto;
     font-family: "Poppins", sans-serif;
+    overflow-y: auto;
 }
 
 .heroBanner {

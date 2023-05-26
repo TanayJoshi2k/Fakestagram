@@ -70,19 +70,27 @@ function App() {
           path="/posts/:postId"
           element={
             state.userReducer.authorized ? (
-              <Post
-                key={state.userReducer.viewPost?._id}
-                usernameswholiked={
-                  state.userReducer.viewPost?.usernameswhoLiked
-                }
-                postData={state.userReducer.viewPost}
-                isLiked={state.userReducer.likedPosts?.includes(
-                  state.userReducer.viewPost?._id
-                )}
-                isSaved={state.userReducer.savedPosts?.includes(
-                  state.userReducer.viewPost?._id
-                )}
-              />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Post
+                  key={state.userReducer.viewPost?._id}
+                  usernameswholiked={
+                    state.userReducer.viewPost?.usernameswhoLiked
+                  }
+                  postData={state.userReducer.viewPost}
+                  isLiked={state.userReducer.likedPosts?.includes(
+                    state.userReducer.viewPost?._id
+                  )}
+                  isSaved={state.userReducer.savedPosts?.includes(
+                    state.userReducer.viewPost?._id
+                  )}
+                />
+              </div>
             ) : (
               <Navigate to="/" />
             )

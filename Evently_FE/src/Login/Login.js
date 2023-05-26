@@ -3,9 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { saveUserDetails } from "../redux/actions/userActions";
 import { Link } from "react-router-dom";
 import ExtraSignupDetails from "../ExtraSignupDetails/ExtraSignupDetails";
-import HomePhones from "../Assets/home_phones_2x.png";
-import PhoneDisplay from "../Assets/screenshot1_2x.png";
-import PhoneDisplayAlternate from "../Assets/screenshot4_2x.png";
+import HomePhones from "../Assets/home_phones_2x.webp";
+import PhoneDisplay from "../Assets/screenshot1_2x.webp";
+import PhoneDisplayAlternate from "../Assets/screenshot4_2x.webp";
 
 import axios from "axios";
 import classes from "./Login.module.css";

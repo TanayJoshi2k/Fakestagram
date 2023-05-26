@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import classes from "./Signup.module.css";
 import { Link } from "react-router-dom";
-import HomePhones from "../Assets/home_phones_2x.png";
-import PhoneDisplay from "../Assets/screenshot1_2x.png";
-import PhoneDisplayAlternate from "../Assets/screenshot4_2x.png";
+import HomePhones from "../Assets/home_phones_2x.webp";
+import PhoneDisplay from "../Assets/screenshot1_2x.webp";
+import PhoneDisplayAlternate from "../Assets/screenshot4_2x.webp";
 import axios from "axios";
 
 function Signup() {
@@ -48,7 +48,6 @@ function Signup() {
         setEmailVerificationMsg(res.data.message);
       })
       .catch((e) => {
-        console.log(e.response.data);
         setSignupFormErrors({
           emailError: e.response.data.error?.emailError,
           usernameError: e.response.data.error?.usernameError,
@@ -60,7 +59,7 @@ function Signup() {
   return (
     <div className={classes.loginContainer}>
       <div className={classes.imgContainer}>
-      <img src={HomePhones} />
+        <img src={HomePhones} />
         <div>
           <img src={displayImage} />
         </div>

@@ -22,7 +22,6 @@ function Home() {
   const dispatch = useDispatch();
   const [showPostModal, setShowPostModal] = useState(false);
   const [error, setError] = useState("");
-  console.log(state.userReducer)
   const getPosts = async () => {
     axios
       .get("/posts")
