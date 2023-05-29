@@ -6,6 +6,9 @@ function Modal(props) {
   return (
     <motion.div className={classes.modalContainer}>
       <motion.div
+      style={{
+        width:`${props.width}`
+      }}
         className={classes.modal}
         initial={{
           opacity: 0,

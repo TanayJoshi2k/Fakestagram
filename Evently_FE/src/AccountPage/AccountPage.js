@@ -92,7 +92,7 @@ function AccountPage() {
       transition={{ duration: 0.5 }}
     >
       {showModal && postData && (
-        <Modal closeModal={()=>setShowModal(false)}>
+        <Modal closeModal={()=>setShowModal(false)} width="50%">
           <Post
             key={postData._id}
             postId={postData._id}
