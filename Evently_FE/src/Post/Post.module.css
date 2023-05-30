@@ -1,9 +1,9 @@
 .post {
-    width: 50%;
+    width: 70%;
     border: 1px solid #e7e7e7;
     font-family: 'Lato', sans-serif;
-    margin-top: 2.5rem;
     background-color: white;
+    margin: 2.5rem auto;
 }
 
 .post .postAuthorInfo {
@@ -12,6 +12,7 @@
     padding: 0.35rem;
     font-family: 'Lato', sans-serif;
 }
+
 .post .postAuthorInfo a {
     text-decoration: none;
 }

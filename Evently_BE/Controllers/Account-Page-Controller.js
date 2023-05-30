@@ -74,7 +74,6 @@ accountPageRouter.put("/follow/:username", async (req, res, next) => {
   try {
     const loggedInUsername = req.body.username;
     const visitedUsername = req.params.username;
-
     await followAccount(visitedUsername, loggedInUsername);
     const following = await getFollowingList(loggedInUsername);
 
