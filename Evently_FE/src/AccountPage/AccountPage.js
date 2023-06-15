@@ -17,28 +17,30 @@ function AccountPage() {
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
   const params = useParams();
-  const [username, setUsername] = useState(params.username);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [bio, setBio] = useState("");
-  const [followersCount, setFollowersCount] = useState(0);
-  const [followingCount, setFollowingCount] = useState(0);
-  const [posts, setPosts] = useState([]);
-  const [avatar, setAvatar] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [postData, setPostData] = useState({});
+  const [username, _] = useState(params.username);
+  const [userData, setUserData] = useState({
+    firstName: "",
+    lastName: "",
+    bio: "",
+    followersCount: 0,
+    followingCount: 0,
+    posts: [],
+    avatar: "",
+  });
 
   useEffect(() => {
     axios
       .get(`/account/${username}`)
       .then((res) => {
-        setPosts(res.data.posts);
-        setBio(res.data.userDetails.bio);
-        setFirstName(res.data.userDetails.firstName);
-        setLastName(res.data.userDetails.lastName);
-        setAvatar(res.data.userDetails.avatarURL);
-        setFollowersCount(res.data.userDetails.followers.length);
-        setFollowingCount(res.data.userDetails.following.length);
+        setUserData({
+          firstName: res.data.userDetails.firstName,
+          lastName: res.data.userDetails.lastName,
+          bio: res.data.userDetails.bio,
+          followersCount: res.data.userDetails.followers.length,
+          followingCount: res.data.userDetails.following.length,
+          posts: res.data.posts,
+          avatar: res.data.userDetails.avatarURL,
+        });
       })
       .catch((e) => {
         console.log(e);
@@ -111,21 +113,21 @@ function AccountPage() {
       <div className={classes.accountPageContainer}>
         <div className={classes.heroBanner}>
           <div className={classes.profilePicContainer}>
-            <img src={avatar} alt="Profile Pic" />
+            <img src={userData.avatar} alt="Profile Pic" />
             <p>{username}</p>
           </div>
           <div className={classes.meta}>
-            <h2>{firstName + " " + lastName}</h2>
-            <p className={classes.bio}>{bio}</p>
+            <h2>{userData.firstName + " " + userData.lastName}</h2>
+            <p className={classes.bio}>{userData.bio}</p>
             <div>
               <p>
-                <span>{posts.length}</span>Posts
+                <span>{userData.posts.length}</span>Posts
               </p>
               <p>
-                <span>{followersCount}</span>Followers
+                <span>{userData.followersCount}</span>Followers
               </p>
               <p>
-                <span>{followingCount}</span>Following
+                <span>{userData.followingCount}</span>Following
               </p>
             </div>
             {state.userReducer.username !== username &&
@@ -143,7 +145,7 @@ function AccountPage() {
           </div>
         </div>
         <div className={classes.postsContainer}>
-          {posts.map((post) => (
+          {userData.posts.map((post) => (
             <div className={classes.post}>
               <img src={post.postURL} alt="" />
               <div
