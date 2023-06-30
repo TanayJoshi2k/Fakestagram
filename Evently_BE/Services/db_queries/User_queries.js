@@ -1,10 +1,14 @@
 const UserTrivia = require("../../Models/UserTrivia");
 
 exports.getLikedPosts = async function (username) {
-  return await UserTrivia.findOne(
+  let likedPosts = await UserTrivia.findOne(
     { username: username },
     { likedPosts: 1 }
   ).lean();
+  if (!likedPosts) {
+    throw { message: "Sorry, the user could not be found", status: 404 };
+  }
+  return likedPosts;
 };
 
 exports.updateLikedPostsList = async function (postId, username, action) {
@@ -16,8 +20,8 @@ exports.updateLikedPostsList = async function (postId, username, action) {
 
 exports.updateUserPostsList = async function (newPostId, username) {
   return await UserTrivia.findOneAndUpdate(
-   { username: username},
-    {$push: { posts: newPostId }},
+    { username: username },
+    { $push: { posts: newPostId } }
   );
 };
 

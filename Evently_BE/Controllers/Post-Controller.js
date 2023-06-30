@@ -54,9 +54,7 @@ postRouter.get("/:postId/users_who_liked", async (req, res, next) => {
       ...usernames,
     });
   } catch (e) {
-    return res.status(500).json({
-      error: "Internal Server Error",
-    });
+    next(e)
   }
 });
 
@@ -101,9 +99,7 @@ postRouter.post("/:postId/comments", async (req, res, next) => {
     const comments = await getPostComments(postId);
     return res.status(201).json({ ...comments });
   } catch (e) {
-    return res.status(500).json({
-      error: "Internal Server Error",
-    });
+    next(e);
   }
 });
 
@@ -114,9 +110,7 @@ postRouter.get("/:postId/comments", async (req, res, next) => {
       ...comments,
     });
   } catch (e) {
-    return res.status(500).json({
-      error: "Internal Server Error",
-    });
+    next(e);
   }
 });
 
@@ -131,7 +125,7 @@ postRouter.delete("/:postId/comments/:commentId", async (req, res, next) => {
       ...comments,
     });
   } catch (e) {
-    next(e)
+    next(e);
   }
 });
 
@@ -163,9 +157,7 @@ postRouter.put("/:postId", async (req, res, next) => {
       ...usernamesWhoLiked,
     });
   } catch (e) {
-    return res.status(500).json({
-      error: "Internal Server Error",
-    });
+    next(e);
   }
 });
 
@@ -209,7 +201,7 @@ postRouter.delete("/:postId", async (req, res, next) => {
       posts,
     });
   } catch (e) {
-    next(e)
+    next(e);
   }
 });
 
@@ -219,11 +211,7 @@ postRouter.get("/:postId", async (req, res, next) => {
     const post = await getPost(postId);
     return res.status(200).json(...post);
   } catch (e) {
-    const statusCode = e.status || 500;
-    const message = e.message || "Internal Server Error";
-    return res.status(statusCode).json({
-      error: message,
-    });
+    next(e);
   }
 });
 

@@ -29,11 +29,15 @@ exports.getPostComments = async function (postId) {
     },
     { comments: 1 }
   ).lean();
+
+  if (!comments) {
+    throw { message: "Sorry, the post could not be found", status: 404 };
+  }
   return comments;
 };
 
 exports.addComment = async function (postId, username, comment, avatarURL) {
-  await Post.findByIdAndUpdate(
+  const post = await Post.findByIdAndUpdate(
     { _id: postId },
     {
       $push: {
@@ -45,19 +49,27 @@ exports.addComment = async function (postId, username, comment, avatarURL) {
       },
     }
   );
+  if (!post) {
+    throw { message: "Sorry, the comment could not be found", status: 404 };
+  }
 };
 
 exports.deleteComment = async function (postId, commentId) {
+  const post = await Post.findById({ _id: postId });
+  if (!post) {
+    throw { message: "Sorry, the post could not be found", status: 404 };
+  }
   const comment = await Post.findOne(
     {
       _id: postId,
       comments: { $elemMatch: { _id: commentId } },
     },
-    { comments: 1, _id: 0 }
+    { comments: 1 }
   );
   if (!comment) {
     throw { message: "Sorry, the comment could not be found", status: 404 };
   }
+
   await Post.findByIdAndUpdate(
     { _id: postId },
     {
@@ -67,24 +79,29 @@ exports.deleteComment = async function (postId, commentId) {
   );
 };
 
-exports.getUsersWhoLikedPost = async function (postId) {
-  return await Post.findById({ _id: postId }, { usernamesWhoLiked: 1 }).lean();
-};
-
 exports.checkPostLiked = async function (postId, username) {
+  const post = await Post.findById({ _id: postId });
+  if (!post) {
+    throw { message: "Sorry, the post could not be found", status: 404 };
+  }
+
   const isPostLiked = await Post.findOne({
     _id: postId,
     usernamesWhoLiked: { $elemMatch: { username: username } },
   });
+
   return isPostLiked;
 };
 
 exports.updatePostLikesCount = async function (postId, incLikeCount) {
-
-  return await Post.findOneAndUpdate(
+  const post = await Post.findOneAndUpdate(
     { _id: postId },
     { $inc: { likes: incLikeCount } }
   );
+  if (!post) {
+    throw { message: "Sorry, the post could not be found", status: 404 };
+  }
+  return post;
 };
 
 exports.updateLikedUsersList = async function (
@@ -94,7 +111,7 @@ exports.updateLikedUsersList = async function (
   name,
   action
 ) {
-  await Post.findOneAndUpdate(
+  const post = await Post.findOneAndUpdate(
     { _id: postId },
     {
       [action]: {
@@ -106,30 +123,46 @@ exports.updateLikedUsersList = async function (
       },
     }
   );
+  if (!post) {
+    throw { message: "Sorry, the post could not be found", status: 404 };
+  }
+  return post;
+};
+
+exports.getUsersWhoLikedPost = async function (postId) {
+  const post = await Post.findById(
+    { _id: postId },
+    { usernamesWhoLiked: 1 }
+  ).lean();
+
+  if (!post) {
+    throw { message: "Sorry, the post could not be found", status: 404 };
+  }
+  return post;
 };
 
 exports.deletePost = async function (postId, username) {
-  //Additional check if user is deleting their own post
+
   const post = await Post.findById(
     { _id: postId },
     { _id: 0, username: 1 }
   ).lean();
 
+  if (!post) {
+    throw { message: "Sorry, the post could not be found", status: 404 };
+  }
 
+  //Additional check if user is deleting their own post
   if (username !== post.username) {
     throw {
       message: "Sorry, you are not authorized to delete the post",
-      status: 404,
+      status: 403,
     };
   }
 
   const deletedPost = await Post.findOneAndDelete({
     _id: postId,
   });
-
-  if (!deletedPost) {
-    throw { message: "Sorry, the post could not be found", status: 404 };
-  }
 
   //Pull the postId from the user's list of postIds
   const user = await UserTrivia.findOneAndUpdate(

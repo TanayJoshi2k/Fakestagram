@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Comment from "../Comment/Comment";
+import Comments from "../Comments/Comments";
 import { Link } from "react-router-dom";
 import PostActions from "./PostActions";
 import ShowUserLikes from "../DisplayUserLikes/ShowUserLikes";
@@ -22,9 +22,21 @@ import {
 import { setPostDetails } from "../redux/actions/postActions";
 import { AnimatePresence } from "framer-motion";
 import FramerHeart from "../Logos/FramerHeart";
+import PostMetaData from "./PostMetaData";
 
 function Post(props) {
-  const state = useSelector((state) => state);
+  const state = useSelector((state) => state.userReducer);
+  const { postData } = props;
+  const {
+    _id: postId,
+    username: postAuthor,
+    usernamesWhoLiked,
+    postURL,
+    day,
+    date,
+    caption,
+  } = postData;
+
   const dispatch = useDispatch();
   const [comment, setComment] = useState("");
   const [postComments, setPostComments] = useState([]);
@@ -42,20 +54,20 @@ function Post(props) {
   };
 
   useEffect(() => {
-    getPostCommentsHandler(props.postData._id);
+    getPostCommentsHandler(postId);
   }, []);
 
   const addCommentHandler = (event) => {
     const postId = event.target.id;
     let loggedInUser = {
-      username: state.userReducer.username,
-      avatarURL: state.userReducer.avatarURL,
+      username: state.username,
+      avatarURL: state.avatarURL,
     };
-    emitAddComment(comment, loggedInUser, props.postData.username);
+    emitAddComment(comment, loggedInUser, postAuthor);
 
     addPostComment(
       postId,
-      state.userReducer,
+      state,
       comment,
       postComments,
       setPostComments,
@@ -81,19 +93,18 @@ function Post(props) {
   };
 
   const likePostHandler = () => {
-    const postId = props.postData._id;
     if (!props.isLiked) {
       let loggedInUser = {
-        username: state.userReducer.username,
-        avatarURL: state.userReducer.avatarURL,
+        username: state.username,
+        avatarURL: state.avatarURL,
       };
-      emitLikePost(props.postData.username, loggedInUser);
+      emitLikePost(postAuthor, loggedInUser);
     }
     axios
       .put(`/posts/${postId}`, {
-        username: state.userReducer.username,
-        avatarURL: state.userReducer.avatarURL,
-        name: state.userReducer.firstName + " " + state.userReducer.lastName,
+        username: state.username,
+        avatarURL: state.avatarURL,
+        name: state.firstName + " " + state.lastName,
       })
       .then((res) => {
         dispatch(setLikedPosts(res.data.likedPosts));
@@ -109,10 +120,9 @@ function Post(props) {
   };
 
   const savePostHandler = async () => {
-    const postId = props.postData._id;
     axios
       .put(`/posts/savepost/${postId}`, {
-        username: state.userReducer.username,
+        username: state.username,
       })
       .then((res) => {
         dispatch(setSavedPosts(res.data.savedPosts));
@@ -130,48 +140,46 @@ function Post(props) {
             closeModal={() => setShowModal(false)}
             title="Likes"
           >
-            <ShowUserLikes users={props.postData.usernamesWhoLiked} />
+            <ShowUserLikes users={usernamesWhoLiked} />
           </Modal>
         )}
 
         {showPostActionsModal && (
           <Modal key="modal" closeModal={() => setShowPostActionsModal(false)}>
             <PostActions
-              postId={props.postData._id}
-              users={props.postData.usernamesWhoLiked}
-              postData={props.postData}
-              loggedInUser={state.userReducer.username}
+              postId={postId}
+              users={usernamesWhoLiked}
+              postData={postData}
+              loggedInUser={state.username}
               setError={props.setError}
             />
           </Modal>
         )}
       </AnimatePresence>
 
-      <div key={props.postData._id} className={classes.post}>
+      <div key={postId} className={classes.post}>
         <div className={classes.postAuthorInfo}>
-          <img src={props.postData.avatarURL} className={classes.avatarURL} />
-          <Link to={`/account/${props.postData.username}`}>
-            {props.postData.username}
-          </Link>
+          <img src={postData.avatarURL} className={classes.avatarURL} />
+          <Link to={`/account/${postAuthor}`}>{postAuthor}</Link>
           <div className={classes.moreActions}>
             <img
               src={EllipsisMenu}
               alt="..."
               onClick={() => {
                 setShowPostActionsModal(true);
-                dispatch(viewCurrentPost(props.postData));
+                dispatch(viewCurrentPost(postData));
               }}
             />
           </div>
         </div>
         <div className={classes.postContent}>
           <img
-            src={props.postData.postURL}
+            src={postURL}
             onClick={doubleClickHandler}
-            alt={`A post by ${props.postData.username}`}
+            alt={`A post by ${postAuthor}`}
           />
           <div className={classes.postActions}>
-            <div id={props.postData._id} onClick={likePostHandler}>
+            <div id={postId} onClick={likePostHandler}>
               {props.isLiked ? (
                 <FramerHeart hasClicked={true} />
               ) : (
@@ -182,65 +190,37 @@ function Post(props) {
               <img src={CommentIcon} alt="" className={classes.commentIcon} />
             </div>
             <div className={classes.savePostUnFill} onClick={savePostHandler}>
-              {props.isSaved ? (
-                <div>
-                  <SavePost />
-                </div>
-              ) : (
-                <div>
-                  <SavePostUnfill />
-                </div>
-              )}
+              {props.isSaved ? <SavePost /> : <SavePostUnfill />}
             </div>
           </div>
-
-          {props.likes > 0 ? (
-            <p className={classes.likes} onClick={() => setShowModal(true)}>
-              {props.likes > 1 ? `${props.likes} likes` : `${props.likes} like`}
-            </p>
-          ) : null}
-
-          <p className={classes.date}>
-            {props.postData.day + " " + props.postData.date}
-          </p>
-
-          {props.postData.caption ? (
-            <p>
-              <strong>{props.postData.username}</strong>
-
-              <span className={classes.caption}>{props.postData.caption}</span>
-            </p>
-          ) : null}
+          <PostMetaData
+            likes={props.likes}
+            caption={caption}
+            username={postAuthor}
+            day={day}
+            date={date}
+            setShowModal={setShowModal}
+          />
         </div>
 
         <div className={classes.commentSection}>
-          {postComments ? (
-            loadingComments ? (
-              <EventActionSpinner />
-            ) : (
-              <div
-                className={
-                  postComments.length
-                    ? classes.commentsContainer
-                    : classes.hideComments
-                }
-              >
-                {postComments?.map((comment) => (
-                  <AnimatePresence>
-                    <Comment
-                      key={comment._id}
-                      commentData={comment}
-                      signedInUsername={state.userReducer.username}
-                      deleteCommentHandler={() =>
-                        deleteCommentHandler(props.postData._id, comment._id)
-                      }
-                      setError={props.setError}
-                    />
-                  </AnimatePresence>
-                ))}
-              </div>
-            )
-          ) : null}
+          {loadingComments ? (
+            <EventActionSpinner />
+          ) : (
+            <div
+              className={
+                postComments.length
+                  ? classes.commentsContainer
+                  : classes.hideComments
+              }
+            >
+              <Comments
+                comments={postComments}
+                deleteCommentHandler={deleteCommentHandler}
+                postId={postId}
+              />
+            </div>
+          )}
           <div className={classes.inputCommentContainer}>
             <input
               type="text"
@@ -249,7 +229,7 @@ function Post(props) {
               value={comment}
             />
             <button
-              id={props.postData._id}
+              id={postId}
               disabled={comment.trim() === "" || comment.trim().length === 0}
               onClick={addCommentHandler}
             >

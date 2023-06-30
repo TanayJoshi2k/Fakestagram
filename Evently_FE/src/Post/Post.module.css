@@ -151,10 +151,6 @@
     font-size: 14px;
 }
 
-.post .caption {
-    margin-left: 5px;
-}
-
 .post .postActions {
     display: flex;
     justify-content: flex-start;

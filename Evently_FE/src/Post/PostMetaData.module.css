@@ -1,0 +1,20 @@
+.likes {
+  width: max-content;
+  font-weight: 600;
+  font-size: 0.8rem;
+  height: max-content;
+  line-height: 1px;
+  cursor: pointer;
+}
+
+.date {
+  color: #7f7f7f;
+  font-size: 10px;
+  font-family: "Lato";
+  text-transform: uppercase;
+  padding-top: 3px;
+}
+
+.caption {
+  margin-left: 5px;
+}

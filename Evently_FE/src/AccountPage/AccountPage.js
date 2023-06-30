@@ -17,6 +17,7 @@ function AccountPage() {
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
   const params = useParams();
+  const [showModal, setShowModal] = useState(false)
   const [username, _] = useState(params.username);
   const [userData, setUserData] = useState({
     firstName: "",
