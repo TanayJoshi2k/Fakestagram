@@ -4,23 +4,22 @@ import { Link } from "react-router-dom";
 import HomePhones from "../Assets/home_phones_2x.webp";
 import PhoneDisplay from "../Assets/screenshot1_2x.webp";
 import PhoneDisplayAlternate from "../Assets/screenshot4_2x.webp";
+import { useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
 import axios from "axios";
 
 function Signup() {
-  const [signupDetails, setSignupDetails] = useState({
-    email: "",
-    username: "",
-    password: "",
-  });
+  const form = useForm();
+  const { register, control, handleSubmit, formState } = form;
+
+  const { errors, isDirty, isValid } = formState;
   const [emailVerificationMsg, setEmailVerificationMsg] = useState("");
-  const [signupFormErrors, setSignupFormErrors] = useState({
+  const [displayImage, setDisplayImage] = useState(PhoneDisplay);
+  const [formErrors, setFormErrors] = useState({
+    emailError: "",
     usernameError: "",
     passwordError: "",
-    emailError: "",
   });
-
-  const [displayImage, setDisplayImage] = useState(PhoneDisplay);
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setDisplayImage(
@@ -33,22 +32,15 @@ function Signup() {
     };
   }, [displayImage]);
 
-  const inputHandler = (e) => {
-    setSignupDetails({
-      ...signupDetails,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const signupHandler = (e) => {
+  const signupHandler = (data, e) => {
     e.preventDefault();
     axios
-      .post("/signup", signupDetails)
+      .post("/signup", data)
       .then((res) => {
         setEmailVerificationMsg(res.data.message);
       })
       .catch((e) => {
-        setSignupFormErrors({
+        setFormErrors({
           emailError: e.response.data.error?.emailError,
           usernameError: e.response.data.error?.usernameError,
           passwordError: e.response.data.error?.passwordError,
@@ -57,82 +49,82 @@ function Signup() {
   };
 
   return (
-    <div className={classes.loginContainer}>
+    <div className={classes.signupContainer}>
       <div className={classes.imgContainer}>
         <img src={HomePhones} />
         <div>
           <img src={displayImage} />
         </div>
       </div>
-      <div className={classes.loginFormContainer}>
-        <div className={classes.loginForm}>
-          <form>
+      <div className={classes.signupFormContainer}>
+        <div className={classes.signupForm}>
+          <form onSubmit={handleSubmit(signupHandler)} noValidate>
             <div className={classes.inputControlGroup}>
               <div className={classes.inputControl}>
-                <label>Email</label>
+                <label htmlFor="email">Email</label>
                 <input
                   type="email"
                   placeholder="Email"
-                  name="email"
-                  onChange={inputHandler}
+                  id="email"
+                  {...register("email", {
+                    pattern: {
+                      value:
+                        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                      message: "Invalid email format",
+                    },
+                    required: "Email cannot be empty",
+                  })}
                 />
-                {signupFormErrors.emailError ? (
-                  <p className={classes.signupFormErrors}>
-                    {signupFormErrors.emailError}
-                  </p>
-                ) : null}
+
+                <p className={classes.signupFormErrors}>
+                  {errors.email?.message || formErrors.emailError}
+                </p>
               </div>
               <div className={classes.inputControl}>
-                <label>Username</label>
+                <label htmlFor="username">Username</label>
                 <input
                   type="text"
                   placeholder="Username"
                   name="username"
-                  onChange={inputHandler}
+                  id="username"
+                  {...register("username", {
+                    required: "Username cannot be empty",
+                  })}
                 />
-                {signupFormErrors.usernameError ? (
-                  <p className={classes.signupFormErrors}>
-                    {signupFormErrors.usernameError}
-                  </p>
-                ) : null}
+                <p className={classes.signupFormErrors}>
+                  {errors.username?.message || formErrors.usernameError}
+                </p>
               </div>
               <div className={classes.inputControl}>
-                <label>Password</label>
+                <label htmlFor="password">Password</label>
                 <input
                   type="password"
                   placeholder="Password"
                   name="password"
-                  onChange={inputHandler}
+                  id="password"
+                  {...register("password", {
+                    required: "Password cannot be empty",
+                  })}
                 />
-                {signupFormErrors.passwordError ? (
-                  <p className={classes.signupFormErrors}>
-                    {signupFormErrors.passwordError}
-                  </p>
-                ) : null}
+                <p className={classes.signupFormErrors}>
+                  {errors.password?.message || formErrors.passwordError}
+                </p>
               </div>
 
-              <button
-                type="submit"
-                onClick={signupHandler}
-                disabled={
-                  !signupDetails.username ||
-                  !signupDetails.email ||
-                  signupDetails.password.length < 6
-                }
-              >
-                SUBMIT
-              </button>
+              <button type="submit">SUBMIT</button>
               {emailVerificationMsg ? (
                 <p className={classes.emailVerification}>
                   {emailVerificationMsg}
                 </p>
               ) : null}
             </div>
-            <p className={classes.signupLink}>
-              Already have an account? <Link to="/">Login</Link>
-            </p>
           </form>
+
+       
         </div>
+        <p className={classes.signupLink}>
+          Already have an account? <Link to="/">Login</Link>
+        </p>
       </div>
     </div>
   );

@@ -13,7 +13,8 @@ const upload = multer({ storage: storage }).single("avatar");
 const ImageUpload = require("../Services/Image-Upload-Service");
 global.XMLHttpRequest = require("xhr2");
 
-const DEFAULT_AVATAR = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png";
+const DEFAULT_AVATAR =
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/2048px-Default_pfp.svg.png";
 
 const authRouter = express.Router();
 
@@ -98,8 +99,8 @@ authRouter.post("/login", limiter, async (req, res, next) => {
 
 authRouter.post("/signup", async (req, res, next) => {
   const user = req.body;
-  const formErrors = { usernameError: "", passwordError: "" };
-
+  const formErrors = { usernameError: "", passwordError: "", emailError: "" };
+  console.log(user)
   if (user.username.trim().length === 0) {
     formErrors.usernameError = "Username cannot be empty";
   }
@@ -107,7 +108,7 @@ authRouter.post("/signup", async (req, res, next) => {
     formErrors.usernameError = "Username should be at least 3 characters";
   }
 
-  if (/[^-_.a-zA-Z]/.test(user.username)) {
+  if (/[^-_.a-zA-Z0-9]/.test(user.username)) {
     formErrors.usernameError =
       "No special characters except hyphens, underscores and periods.";
   }
@@ -115,21 +116,31 @@ authRouter.post("/signup", async (req, res, next) => {
   if (user.password.length < 6) {
     formErrors.passwordError = "Password must be at least 6 characters";
   }
+  
   if (user.password.length === 0) {
     formErrors.passwordError = "Password cannot be empty";
   }
 
-  const takenUsername = await User.findOne({ username: user.username });
-
-  if (takenUsername) {
-    formErrors.usernameError = "Username already taken";
+  const takenEmail = await User.findOne({ email: user.email });
+  if (takenEmail) {
+    formErrors.emailError = "An account already exists with this email";
   }
 
-  if (formErrors.usernameError || formErrors.passwordError) {
+  const takenUsername = await User.findOne({ username: user.username });
+  if (takenUsername) {
+    formErrors.usernameError = "This username is taken";
+  }
+
+  if (
+    formErrors.usernameError ||
+    formErrors.passwordError ||
+    formErrors.emailError
+  ) {
     return res.status(400).json({
       error: {
         usernameError: formErrors.usernameError,
         passwordError: formErrors.passwordError,
+        emailError: formErrors.emailError,
       },
     });
   }
@@ -193,14 +204,15 @@ authRouter.get("/users/:user_id/verify/:token", async (req, res, next) => {
 authRouter.post("/secondSignupStep", upload, async (req, res, next) => {
   try {
     const file = req.file;
-    downloadURL = await ImageUpload(file, req.body.username, "avatar") || DEFAULT_AVATAR;
+    downloadURL =
+      (await ImageUpload(file, req.body.username, "avatar")) || DEFAULT_AVATAR;
     await new UserTrivia({
       username: req.body.username,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       bio: req.body.bio,
       gender: req.body.gender,
-      avatarURL: downloadURL
+      avatarURL: downloadURL,
     }).save();
 
     await User.findOneAndUpdate(
@@ -211,7 +223,6 @@ authRouter.post("/secondSignupStep", upload, async (req, res, next) => {
     return res.status(203).json({
       message: "Details confirmed. Success.",
     });
-    
   } catch (e) {
     res.status(500).json({ error: "Internal Server Error" });
     console.log(e);
