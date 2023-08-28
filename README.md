@@ -1,5 +1,5 @@
-# IGClone
-Welcome to IGClone, an impressive Instagram clone built using the MERN (MongoDB, Express, React, Node.js) stack! 
+# Fakestagram
+Welcome to an impressive Instagram clone built using the MERN (MongoDB, Express, React, Node.js) stack! 
 This project showcases the power of modern web development technologies to create a fully functional social media platform.
 
 ## Key Features
